@@ -10,4 +10,9 @@ end
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../lib')
 require 'genomer'
 
+require 'tempfile'
+require 'english'
+
 require 'rspec/expectations'
+
+GENOMER = File.join %W| #{File.dirname(__FILE__)} .. .. bin genomer|

@@ -1,8 +1,13 @@
 class Genomer::RulesDSL
 
   def scaffold_file(location=nil)
-    return @location if location.nil?
-    @location = location
+    return @scaffold if location.nil?
+    @scaffold = location
+  end
+
+  def sequence_file(location=nil)
+    return @sequence if location.nil?
+    @sequence = location
   end
 
 end

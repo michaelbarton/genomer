@@ -4,16 +4,16 @@ Feature: Generating fasta output
 
   Scenario: Generating a simple fasta file
     Given the Rules file has the text:
-      | line                          |
-      | scaffold_file 'scaffold.yml'  |
-      | sequence_file 'sequences.fna' |
-      | out_file_name 'genome' |
-      | output :fasta                 |
+      | line                               |
+      | scaffold_file '/tmp/scaffold.yml'  |
+      | sequence_file '/tmp/sequences.fna' |
+      | out_file_name 'genome'             |
+      | output :fasta                      |
     And the scaffold is composed of the sequences:
       | name | nucleotides |
       | seq  | ATGCC       |
-    And the scaffold file is called "scaffold.yml"
-    And the sequence file is called "sequences.fna"
+    And the scaffold file is called "/tmp/scaffold.yml"
+    And the sequence file is called "/tmp/sequences.fna"
     When the genomer executable is invoked
     Then genomer should exit without any error
     And the file "genome.fna" should exist

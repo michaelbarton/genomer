@@ -1,0 +1,2 @@
+class Genomer::OutputType
+end

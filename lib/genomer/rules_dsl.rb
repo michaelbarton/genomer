@@ -19,6 +19,11 @@ class Genomer::RulesDSL
     @out_file_name = name
   end
 
+  def out_dir_name(name=nil)
+    return @out_dir_name if name.nil?
+    @out_dir_name = name
+  end
+
   def output(*types)
     return @types if types.empty?
     @types.concat types

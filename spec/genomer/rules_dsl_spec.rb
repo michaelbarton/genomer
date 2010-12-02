@@ -23,6 +23,11 @@ describe Genomer::RulesDSL do
       @dsl.out_file_name.should == "name"
     end
 
+    it "should include out_dir_name" do
+      @dsl.out_dir_name "name"
+      @dsl.out_dir_name.should == "name"
+    end
+
   end
 
   describe "output types method" do

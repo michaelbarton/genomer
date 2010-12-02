@@ -6,16 +6,21 @@ describe Genomer::RulesDSL do
     @dsl = Genomer::RulesDSL.new
   end
 
-  describe "file location attributes" do
+  describe "file attributes" do
 
-    it "should include scaffold_file" do
+    it "should include scaffold_file location" do
       @dsl.scaffold_file "location"
       @dsl.scaffold_file.should == "location"
     end
 
-    it "should include sequence_file" do
+    it "should include sequence_file location" do
       @dsl.sequence_file "location"
       @dsl.sequence_file.should == "location"
+    end
+
+    it "should include out_file_name" do
+      @dsl.out_file_name "name"
+      @dsl.out_file_name.should == "name"
     end
 
   end

@@ -14,6 +14,11 @@ class Genomer::RulesDSL
     @sequence = location
   end
 
+  def out_file_name(name=nil)
+    return @out_file_name if name.nil?
+    @out_file_name = name
+  end
+
   def output(*types)
     return @types if types.empty?
     @types.concat types

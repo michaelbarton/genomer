@@ -8,39 +8,22 @@ describe Genomer::Runtime do
     @rules   = File.new('Rules','w').path
   end
 
-  describe "when configured on an empty rules file" do
-    it "should return a RulesDSL instance" do
+  describe "when configured" do
+
+    it "should return a RulesDSL instance for an empty Rules file" do
       @runtime.configure(@rules).should be_instance_of(Genomer::RulesDSL)
     end
-  end
 
-  describe "when configured on a filled rules file" do
+    it "should call the required methods for a filled Rules file" do
+      @methods = {:m1 => 'v1', :m2 => 'v2'}
 
-    before(:each) do
-      @text = {:scaffold_file => 'scaf', :sequence_file => 'seq',
-        :output => 'output'}
-
-      File.open(@rules,'w') do |out|
-        @text.each{|method,value| out.puts("#{method} '#{value}'") }
+      @methods.each do |method,value|
+        File.open(@rules,'a'){|out| out.puts("#{method} '#{value}'")}
+        Genomer::RulesDSL.any_instance.expects(method).with(value)
       end
 
-     @dsl = @runtime.configure(@rules)
-    end
-
-    it "should return a RulesDSL instance" do
+      @dsl = @runtime.configure(@rules)
       @dsl.should be_instance_of(Genomer::RulesDSL)
-    end
-
-    it "should set the scaffold_file location" do
-      @dsl.scaffold_file.should == @text[:scaffold_file]
-    end
-
-    it "should set the scaffold_file location" do
-      @dsl.sequence_file.should == @text[:sequence_file]
-    end
-
-    it "should set the output types" do
-      @dsl.output.first.should == @text[:output]
     end
 
   end

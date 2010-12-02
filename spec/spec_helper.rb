@@ -2,6 +2,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'rspec'
 require 'fakefs/spec_helpers'
+require 'mocha'
 require 'genomer'
 
 # Requires supporting files with custom matchers and macros, etc,
@@ -9,4 +10,5 @@ require 'genomer'
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |config|
+  config.mock_with :mocha
 end

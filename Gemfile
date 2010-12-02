@@ -11,6 +11,7 @@ group :development do
   gem "rspec",    "~> 2.2"
   gem "cucumber", "~> 0.9"
   gem "fakefs",   "~> 0.2"
+  gem "mocha",    "~> 0.9"
 
   # Documentation
   gem "yard",     "~> 0.6"

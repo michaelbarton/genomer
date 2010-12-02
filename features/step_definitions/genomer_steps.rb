@@ -1,6 +1,18 @@
-Given /^the Rules file has the text "([^"]*)"$/ do |contents|
-  @rule_file ||= Tempfile.new('genomer_test')
-  File.open(@rule_file.path,'a'){|out| out.print contents }
+Given /^the Rules file has the text:$/ do |table|
+  @rule_file = Tempfile.new('genomer_test')
+  File.open(@rule_file.path,'a') do |out|
+    table.hashes.each{ |i| out.puts(i['line']) }
+  end
+end
+
+Given /^the scaffold file is called "([^"]*)"$/ do |file|
+  tmp = write_scaffold_file(@entries)
+  FileUtils.mv(tmp,file)
+end
+
+Given /^the sequence file is called "([^"]*)"$/ do |file|
+  tmp = write_sequence_file(@sequences)
+  FileUtils.mv(tmp,file)
 end
 
 When /^the genomer executable is invoked$/ do
@@ -16,7 +28,8 @@ Then /^the file "([^"]*)" should exist$/ do |file|
   File.exists?(file).should be_true
 end
 
-Then /^the file "([^"]*)" should contain the sequence "([^"]*)"$/ do |f,s|
-  seq = Bio::FlatFile.auto(f).first.sequence
-  s.should == seq
+Then /^"([^"]*)" should contain the sequence "([^"]*)"$/ do |file,seq|
+  Bio::FlatFile.open(Bio::FastaFormat, file) do |ff|
+    ff.first.seq.should == seq
+  end
 end

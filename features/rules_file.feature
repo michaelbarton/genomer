@@ -3,6 +3,7 @@ Feature: The Rules file
   A user can specify the output in a Rules file
 
   Scenario: Parsing an empty Rules file
-    Given the Rules file has the text ""
+    Given the Rules file has the text:
+      | line |
     When the genomer executable is invoked
     Then genomer should exit without any error

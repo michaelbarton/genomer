@@ -29,7 +29,7 @@ Then /^the file "([^"]*)" should exist$/ do |file|
 end
 
 Then /^"([^"]*)" should contain the sequence "([^"]*)"$/ do |file,seq|
-  Bio::FlatFile.open(Bio::FastaFormat, file) do |ff|
-    ff.first.seq.should == seq
+  Bio::FlatFile.auto(file) do |ff|
+    ff.first.seq.upcase.should == seq.upcase
   end
 end

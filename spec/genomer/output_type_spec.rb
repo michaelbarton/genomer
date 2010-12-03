@@ -41,4 +41,12 @@ describe Genomer::OutputType do
 
   end
 
+  describe "the sequence method" do
+    subject do
+      rules = simple_rules [{'name' => 'seq1', 'nucleotides' => 'ATGC' }]
+      Genomer::OutputType.new(rules)
+    end
+    its(:sequence){should == 'ATGC' }
+  end
+
 end

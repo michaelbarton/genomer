@@ -15,5 +15,14 @@ class Genomer::OutputType
     @rules.out_dir_name ? File.join(@rules.out_dir_name,file) : file
   end
 
-  require 'genomer/output_type/fasta'
+  def sequence
+    scaffold = Scaffolder.new(YAML.load(File.read(@rules.scaffold_file)),
+                              @rules.sequence_file)
+    scaffold.inject(String.new){|build,e| build << e.sequence }
+  end
+
+  # Load all output_type ruby files
+  Dir[File.join(File.dirname(__FILE__),'output_type','*.rb')].each do |f|
+    require File.expand_path(f)
+  end
 end

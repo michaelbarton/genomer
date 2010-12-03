@@ -8,6 +8,8 @@ describe Genomer::OutputType::Fasta do
   end
 
   it{ should generate_the_sequence('ATGC') }
+  it{ should generate_the_format_type(:fasta) }
+
   it{ described_class.should define_the_suffix_constant_as('fna') }
   it{ described_class.should subclass_genomer_output_type }
 

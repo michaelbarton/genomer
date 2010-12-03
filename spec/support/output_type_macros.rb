@@ -18,12 +18,20 @@ end
 
 RSpec::Matchers.define :generate_the_sequence do |expected|
   match do |outputter|
-    output = outputter.generate
-    raise ArgumentError.new("Generated output is nil") if output.nil?
-    sequence = Bio::FlatFile.auto(StringIO.new(output)){ |out| out.first.seq }
+    sequence = output_sequence(outputter.generate)
 
     self.instance_variable_set(:@actual, sequence.upcase)
     self.instance_variable_set(:@expected, expected.upcase)
+    actual == expected
+  end
+  diffable
+end
+
+RSpec::Matchers.define :generate_the_format_type do |expected|
+  match do |outputter|
+    format = output_format(outputter.generate)
+
+    self.instance_variable_set(:@actual, format)
     actual == expected
   end
   diffable

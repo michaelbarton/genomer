@@ -9,9 +9,11 @@ RSpec::Matchers.define :subclass_genomer_output_type do
 end
 
 RSpec::Matchers.define :define_the_suffix_constant_as do |expected|
-  match do |actual|
-    actual.const_get('SUFFIX').should == expected
+  match do |a|
+    self.instance_variable_set(:@actual, a.const_get('SUFFIX'))
+    actual == expected
   end
+  diffable
 end
 
 RSpec::Matchers.define :generate_the_sequence do |expected|
@@ -19,6 +21,10 @@ RSpec::Matchers.define :generate_the_sequence do |expected|
     output = outputter.generate
     raise ArgumentError.new("Generated output is nil") if output.nil?
     sequence = Bio::FlatFile.auto(StringIO.new(output)){ |out| out.first.seq }
-    sequence == expected
+
+    self.instance_variable_set(:@actual, sequence.upcase)
+    self.instance_variable_set(:@expected, expected.upcase)
+    actual == expected
   end
+  diffable
 end

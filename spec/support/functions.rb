@@ -26,3 +26,12 @@ def write_scaffold_file(scaffold)
   File.open(file,'w'){|tmp| tmp.print(YAML.dump(scaffold))}
   file
 end
+
+def simple_rules(sequences)
+  rules = Genomer::RulesDSL.new
+  scaffold,sequence = scaffold_and_sequence(sequences)
+
+  rules.scaffold_file scaffold
+  rules.sequence_file sequence
+  rules
+end

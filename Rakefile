@@ -14,12 +14,10 @@ Jeweler::Tasks.new do |gem|
   gem.name = "genomer"
   gem.homepage = "http://github.com/michaelbarton/genomer"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Build genome output files}
+  gem.description = %Q{Turns scaffolded contigs and annotations into a genome.}
   gem.email = "mail@michaelbarton.me.uk"
   gem.authors = ["Michael Barton"]
-  #  gem.add_runtime_dependency 'jabber4r', '> 0.1'
-  #  gem.add_development_dependency 'rspec', '> 1.2.3'
 end
 Jeweler::RubygemsDotOrgTasks.new
 

@@ -28,6 +28,11 @@ describe Genomer::RulesDSL do
       @dsl.out_dir_name.should == "name"
     end
 
+    it "should include annotation_file location" do
+      @dsl.annotation_file "location"
+      @dsl.annotation_file.should == "location"
+    end
+
   end
 
   describe "output types method" do

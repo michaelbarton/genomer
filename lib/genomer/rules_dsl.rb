@@ -14,6 +14,11 @@ class Genomer::RulesDSL
     @sequence = location
   end
 
+  def annotation_file(location=nil)
+    return @annotation_file if location.nil?
+    @annotation_file = location
+  end
+
   def out_file_name(name=nil)
     return @out_file_name if name.nil?
     @out_file_name = name

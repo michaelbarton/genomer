@@ -16,6 +16,7 @@ group :development do
 
   # Features
   gem "cucumber", "~> 0.10"
+  gem "aruba",    "~> 0.3"
 
   # Documentation
   gem "yard",     "~> 0.6"

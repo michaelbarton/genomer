@@ -17,3 +17,5 @@ require 'english'
 
 require 'rspec/expectations'
 require 'spec/support/functions'
+
+require 'aruba/cucumber'

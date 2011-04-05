@@ -3,19 +3,30 @@ Feature: Generating fasta output
   A user can use the fasta output option
 
   Scenario: Generating a simple fasta file
-    Given the Rules file has the text:
-      | line                               |
-      | scaffold_file '/tmp/scaffold.yml'  |
-      | sequence_file '/tmp/sequences.fna' |
-      | out_file_name 'genome'             |
-      | out_dir_name '/tmp'                 |
-      | output :fasta                      |
-    And the scaffold is composed of the sequences:
-      | name | nucleotides |
-      | seq  | ATGCC       |
-    And the scaffold file is called "/tmp/scaffold.yml"
-    And the sequence file is called "/tmp/sequences.fna"
-    When the genomer executable is invoked
-    Then genomer should exit without any error
-    And the file "/tmp/genome.fna" should exist
-    And "/tmp/genome.fna" should contain the sequence "ATGCC"
+    Given a file named "scaffold.yml" with:
+      """
+      ---
+        - sequence:
+            source: contig1
+      """
+    Given a file named "sequences.fna" with:
+      """
+      >contig1
+      ATG
+      """
+    Given a file named "Rules" with:
+      """
+      scaffold_file 'scaffold.yml'
+      sequence_file 'sequences.fna'
+      out_file_name 'genome'
+      output :fasta
+      """
+    When I run `genomer Rules`
+    Then the exit status should be 0
+    And a file named "genome.fna" should exist
+    And the file "genome.fna" should contain exactly:
+    """
+    >. 
+    ATG
+
+    """

@@ -4,30 +4,27 @@ class Genomer::RulesDSL
     @types = Array.new
   end
 
-  def scaffold_file(location=nil)
-    return @scaffold if location.nil?
-    @scaffold = location
+  private
+
+  def self.attribute(name)
+    define_method(name) do |*arg|
+      var = "@#{name}"
+      unless arg.first # Is an argument is passed to the method?
+        value = instance_variable_get(var)
+        return value if value
+      end
+      instance_variable_set(var,arg.first)
+    end
   end
 
-  def sequence_file(location=nil)
-    return @sequence if location.nil?
-    @sequence = location
-  end
+  attribute :scaffold_file
+  attribute :sequence_file
+  attribute :annotation_file
 
-  def annotation_file(location=nil)
-    return @annotation_file if location.nil?
-    @annotation_file = location
-  end
+  attribute :out_file_name
+  attribute :out_dir_name
 
-  def out_file_name(name=nil)
-    return @out_file_name if name.nil?
-    @out_file_name = name
-  end
-
-  def out_dir_name(name=nil)
-    return @out_dir_name if name.nil?
-    @out_dir_name = name
-  end
+  public
 
   def output(*types)
     return @types if types.empty?

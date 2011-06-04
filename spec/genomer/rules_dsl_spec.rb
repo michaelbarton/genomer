@@ -50,4 +50,13 @@ describe Genomer::RulesDSL do
 
   end
 
+  describe "genome metadata methods" do
+
+    it "should allow locus to be set" do
+      @dsl.identifier :type
+      @dsl.identifier.should == :type
+    end
+
+  end
+
 end

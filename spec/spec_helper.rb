@@ -6,6 +6,7 @@ require 'fakefs/spec_helpers'
 require 'mocha'
 require 'bio'
 require 'genomer'
+require 'scaffolder/test/helpers'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
@@ -15,4 +16,7 @@ end
 
 RSpec.configure do |config|
   config.mock_with :mocha
+
+  include Scaffolder::Test
+  include Scaffolder::Test::Helpers
 end

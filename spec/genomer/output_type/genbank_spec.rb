@@ -10,15 +10,17 @@ describe Genomer::OutputType::Genbank do
   subject{ described_class.new(rules) }
 
   describe "creating a basic Genbank file" do
-    let(:rules){ simple_rules [{'name' => 'seq1', 'nucleotides' => 'ATGC' }] }
+    let(:rules){ generate_rules [Sequence.new(:name => 'seq1', :sequence => 'ATGC')] }
 
     it{ should generate_the_sequence('ATGC') }
     it{ should generate_the_format_type(:genbank) }
   end
 
   describe "setting the locus in a Genbank file" do
-    let(:rules){ simple_rules [{'name' => 'seq1', 'nucleotides' => 'ATGC',
-      'indentifier' => 'something' }] }
+    let(:rules) do
+      generate_rules([Sequence.new(:name => 'seq1', :sequence => 'ATGC')],
+                    :identifier => 'something')
+    end
 
     its(:generate){ should match(/LOCUS\s+something/)}
   end

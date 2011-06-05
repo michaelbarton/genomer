@@ -3,7 +3,7 @@ require 'spec/spec_helper'
 describe Genomer::OutputType::Genbank do
 
   subject do
-    rules = simple_rules [{'name' => 'seq1', 'nucleotides' => 'ATGC' }]
+    rules = generate_rules [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
     described_class.new(rules)
   end
 

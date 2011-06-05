@@ -3,7 +3,9 @@ class Genomer::OutputType::Genbank < Genomer::OutputType
   SUFFIX = 'gb'
 
   def generate
-    Bio::Sequence.new(sequence).output(:genbank)
+    build = Bio::Sequence.new(sequence)
+    build.entry_id = @rules.identifier if @rules.identifier
+    build.output(:genbank)
   end
 
 end

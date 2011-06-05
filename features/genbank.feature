@@ -58,10 +58,10 @@ Feature: Generating genbank output
       scaffold_file 'scaffold.yml'
       sequence_file 'sequences.fna'
       out_file_name 'genome'
-      locus 'something'
+      identifier 'something'
       output :genbank
       """
     When I run `genomer Rules`
     Then the exit status should be 0
     And a file named "genome.gb" should exist
-    And the file "genome.gb" should match /LOCUS\ssomething/
+    And the file "genome.gb" should match /LOCUS\s+something/

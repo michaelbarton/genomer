@@ -1,4 +1,3 @@
-GENOMER = File.join %W| #{File.dirname(__FILE__)} .. .. bin genomer|
 
 def scaffold_and_sequence(entries)
   scaffold = write_scaffold_file(entries.map do |entry|

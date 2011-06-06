@@ -1,9 +1,11 @@
-def generate_rules(sequences)
-  rules = Genomer::RulesDSL.new
+def generate_rules(sequences,options = Hash.new)
   scaffold,sequence = generate_scaffold_files(sequences)
 
+  rules = Genomer::RulesDSL.new
   rules.scaffold_file scaffold.path
   rules.sequence_file sequence.path
+  options.each{|key,value| rules.send(key,value)}
+
   rules
 end
 

@@ -50,4 +50,18 @@ describe Genomer::RulesDSL do
 
   end
 
+  describe "genome metadata methods" do
+
+    it "should allow identifier to be set" do
+      @dsl.identifier :type
+      @dsl.identifier.should == :type
+    end
+
+    it "should allow description to be set" do
+      @dsl.description :type
+      @dsl.description.should == :type
+    end
+
+  end
+
 end

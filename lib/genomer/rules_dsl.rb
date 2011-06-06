@@ -29,4 +29,14 @@ class Genomer::RulesDSL
     @types.concat types
   end
 
+  def identifier(arg=nil)
+    return @identifier if arg.nil?
+    @identifier = arg
+  end
+
+  def description(arg=nil)
+    return @description if arg.nil?
+    @description = arg
+  end
+
 end

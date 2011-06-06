@@ -16,7 +16,8 @@ Given /^the sequence file is called "([^"]*)"$/ do |file|
 end
 
 When /^the genomer executable is invoked$/ do
-  @clean = system(GENOMER, @rule_file.path)
+  genomer = File.join %W| #{File.dirname(__FILE__)} .. .. bin genomer|
+  @clean = system(genomer, @rule_file.path)
 end
 
 Then /^genomer should exit without any error$/ do

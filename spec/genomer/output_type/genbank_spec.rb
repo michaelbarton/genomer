@@ -25,4 +25,13 @@ describe Genomer::OutputType::Genbank do
     its(:generate){ should match(/LOCUS\s+something/)}
   end
 
+  describe "setting the definition in a Genbank file" do
+    let(:rules) do
+      generate_rules([Sequence.new(:name => 'seq1', :sequence => 'ATGC')],
+                    :description => 'something')
+    end
+
+    its(:generate){ should match(/DEFINITION\s+something/)}
+  end
+
 end

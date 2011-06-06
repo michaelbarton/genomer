@@ -33,4 +33,10 @@ class Genomer::RulesDSL
     return @identifier if arg.nil?
     @identifier = arg
   end
+
+  def description(arg=nil)
+    return @description if arg.nil?
+    @description = arg
+  end
+
 end

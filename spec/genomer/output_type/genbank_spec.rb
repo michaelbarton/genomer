@@ -18,7 +18,7 @@ describe Genomer::OutputType::Genbank do
 
   describe "setting the locus in a Genbank file" do
     let(:rules) do
-      generate_rules([Sequence.new(:name => 'seq1', :sequence => 'ATGC')],
+      generate_rules([Sequence.new(:name => 'seq1', :sequence => 'ATGC')],[],
                     :identifier => 'something')
     end
 
@@ -27,7 +27,7 @@ describe Genomer::OutputType::Genbank do
 
   describe "setting the definition in a Genbank file" do
     let(:rules) do
-      generate_rules([Sequence.new(:name => 'seq1', :sequence => 'ATGC')],
+      generate_rules([Sequence.new(:name => 'seq1', :sequence => 'ATGC')],[],
                     :description => 'something')
     end
 

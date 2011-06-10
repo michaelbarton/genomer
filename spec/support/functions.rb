@@ -1,9 +1,13 @@
-def generate_rules(sequences,options = Hash.new)
+def generate_rules(sequences,annotations = [],options = Hash.new)
   scaffold,sequence = generate_scaffold_files(sequences)
 
   rules = Genomer::RulesDSL.new
-  rules.scaffold_file scaffold.path
-  rules.sequence_file sequence.path
+  rules.scaffold_file   scaffold.path
+  rules.sequence_file   sequence.path
+
+  annotation = generate_gff3_file(annotations)
+  rules.annotation_file annotation.path
+
   options.each{|key,value| rules.send(key,value)}
 
   rules

@@ -12,14 +12,7 @@ class Genomer::RulesDSL
 
   adorn :output, :array => true
 
-  def identifier(arg=nil)
-    return @identifier if arg.nil?
-    @identifier = arg
-  end
-
-  def description(arg=nil)
-    return @description if arg.nil?
-    @description = arg
-  end
+  adorn :identifier
+  adorn :description
 
 end

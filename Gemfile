@@ -16,6 +16,7 @@ group :development do
   gem "fakefs",                   "~> 0.2"
   gem "mocha",                    "~> 0.9"
   gem "scaffolder-test-helpers",  "~> 0.4"
+  gem "heredoc_unindent",         "~> 1.1"
 
   # Features
   gem "cucumber", "~> 0.10"

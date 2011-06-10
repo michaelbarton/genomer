@@ -7,23 +7,23 @@ describe Genomer::OutputType::Table do
     it{ described_class.should subclass_genomer_output_type }
   end
 
-  subject{ described_class.new(rules).generate }
-
-  let(:sequences) do
-    [Sequence.new(:name => 'seq1', :sequence => 'ATG')]
-  end
-
-
   describe "#generate" do
+
+    subject do
+      described_class.new(generate_rules(sequences,annotations,metadata)).generate
+    end
+
+    let(:sequences){ [Sequence.new(:name => 'seq1', :sequence => 'ATG')] }
+    let(:metadata){ {:identifier => 'something'} }
 
     context "using an empty annotation set" do
 
-      let(:rules) do
-        generate_rules(sequences)
+      let(:annotations) do
+        []
       end
 
       it "should generate an empty annotation table" do
-        subject.should == ">Feature\n"
+        subject.should == ">Feature\tsomething\tannotation_table\n"
       end
 
     end

@@ -2,7 +2,7 @@ class Genomer::OutputType::Table < Genomer::OutputType
   SUFFIX = 'tbl'
 
   def generate
-    ">Feature\n"
+    ">Feature\t#{@rules.identifier}\tannotation_table\n"
   end
 
 end

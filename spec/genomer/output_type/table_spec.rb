@@ -44,6 +44,22 @@ describe Genomer::OutputType::Table do
 
     end
 
+    context "with a reversed annotation" do
+
+      let(:annotations) do
+        [Annotation.new(:seqname => 'seq1',:start   => 1, :end => 3,
+                        :strand  => '-',   :feature => 'CDS')]
+      end
+
+      it "should generate an empty annotation table" do
+        subject.should == <<-EOS.unindent
+          >Feature\tsomething\tannotation_table
+          3\t1\tCDS
+        EOS
+      end
+
+    end
+
   end
 
 end

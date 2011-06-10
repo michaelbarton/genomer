@@ -49,4 +49,50 @@ describe Genomer::OutputType do
     its(:sequence){should == 'ATGC' }
   end
 
+  describe "#annotations" do
+
+    subject{ Genomer::OutputType.new(rules) }
+
+    context "when there is no annotations file set" do
+
+      let(:rules) do
+        rules = generate_rules [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
+        rules.annotation_file nil
+        rules
+      end
+
+      its(:annotations){should == [] }
+
+    end
+
+    context "when the annotations file is empty" do
+
+      let(:rules) do
+        rules = generate_rules [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
+        rules
+      end
+
+      its(:annotations){should == [] }
+
+    end
+
+    context "when the annotations file contains an annotation" do
+
+      let(:annotations) do
+        [Annotation.new(:seqname => 'seq1',:start => 1, :end => 3,
+                        :feature => 'CDS')]
+      end
+
+      let(:rules) do
+        generate_rules(
+          [Sequence.new(:name => 'seq1', :sequence => 'ATGC')],
+          annotations)
+      end
+
+      its(:annotations){should_not be_empty }
+
+    end
+
+  end
+
 end

@@ -1,8 +1,9 @@
 source "http://rubygems.org"
 
 group :default do
-  gem "bio",        "~> 1.4"
-  gem "scaffolder", "~> 0.4"
+  gem "bio",               "~> 1.4"
+  gem "scaffolder",        "~> 0.4"
+  gem "classy-adornments", "~> 0.2"
 end
 
 group :development do

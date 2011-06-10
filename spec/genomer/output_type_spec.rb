@@ -8,7 +8,7 @@ describe Genomer::OutputType do
     Genomer::OutputType[:type].should == Genomer::OutputType::Type
   end
 
-  describe "output file method" do
+  describe "#file" do
 
     before(:each) do
       @rules = Genomer::RulesDSL.new
@@ -41,7 +41,7 @@ describe Genomer::OutputType do
 
   end
 
-  describe "the sequence method" do
+  describe "#sequence" do
     subject do
       rules = generate_rules [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
       Genomer::OutputType.new(rules)

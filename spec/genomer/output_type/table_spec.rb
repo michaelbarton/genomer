@@ -60,6 +60,23 @@ describe Genomer::OutputType::Table do
 
     end
 
+    context "with an annotation with attributes" do
+
+      let(:annotations) do
+        [Annotation.new(:seqname => 'seq1',:start => 1, :end => 3,
+                        :feature => 'CDS', :attributes => {'ID' => 'gene1'})]
+      end
+
+      it "should generate the expected annotation table" do
+        subject.should == <<-EOS.unindent
+          >Feature\tsomething\tannotation_table
+          1\t3\tCDS
+          \t\t\tID\tgene1
+        EOS
+      end
+
+    end
+
   end
 
 end

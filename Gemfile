@@ -15,7 +15,7 @@ group :development do
   gem "rspec",                    "~> 2.5"
   gem "fakefs",                   "~> 0.2"
   gem "mocha",                    "~> 0.9"
-  gem "scaffolder-test-helpers",  "~> 0.4"
+  gem "scaffolder-test-helpers",  ">= 0.4.1"
   gem "heredoc_unindent",         "~> 1.1"
 
   # Features

@@ -89,7 +89,7 @@ Feature: Generating annotation table output
     Given a file named "annotations.gff" with:
       """
       ##gff-version 3
-      contig1	.	CDS	1	3	.	-	1	.ID=gene
+      contig1	.	CDS	1	3	.	-	1	ID=gene1
       """
     Given a file named "Rules" with:
       """

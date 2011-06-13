@@ -18,7 +18,7 @@ describe Genomer::OutputType::Table do
                                    :start => 1, :end => 3,:feature => 'CDS')
     end
 
-    let(:sequences){ [Sequence.new(:name => 'seq1', :sequence => 'ATG')] }
+    let(:sequences){ [Sequence.new(:name => 'seq1', :sequence => 'ATGATG')] }
     let(:metadata){ {:identifier => 'something'} }
 
     context "using an empty annotation set" do
@@ -74,6 +74,22 @@ describe Genomer::OutputType::Table do
           >Feature\tsomething\tannotation_table
           1\t3\tCDS
           \t\t\tID\tgene1
+        EOS
+      end
+
+    end
+
+    context "with two annotations" do
+
+      let(:annotations) do
+        [@annotation,@annotation.clone.start(4).end(6)]
+      end
+
+      it "should generate the expected annotation table" do
+        subject.should == <<-EOS.unindent
+          >Feature\tsomething\tannotation_table
+          1\t3\tCDS
+          4\t6\tCDS
         EOS
       end
 

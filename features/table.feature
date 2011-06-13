@@ -2,7 +2,7 @@ Feature: Generating annotation table output
   In order to submit genome annotations
   A user can generate the genbank annotation table format
 
-  Scenario: Generating a simple table file
+  Scenario: Generating a table file from a single annotation
     Given a file named "scaffold.yml" with:
       """
       ---
@@ -12,19 +12,20 @@ Feature: Generating annotation table output
     Given a file named "sequences.fna" with:
       """
       >contig1
-      ATG
+      AAAAATTTTTGGGGGCCCCC
       """
     Given a file named "annotations.gff" with:
       """
       ##gff-version 3
-      contig1	.	CDS	1	3	.	+	1	ID=gene1
+      contig1	.	CDS	1	3	.	+	1	.
       """
     Given a file named "Rules" with:
       """
       scaffold_file 'scaffold.yml'
       sequence_file 'sequences.fna'
-      sequence_file 'annotations.gff'
+      annotation_file 'annotations.gff'
       out_file_name 'genome'
+      identifier 'genome'
       output :table
       """
     When I run `genomer Rules`
@@ -32,7 +33,7 @@ Feature: Generating annotation table output
     And a file named "genome.tbl" should exist
     And the file "genome.tbl" should contain exactly:
     """
-    >Feature pflr124 annotations
+    >Feature	genome	annotation_table
     1	3	CDS
-    			product	gene1
+
     """

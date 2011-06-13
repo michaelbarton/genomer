@@ -1,4 +1,5 @@
 require 'scaffolder'
+require 'scaffolder/annotation_locator'
 
 class Genomer::OutputType
 
@@ -19,6 +20,12 @@ class Genomer::OutputType
     scaffold = Scaffolder.new(YAML.load(File.read(@rules.scaffold_file)),
                               @rules.sequence_file)
     scaffold.inject(String.new){|build,e| build << e.sequence }
+  end
+
+  def annotations
+    return [] unless @rules.annotation_file
+    Scaffolder::AnnotationLocator.new(
+      @rules.scaffold_file,@rules.sequence_file,@rules.annotation_file)
   end
 
   # Load all output_type ruby files

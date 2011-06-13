@@ -13,6 +13,11 @@ describe Genomer::OutputType::Table do
       described_class.new(generate_rules(sequences,annotations,metadata)).generate
     end
 
+    before do
+      @annotation = Annotation.new(:seqname => 'seq1',
+                                   :start => 1, :end => 3,:feature => 'CDS')
+    end
+
     let(:sequences){ [Sequence.new(:name => 'seq1', :sequence => 'ATG')] }
     let(:metadata){ {:identifier => 'something'} }
 
@@ -31,8 +36,7 @@ describe Genomer::OutputType::Table do
     context "with a single annotation" do
 
       let(:annotations) do
-        [Annotation.new(:seqname => 'seq1',:start => 1, :end => 3,
-                        :feature => 'CDS')]
+        [@annotation]
       end
 
       it "should generate the expected annotation table" do
@@ -47,8 +51,7 @@ describe Genomer::OutputType::Table do
     context "with a reversed annotation" do
 
       let(:annotations) do
-        [Annotation.new(:seqname => 'seq1',:start   => 1, :end => 3,
-                        :strand  => '-',   :feature => 'CDS')]
+        [@annotation.clone.strand('-')]
       end
 
       it "should generate the expected annotation table" do
@@ -63,8 +66,7 @@ describe Genomer::OutputType::Table do
     context "with an annotation with attributes" do
 
       let(:annotations) do
-        [Annotation.new(:seqname => 'seq1',:start => 1, :end => 3,
-                        :feature => 'CDS', :attributes => {'ID' => 'gene1'})]
+        [@annotation.clone.attributes({'ID' => 'gene1'})]
       end
 
       it "should generate the expected annotation table" do

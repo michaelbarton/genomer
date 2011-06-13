@@ -1,16 +1,17 @@
 class Genomer::OutputType::Table < Genomer::OutputType
   SUFFIX = 'tbl'
 
+  DELIMITER = "\t"
+  INDENT    = DELIMITER * 2
+
   def generate
-    out = ">Feature\t#{@rules.identifier}\tannotation_table\n"
+    out = Array.new
+    out << %W|>Feature #{@rules.identifier} annotation_table|
     annotations.each do |annotation|
-      out << map_annotation(annotation) * "\t"
-      out << "\n"
-      annotation.attributes.each do |attr|
-        out << "\t\t\t#{attr.first}\t#{attr.last}\n"
-      end
+      out << map_annotation(annotation)
+      annotation.attributes.each{|attr| out << attr.unshift(INDENT)}
     end
-    out
+    out.map{|line| line * DELIMITER} * "\n" + "\n"
   end
 
   def map_annotation(annotation)

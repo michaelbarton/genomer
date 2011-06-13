@@ -35,7 +35,7 @@ describe Genomer::OutputType::Table do
                         :feature => 'CDS')]
       end
 
-      it "should generate an empty annotation table" do
+      it "should generate the expected annotation table" do
         subject.should == <<-EOS.unindent
           >Feature\tsomething\tannotation_table
           1\t3\tCDS
@@ -51,7 +51,7 @@ describe Genomer::OutputType::Table do
                         :strand  => '-',   :feature => 'CDS')]
       end
 
-      it "should generate an empty annotation table" do
+      it "should generate the expected annotation table" do
         subject.should == <<-EOS.unindent
           >Feature\tsomething\tannotation_table
           3\t1\tCDS

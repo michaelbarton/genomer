@@ -76,6 +76,23 @@ describe Genomer::RulesDSL do
       @dsl.map_annotations.should == :type
     end
 
+    it "should allow map_annotations to be set" do
+      @dsl.annotation_id_field :type
+      @dsl.annotation_id_field.should == :type
+    end
+
+    it "should allow reset_annotation_id_field to be set as a boolean" do
+      @dsl.reset_annotation_id_field?.should == false
+      @dsl.reset_annotation_id_field
+      @dsl.reset_annotation_id_field?.should == true
+    end
+
+    it "should allow reset_annotation_id_field to be with an arg" do
+      @dsl.reset_annotation_id_field?.should == false
+      @dsl.reset_annotation_id_field true
+      @dsl.reset_annotation_id_field?.should == true
+    end
+
   end
 
 end

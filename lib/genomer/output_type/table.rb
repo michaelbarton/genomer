@@ -43,7 +43,7 @@ class Genomer::OutputType::Table < Genomer::OutputType
   end
 
   def self.reset_id(records,id)
-    records.each_with_index do |record,count|
+    records.sort!{|a,b| a.start <=> b.start }.each_with_index do |record,count|
       index = record.attributes.index{|a| a.first == id}
       record.attributes[index][1]= sprintf("%06d",count+1)
     end

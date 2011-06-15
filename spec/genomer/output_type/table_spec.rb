@@ -215,6 +215,33 @@ describe Genomer::OutputType::Table do
 
     end
 
+    context "passed a multiple unordered annotations" do
+
+      let(:annotations) do
+        a = [
+          @annotation.clone.attributes({'ID' => 'gene3'}).start(7).end(9),
+          @annotation.clone.attributes({'ID' => 'gene2'}).start(4).end(6),
+          @annotation.clone.attributes({'ID' => 'gene1'})
+        ]
+        a.map{|a| a.to_gff3_record}
+      end
+
+      its(:length){should == 3}
+
+      it "should renumber the first annotation" do
+        subject.first.attributes.should == [['ID','000001']]
+        subject.first.start == 1
+        subject.first.end == 3
+      end
+
+      it "should renumber the last annotation" do
+        subject.last.attributes.should == [['ID','000003']]
+        subject.last.start == 7
+        subject.last.end == 9
+      end
+
+    end
+
   end
 
 end

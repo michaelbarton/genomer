@@ -28,6 +28,10 @@ class Genomer::OutputType
       @rules.scaffold_file,@rules.sequence_file,@rules.annotation_file)
   end
 
+  def identifier
+    @rules.identifier
+  end
+
   # Load all output_type ruby files
   Dir[File.join(File.dirname(__FILE__),'output_type','*.rb')].each do |f|
     require File.expand_path(f)

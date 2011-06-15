@@ -95,4 +95,34 @@ describe Genomer::OutputType do
 
   end
 
+  describe "#identifier" do
+
+    subject{ Genomer::OutputType.new(rules) }
+
+    context "when there is no identifier set" do
+
+      let(:rules) do
+        rules = generate_rules [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
+        rules.identifier nil
+        rules
+      end
+
+      its(:identifier){should be_nil }
+
+    end
+
+    context "when the is identifier is set" do
+
+      let(:rules) do
+        rules = generate_rules [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
+        rules.identifier 'something'
+        rules
+      end
+
+      its(:identifier){should == 'something' }
+
+    end
+
+  end
+
 end

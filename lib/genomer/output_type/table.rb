@@ -14,7 +14,7 @@ class Genomer::OutputType::Table < Genomer::OutputType
     end
 
     out = Array.new
-    out << %W|>Feature #{@rules.identifier} annotation_table|
+    out << %W|>Feature #{identifier} annotation_table|
     updated.each do |annotation|
       out << strand(annotation)
       annotation.attributes.each{|attr| out << remap(attr).unshift(INDENT)}

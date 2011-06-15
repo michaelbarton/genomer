@@ -2,15 +2,52 @@ require 'spec/spec_helper'
 
 describe Genomer::OutputType::Fasta do
 
-  subject do
-    rules = generate_rules [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
-    described_class.new(rules)
+
+  describe "class contants" do
+    it{ described_class.should define_the_suffix_constant_as('fna') }
+    it{ described_class.should subclass_genomer_output_type }
   end
 
-  it{ should generate_the_sequence('ATGC') }
-  it{ should generate_the_format_type(:fasta) }
+  describe "#generate" do
 
-  it{ described_class.should define_the_suffix_constant_as('fna') }
-  it{ described_class.should subclass_genomer_output_type }
+    before do
+      @sequence = Sequence.new(:name => 'seq1', :sequence => 'ATGC')
+    end
+
+    subject do
+      described_class.new(rules).generate
+    end
+
+    describe "with a simple sequence" do
+
+      let(:rules) do
+        generate_rules([@sequence])
+      end
+
+      it "should generate the expected fasta" do
+        subject.should == <<-EOS.unindent
+          >. 
+          ATGC
+        EOS
+      end
+
+    end
+
+    describe "with an identifier" do
+
+      let(:rules) do
+        generate_rules([@sequence],[],{:identifier => 'something'})
+      end
+
+      it "should generate the expected fasta" do
+        subject.should == <<-EOS.unindent
+          >something
+          ATGC
+        EOS
+      end
+
+    end
+
+  end
 
 end

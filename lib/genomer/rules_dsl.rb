@@ -15,4 +15,6 @@ class Genomer::RulesDSL
   adorn :identifier
   adorn :description
 
+  adorn :map_annotations
+
 end

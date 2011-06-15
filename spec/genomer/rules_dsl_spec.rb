@@ -69,4 +69,13 @@ describe Genomer::RulesDSL do
 
   end
 
+  describe "annotation methods" do
+
+    it "should allow map_annotations to be set" do
+      @dsl.map_annotations :type
+      @dsl.map_annotations.should == :type
+    end
+
+  end
+
 end

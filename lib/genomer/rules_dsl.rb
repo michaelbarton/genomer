@@ -16,5 +16,6 @@ class Genomer::RulesDSL
   adorn :description
 
   adorn :map_annotations
+  adorn :annotation_id_field
 
 end

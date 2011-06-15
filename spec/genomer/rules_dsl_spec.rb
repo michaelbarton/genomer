@@ -76,6 +76,11 @@ describe Genomer::RulesDSL do
       @dsl.map_annotations.should == :type
     end
 
+    it "should allow map_annotations to be set" do
+      @dsl.annotation_id_field :type
+      @dsl.annotation_id_field.should == :type
+    end
+
   end
 
 end

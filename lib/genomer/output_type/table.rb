@@ -4,6 +4,8 @@ class Genomer::OutputType::Table < Genomer::OutputType
   DELIMITER = "\t"
   INDENT    = DELIMITER * 2
 
+  ID_FIELD  = 'locus_tag'
+
   def generate
     out = Array.new
     out << %W|>Feature #{@rules.identifier} annotation_table|
@@ -26,10 +28,12 @@ class Genomer::OutputType::Table < Genomer::OutputType
 
   def remap(attr)
     if @rules.map_annotations and @rules.map_annotations[attr.first]
-      [@rules.map_annotations[attr.first],attr.last]
-    else
-      attr
+      attr = [@rules.map_annotations[attr.first],attr.last]
     end
+    if @rules.annotation_id_field == attr.first
+      attr = [ID_FIELD,attr.last]
+    end
+    attr
   end
 
 end

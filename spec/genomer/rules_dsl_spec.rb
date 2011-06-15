@@ -93,6 +93,10 @@ describe Genomer::RulesDSL do
       @dsl.reset_annotation_id_field?.should == true
     end
 
+    it "should allow annotation_id_field_prefix to be set" do
+      @dsl.annotation_id_field_prefix :type
+      @dsl.annotation_id_field_prefix.should == :type
+    end
   end
 
 end

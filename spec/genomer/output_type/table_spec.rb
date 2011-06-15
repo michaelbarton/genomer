@@ -18,7 +18,6 @@ describe Genomer::OutputType::Table do
       described_class.new(generate_rules(sequences,annotations,metadata)).generate
     end
 
-
     let(:sequences){ [Sequence.new(:name => 'seq1', :sequence => 'ATGATGATGATG')] }
     let(:metadata){ {:identifier => 'something'} }
 
@@ -163,6 +162,27 @@ describe Genomer::OutputType::Table do
           \t\t\tlocus_tag\t000003
           10\t12\tCDS
           \t\t\tlocus_tag\t000004
+        EOS
+      end
+
+    end
+
+    context "with a single annotation with an annotation prefix specified" do
+
+      let(:metadata) do
+        {:identifier => 'something', :annotation_id_field => 'ID',
+         :annotation_id_field_prefix => 'S_'}
+      end
+
+      let(:annotations) do
+        [@annotation.clone.attributes({'ID' => 'gene1'})]
+      end
+
+      it "should generate the expected annotation table" do
+        subject.should == <<-EOS.unindent
+          >Feature\tsomething\tannotation_table
+          1\t3\tCDS
+          \t\t\tlocus_tag\tS_gene1
         EOS
       end
 

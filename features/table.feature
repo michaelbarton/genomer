@@ -314,3 +314,45 @@ Feature: Generating annotation table output
     			locus_tag	000004
 
     """
+
+  Scenario: Adding a prefix to the annotation id
+    Given a file named "scaffold.yml" with:
+      """
+      ---
+        - sequence:
+            source: contig1
+      """
+    Given a file named "sequences.fna" with:
+      """
+      >contig1
+      AAAAATTTTTGGGGGCCCCC
+      """
+    Given a file named "annotations.gff" with:
+      """
+      ##gff-version 3
+      contig1	.	CDS	1	3	.	+	1	ID=gene1
+      contig1	.	CDS	4	6	.	+	1	ID=gene2
+      """
+    Given a file named "Rules" with:
+      """
+      scaffold_file 'scaffold.yml'
+      sequence_file 'sequences.fna'
+      annotation_file 'annotations.gff'
+      out_file_name 'genome'
+      identifier 'genome'
+      output :table
+      annotation_id_field 'ID'
+      annotation_id_field_prefix 'S_'
+      """
+    When I run `genomer Rules`
+    Then the exit status should be 0
+    And a file named "genome.tbl" should exist
+    And the file "genome.tbl" should contain exactly:
+    """
+    >Feature	genome	annotation_table
+    1	3	CDS
+    			locus_tag	S_gene1
+    4	6	CDS
+    			locus_tag	S_gene2
+
+    """

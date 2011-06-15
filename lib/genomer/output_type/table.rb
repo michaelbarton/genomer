@@ -37,7 +37,7 @@ class Genomer::OutputType::Table < Genomer::OutputType
       attr = [@rules.map_annotations[attr.first],attr.last]
     end
     if @rules.annotation_id_field == attr.first
-      attr = [ID_FIELD,attr.last]
+      attr = [ID_FIELD,@rules.annotation_id_field_prefix.to_s + attr.last]
     end
     attr
   end

@@ -17,6 +17,7 @@ class Genomer::RulesDSL
 
   adorn :map_annotations
   adorn :annotation_id_field
+  adorn :annotation_id_field_prefix
 
   def reset_annotation_id_field?
     ! @reset_annotation_id_field.nil?

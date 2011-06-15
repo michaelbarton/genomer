@@ -18,4 +18,12 @@ class Genomer::RulesDSL
   adorn :map_annotations
   adorn :annotation_id_field
 
+  def reset_annotation_id_field?
+    ! @reset_annotation_id_field.nil?
+  end
+
+  def reset_annotation_id_field(arg = true)
+    @reset_annotation_id_field = arg
+  end
+
 end

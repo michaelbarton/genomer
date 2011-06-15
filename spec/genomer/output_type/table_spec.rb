@@ -95,6 +95,25 @@ describe Genomer::OutputType::Table do
 
     end
 
+    context "with a single annotation with the ID field mapped to locus_tag" do
+
+      let(:metadata) do
+        {:identifier => 'something', :map_annotations => {'ID' => 'locus_tag'}}
+      end
+
+      let(:annotations) do
+        [@annotation.clone.attributes({'ID' => 'gene1'})]
+      end
+
+      it "should generate the expected annotation table" do
+        subject.should == <<-EOS.unindent
+          >Feature\tsomething\tannotation_table
+          1\t3\tCDS
+          \t\t\tlocus_tag\tgene1
+        EOS
+      end
+
+    end
   end
 
 end

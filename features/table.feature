@@ -174,7 +174,7 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      map_annotations {'ID' => 'locus_tag'}
+      map_annotations 'ID' => 'locus_tag'
       """
     When I run `genomer Rules`
     Then the exit status should be 0

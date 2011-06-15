@@ -192,8 +192,25 @@ describe Genomer::OutputType::Table do
         a.map{|a| a.to_gff3_record}
       end
 
-      it "should return an empty array" do
+      it "should start the attribute ID count at zero" do
         subject.first.attributes.should == [['ID','000001']]
+      end
+
+    end
+
+    context "passed a multiple ordered annotations" do
+
+      let(:annotations) do
+        a = [
+          @annotation.clone.attributes({'ID' => 'gene1'}),
+          @annotation.clone.attributes({'ID' => 'gene2'}).start(4).end(6)
+        ]
+        a.map{|a| a.to_gff3_record}
+      end
+
+      it "should consectutively renumber the attributes" do
+        subject[0].attributes.should == [['ID','000001']]
+        subject[1].attributes.should == [['ID','000002']]
       end
 
     end

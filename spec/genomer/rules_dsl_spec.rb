@@ -67,6 +67,11 @@ describe Genomer::RulesDSL do
       @dsl.description.should == :type
     end
 
+    it "should allow metadata to be set" do
+      @dsl.metadata :type
+      @dsl.metadata.should == :type
+    end
+
   end
 
   describe "annotation methods" do

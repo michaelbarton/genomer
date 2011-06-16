@@ -14,6 +14,7 @@ class Genomer::RulesDSL
 
   adorn :identifier
   adorn :description
+  adorn :metadata
 
   adorn :map_annotations
   adorn :annotation_id_field

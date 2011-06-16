@@ -2,7 +2,6 @@ require 'spec/spec_helper'
 
 describe Genomer::OutputType::Fasta do
 
-
   describe "class contants" do
     it{ described_class.should define_the_suffix_constant_as('fna') }
     it{ described_class.should subclass_genomer_output_type }
@@ -42,6 +41,21 @@ describe Genomer::OutputType::Fasta do
       it "should generate the expected fasta" do
         subject.should == <<-EOS.unindent
           >something
+          ATGC
+        EOS
+      end
+
+    end
+
+    describe "with metadata" do
+
+      let(:rules) do
+        generate_rules([@sequence],[],{:metadata => {'something' => 'other'}})
+      end
+
+      it "should generate the expected fasta" do
+        subject.should == <<-EOS.unindent
+          >. [something=other]
           ATGC
         EOS
       end

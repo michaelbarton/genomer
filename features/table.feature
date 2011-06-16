@@ -17,7 +17,7 @@ Feature: Generating annotation table output
     Given a file named "annotations.gff" with:
       """
       ##gff-version 3
-      contig1	.	CDS	1	3	.	+	1	.
+      contig1	.	gene	1	3	.	+	1	.
       """
     Given a file named "Rules" with:
       """
@@ -34,7 +34,7 @@ Feature: Generating annotation table output
     And the file "genome.tbl" should contain exactly:
     """
     >Feature	genome	annotation_table
-    1	3	CDS
+    1	3	gene
 
     """
 
@@ -53,7 +53,7 @@ Feature: Generating annotation table output
     Given a file named "annotations.gff" with:
       """
       ##gff-version 3
-      contig1	.	CDS	1	3	.	-	1	.
+      contig1	.	gene	1	3	.	-	1	.
       """
     Given a file named "Rules" with:
       """
@@ -70,7 +70,7 @@ Feature: Generating annotation table output
     And the file "genome.tbl" should contain exactly:
     """
     >Feature	genome	annotation_table
-    3	1	CDS
+    3	1	gene
 
     """
 
@@ -89,7 +89,7 @@ Feature: Generating annotation table output
     Given a file named "annotations.gff" with:
       """
       ##gff-version 3
-      contig1	.	CDS	1	3	.	-	1	ID=gene1
+      contig1	.	gene	1	3	.	-	1	ID=gene1
       """
     Given a file named "Rules" with:
       """
@@ -106,7 +106,7 @@ Feature: Generating annotation table output
     And the file "genome.tbl" should contain exactly:
     """
     >Feature	genome	annotation_table
-    3	1	CDS
+    3	1	gene
     			ID	gene1
 
     """
@@ -126,8 +126,8 @@ Feature: Generating annotation table output
     Given a file named "annotations.gff" with:
       """
       ##gff-version 3
-      contig1	.	CDS	1	3	.	+	1	
-      contig1	.	CDS	4	6	.	+	1	
+      contig1	.	gene	1	3	.	+	1	
+      contig1	.	gene	4	6	.	+	1	
       """
     Given a file named "Rules" with:
       """
@@ -144,8 +144,8 @@ Feature: Generating annotation table output
     And the file "genome.tbl" should contain exactly:
     """
     >Feature	genome	annotation_table
-    1	3	CDS
-    4	6	CDS
+    1	3	gene
+    4	6	gene
 
     """
 
@@ -164,7 +164,7 @@ Feature: Generating annotation table output
     Given a file named "annotations.gff" with:
       """
       ##gff-version 3
-      contig1	.	CDS	1	3	.	-	1	ID=gene1
+      contig1	.	gene	1	3	.	-	1	ID=gene1
       """
     Given a file named "Rules" with:
       """
@@ -182,7 +182,7 @@ Feature: Generating annotation table output
     And the file "genome.tbl" should contain exactly:
     """
     >Feature	genome	annotation_table
-    3	1	CDS
+    3	1	gene
     			locus_tag	gene1
 
     """
@@ -202,7 +202,7 @@ Feature: Generating annotation table output
     Given a file named "annotations.gff" with:
       """
       ##gff-version 3
-      contig1	.	CDS	1	3	.	-	1	ID=gene1
+      contig1	.	gene	1	3	.	-	1	ID=gene1
       """
     Given a file named "Rules" with:
       """
@@ -220,7 +220,7 @@ Feature: Generating annotation table output
     And the file "genome.tbl" should contain exactly:
     """
     >Feature	genome	annotation_table
-    3	1	CDS
+    3	1	gene
     			locus_tag	gene1
 
     """
@@ -240,8 +240,8 @@ Feature: Generating annotation table output
     Given a file named "annotations.gff" with:
       """
       ##gff-version 3
-      contig1	.	CDS	1	3	.	+	1	ID=gene1
-      contig1	.	CDS	4	6	.	+	1	ID=gene2
+      contig1	.	gene	1	3	.	+	1	ID=gene1
+      contig1	.	gene	4	6	.	+	1	ID=gene2
       """
     Given a file named "Rules" with:
       """
@@ -260,9 +260,9 @@ Feature: Generating annotation table output
     And the file "genome.tbl" should contain exactly:
     """
     >Feature	genome	annotation_table
-    1	3	CDS
+    1	3	gene
     			locus_tag	000001
-    4	6	CDS
+    4	6	gene
     			locus_tag	000002
 
     """
@@ -282,10 +282,10 @@ Feature: Generating annotation table output
     Given a file named "annotations.gff" with:
       """
       ##gff-version 3
-      contig1	.	CDS	10	12	.	+	1	ID=gene4
-      contig1	.	CDS	4	6	.	+	1	ID=gene2
-      contig1	.	CDS	1	3	.	+	1	ID=gene1
-      contig1	.	CDS	7	9	.	+	1	ID=gene3
+      contig1	.	gene	10	12	.	+	1	ID=gene4
+      contig1	.	gene	4	6	.	+	1	ID=gene2
+      contig1	.	gene	1	3	.	+	1	ID=gene1
+      contig1	.	gene	7	9	.	+	1	ID=gene3
       """
     Given a file named "Rules" with:
       """
@@ -304,13 +304,13 @@ Feature: Generating annotation table output
     And the file "genome.tbl" should contain exactly:
     """
     >Feature	genome	annotation_table
-    1	3	CDS
+    1	3	gene
     			locus_tag	000001
-    4	6	CDS
+    4	6	gene
     			locus_tag	000002
-    7	9	CDS
+    7	9	gene
     			locus_tag	000003
-    10	12	CDS
+    10	12	gene
     			locus_tag	000004
 
     """
@@ -330,8 +330,8 @@ Feature: Generating annotation table output
     Given a file named "annotations.gff" with:
       """
       ##gff-version 3
-      contig1	.	CDS	1	3	.	+	1	ID=gene1
-      contig1	.	CDS	4	6	.	+	1	ID=gene2
+      contig1	.	gene	1	3	.	+	1	ID=gene1
+      contig1	.	gene	4	6	.	+	1	ID=gene2
       """
     Given a file named "Rules" with:
       """
@@ -350,9 +350,9 @@ Feature: Generating annotation table output
     And the file "genome.tbl" should contain exactly:
     """
     >Feature	genome	annotation_table
-    1	3	CDS
+    1	3	gene
     			locus_tag	S_gene1
-    4	6	CDS
+    4	6	gene
     			locus_tag	S_gene2
 
     """

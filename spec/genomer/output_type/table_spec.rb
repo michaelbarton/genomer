@@ -4,7 +4,7 @@ describe Genomer::OutputType::Table do
 
   before do
     @annotation = Annotation.new(:seqname => 'seq1',
-                                 :start => 1, :end => 3,:feature => 'CDS')
+                                 :start => 1, :end => 3,:feature => 'gene')
   end
 
   describe "class contants" do
@@ -42,7 +42,7 @@ describe Genomer::OutputType::Table do
       it "should generate the expected annotation table" do
         subject.should == <<-EOS.unindent
           >Feature\tsomething\tannotation_table
-          1\t3\tCDS
+          1\t3\tgene
         EOS
       end
 
@@ -57,7 +57,7 @@ describe Genomer::OutputType::Table do
       it "should generate the expected annotation table" do
         subject.should == <<-EOS.unindent
           >Feature\tsomething\tannotation_table
-          3\t1\tCDS
+          3\t1\tgene
         EOS
       end
 
@@ -72,7 +72,7 @@ describe Genomer::OutputType::Table do
       it "should generate the expected annotation table" do
         subject.should == <<-EOS.unindent
           >Feature\tsomething\tannotation_table
-          1\t3\tCDS
+          1\t3\tgene
           \t\t\tID\tgene1
         EOS
       end
@@ -88,8 +88,8 @@ describe Genomer::OutputType::Table do
       it "should generate the expected annotation table" do
         subject.should == <<-EOS.unindent
           >Feature\tsomething\tannotation_table
-          1\t3\tCDS
-          4\t6\tCDS
+          1\t3\tgene
+          4\t6\tgene
         EOS
       end
 
@@ -108,7 +108,7 @@ describe Genomer::OutputType::Table do
       it "should generate the expected annotation table" do
         subject.should == <<-EOS.unindent
           >Feature\tsomething\tannotation_table
-          1\t3\tCDS
+          1\t3\tgene
           \t\t\tother\tgene1
         EOS
       end
@@ -128,7 +128,7 @@ describe Genomer::OutputType::Table do
       it "should generate the expected annotation table" do
         subject.should == <<-EOS.unindent
           >Feature\tsomething\tannotation_table
-          1\t3\tCDS
+          1\t3\tgene
           \t\t\tlocus_tag\tgene1
         EOS
       end
@@ -154,13 +154,13 @@ describe Genomer::OutputType::Table do
       it "should generate the expected annotation table" do
         subject.should == <<-EOS.unindent
           >Feature\tsomething\tannotation_table
-          1\t3\tCDS
+          1\t3\tgene
           \t\t\tlocus_tag\t000001
-          4\t6\tCDS
+          4\t6\tgene
           \t\t\tlocus_tag\t000002
-          7\t9\tCDS
+          7\t9\tgene
           \t\t\tlocus_tag\t000003
-          10\t12\tCDS
+          10\t12\tgene
           \t\t\tlocus_tag\t000004
         EOS
       end
@@ -181,7 +181,7 @@ describe Genomer::OutputType::Table do
       it "should generate the expected annotation table" do
         subject.should == <<-EOS.unindent
           >Feature\tsomething\tannotation_table
-          1\t3\tCDS
+          1\t3\tgene
           \t\t\tlocus_tag\tS_gene1
         EOS
       end

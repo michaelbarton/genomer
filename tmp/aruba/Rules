@@ -1,8 +1,0 @@
-scaffold_file 'scaffold.yml'
-sequence_file 'sequences.fna'
-annotation_file 'annotations.gff'
-out_file_name 'genome'
-identifier 'genome'
-output :table
-annotation_id_field 'ID'
-annotation_id_field_prefix 'S_'

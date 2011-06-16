@@ -399,3 +399,175 @@ Feature: Generating annotation table output
     			locus_tag	S_000002
 
     """
+
+  Scenario: A CDS annotation
+    Given a file named "scaffold.yml" with:
+      """
+      ---
+        - sequence:
+            source: contig1
+      """
+    Given a file named "sequences.fna" with:
+      """
+      >contig1
+      AAAAATTTTTGGGGGCCCCC
+      """
+    Given a file named "annotations.gff" with:
+      """
+      ##gff-version 3
+      contig1	.	gene	1	3	.	+	1	ID=gene1
+      contig1	.	mRNA	1	3	.	+	1	ID=mrna1;Parent=gene1
+      contig1	.	CDS	1	3	.	+	1	ID=cds1;Parent=mrna1
+      """
+    Given a file named "Rules" with:
+      """
+      scaffold_file 'scaffold.yml'
+      sequence_file 'sequences.fna'
+      annotation_file 'annotations.gff'
+      out_file_name 'genome'
+      identifier 'genome'
+      output :table
+      annotation_id_field 'ID'
+      """
+    When I run `genomer Rules`
+    Then the exit status should be 0
+    And a file named "genome.tbl" should exist
+    And the file "genome.tbl" should contain exactly:
+    """
+    >Feature	genome	annotation_table
+    1	3	gene
+    			locus_tag	gene1
+    1	3	CDS
+    			protein_id	gnl|ncbi|gene1
+
+    """
+
+  Scenario: A CDS annotation with the ID prefixed
+    Given a file named "scaffold.yml" with:
+      """
+      ---
+        - sequence:
+            source: contig1
+      """
+    Given a file named "sequences.fna" with:
+      """
+      >contig1
+      AAAAATTTTTGGGGGCCCCC
+      """
+    Given a file named "annotations.gff" with:
+      """
+      ##gff-version 3
+      contig1	.	gene	1	3	.	+	1	ID=gene1
+      contig1	.	mRNA	1	3	.	+	1	ID=mrna1;Parent=gene1
+      contig1	.	CDS	1	3	.	+	1	ID=cds1;Parent=mrna1
+      """
+    Given a file named "Rules" with:
+      """
+      scaffold_file 'scaffold.yml'
+      sequence_file 'sequences.fna'
+      annotation_file 'annotations.gff'
+      out_file_name 'genome'
+      identifier 'genome'
+      output :table
+      annotation_id_field 'ID'
+      annotation_id_field_prefix 'S_'
+      """
+    When I run `genomer Rules`
+    Then the exit status should be 0
+    And a file named "genome.tbl" should exist
+    And the file "genome.tbl" should contain exactly:
+    """
+    >Feature	genome	annotation_table
+    1	3	gene
+    			locus_tag	S_gene1
+    1	3	CDS
+    			protein_id	gnl|ncbi|S_gene1
+
+    """
+
+  Scenario: A CDS annotation with the ID reset
+    Given a file named "scaffold.yml" with:
+      """
+      ---
+        - sequence:
+            source: contig1
+      """
+    Given a file named "sequences.fna" with:
+      """
+      >contig1
+      AAAAATTTTTGGGGGCCCCC
+      """
+    Given a file named "annotations.gff" with:
+      """
+      ##gff-version 3
+      contig1	.	gene	1	3	.	+	1	ID=gene1
+      contig1	.	mRNA	1	3	.	+	1	ID=mrna1;Parent=gene1
+      contig1	.	CDS	1	3	.	+	1	ID=cds1;Parent=mrna1
+      """
+    Given a file named "Rules" with:
+      """
+      scaffold_file 'scaffold.yml'
+      sequence_file 'sequences.fna'
+      annotation_file 'annotations.gff'
+      out_file_name 'genome'
+      identifier 'genome'
+      output :table
+      annotation_id_field 'ID'
+      reset_annotation_id_field
+      """
+    When I run `genomer Rules`
+    Then the exit status should be 0
+    And a file named "genome.tbl" should exist
+    And the file "genome.tbl" should contain exactly:
+    """
+    >Feature	genome	annotation_table
+    1	3	gene
+    			locus_tag	000001
+    1	3	CDS
+    			protein_id	gnl|ncbi|000001
+
+    """
+
+  Scenario: A CDS annotation with the ID reset and prefixed
+    Given a file named "scaffold.yml" with:
+      """
+      ---
+        - sequence:
+            source: contig1
+      """
+    Given a file named "sequences.fna" with:
+      """
+      >contig1
+      AAAAATTTTTGGGGGCCCCC
+      """
+    Given a file named "annotations.gff" with:
+      """
+      ##gff-version 3
+      contig1	.	gene	1	3	.	+	1	ID=gene1
+      contig1	.	mRNA	1	3	.	+	1	ID=mrna1;Parent=gene1
+      contig1	.	CDS	1	3	.	+	1	ID=cds1;Parent=mrna1
+      """
+    Given a file named "Rules" with:
+      """
+      scaffold_file 'scaffold.yml'
+      sequence_file 'sequences.fna'
+      annotation_file 'annotations.gff'
+      out_file_name 'genome'
+      identifier 'genome'
+      output :table
+      annotation_id_field 'ID'
+      annotation_id_field_prefix 'S_'
+      reset_annotation_id_field
+      """
+    When I run `genomer Rules`
+    Then the exit status should be 0
+    And a file named "genome.tbl" should exist
+    And the file "genome.tbl" should contain exactly:
+    """
+    >Feature	genome	annotation_table
+    1	3	gene
+    			locus_tag	S_000001
+    1	3	CDS
+    			protein_id	gnl|ncbi|S_000001
+
+    """

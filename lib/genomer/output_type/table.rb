@@ -1,9 +1,6 @@
 class Genomer::OutputType::Table < Genomer::OutputType
   SUFFIX = 'tbl'
 
-  DELIMITER = "\t"
-  INDENT    = DELIMITER * 2
-
   ID_FIELD  = 'locus_tag'
 
   def generate
@@ -13,16 +10,23 @@ class Genomer::OutputType::Table < Genomer::OutputType
       updated = self.class.reset_id(updated,@rules.annotation_id_field)
     end
 
-    out = Array.new
-    out << %W|>Feature #{identifier} annotation_table|
-    updated.each do |annotation|
-      out << strand(annotation)
-      annotation.attributes.each{|attr| out << remap(attr).unshift(INDENT)}
-    end
-    out.map{|line| line * DELIMITER} * "\n" + "\n"
+    render updated
   end
 
   private
+
+  def render(annotations)
+    delimiter = "\t"
+    indent    = delimiter * 2
+
+    out = Array.new
+    out << %W|>Feature #{identifier} annotation_table|
+    annotations.each do |annotation|
+      out << strand(annotation)
+      annotation.attributes.each{|attr| out << remap(attr).unshift(indent)}
+    end
+    out.map{|line| line * delimiter} * "\n" + "\n"
+  end
 
   def strand(annotation)
     if annotation.strand == '+'

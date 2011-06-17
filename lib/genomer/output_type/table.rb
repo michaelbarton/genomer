@@ -15,27 +15,31 @@ class Genomer::OutputType::Table < Genomer::OutputType
 
   private
 
-  def prefix_annotation_id_field
+  def remap_attributes
     @annotations.each do |annotation|
-      annotation.attributes.map! do |attr|
-        if @rules.annotation_id_field == attr.first
-          [ID_FIELD,@rules.annotation_id_field_prefix.to_s + attr.last]
-        else
-          attr
-        end
+      annotation.attributes.map! do |attribute|
+        yield attribute
+      end
+    end
+  end
+
+  def prefix_annotation_id_field
+    remap_attributes do |attr|
+      if @rules.annotation_id_field == attr.first
+        [ID_FIELD,@rules.annotation_id_field_prefix.to_s + attr.last]
+      else
+        attr
       end
     end
   end
 
   def remap_annotation_fields
     if @rules.map_annotations
-      @annotations.each do |annotation|
-        annotation.attributes.map! do |attr|
-          if @rules.map_annotations[attr.first]
-            attr = [@rules.map_annotations[attr.first],attr.last]
-          else
-            attr
-          end
+      remap_attributes do |attr|
+        if @rules.map_annotations[attr.first]
+          attr = [@rules.map_annotations[attr.first],attr.last]
+        else
+          attr
         end
       end
     end

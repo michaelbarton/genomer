@@ -6,13 +6,26 @@ class Genomer::OutputType::Table < Genomer::OutputType
   def generate
     remap_annotation_fields
     reset_annotation_id_field
+    prefix_annotation_id_field
+
     complement_reverse_strand_annotations
-    remap_annotation_attributes
 
     render @annotations
   end
 
   private
+
+  def prefix_annotation_id_field
+    @annotations.each do |annotation|
+      annotation.attributes.map! do |attr|
+        if @rules.annotation_id_field == attr.first
+          [ID_FIELD,@rules.annotation_id_field_prefix.to_s + attr.last]
+        else
+          attr
+        end
+      end
+    end
+  end
 
   def remap_annotation_fields
     if @rules.map_annotations
@@ -38,14 +51,6 @@ class Genomer::OutputType::Table < Genomer::OutputType
     @annotations.each{|i| i.reverse if i.negative_strand? }
   end
 
-  def remap_annotation_attributes
-    @annotations.each do |annotation|
-      annotation.attributes.map! do |attribute|
-        remap attribute
-      end
-    end
-  end
-
   def render(annotations)
     delimiter = "\t"
     indent    = delimiter * 2
@@ -57,13 +62,6 @@ class Genomer::OutputType::Table < Genomer::OutputType
       annotation.attributes.each{|attr| out << attr.unshift(indent)}
     end
     out.map{|line| line * delimiter} * "\n" + "\n"
-  end
-
-  def remap(attr)
-    if @rules.annotation_id_field == attr.first
-      attr = [ID_FIELD,@rules.annotation_id_field_prefix.to_s + attr.last]
-    end
-    attr
   end
 
   def self.reset_id(records,id)

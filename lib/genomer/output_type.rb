@@ -9,6 +9,7 @@ class Genomer::OutputType
 
   def initialize(rules)
     @rules = rules
+    @annotations = annotations
   end
 
   def file

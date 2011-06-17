@@ -4,30 +4,27 @@ class Genomer::OutputType::Table < Genomer::OutputType
   ID_FIELD  = 'locus_tag'
 
   def generate
+    reset_annotation_id_field
+    complement_reverse_strand_annotations
+    remap_annotation_attributes
 
-    updated = annotations
-
-    reset_annotation_id_field updated
-    complement_reverse_strand_annotations updated
-    remap_annotation_attributes updated
-
-    render updated
+    render @annotations
   end
 
   private
 
-  def reset_annotation_id_field(annotations)
+  def reset_annotation_id_field
     if @rules.reset_annotation_id_field?
-      self.class.reset_id(annotations,@rules.annotation_id_field)
+      self.class.reset_id(@annotations,@rules.annotation_id_field)
     end
   end
 
-  def complement_reverse_strand_annotations(annotations)
-    annotations.each{|i| i.reverse if i.negative_strand? }
+  def complement_reverse_strand_annotations
+    @annotations.each{|i| i.reverse if i.negative_strand? }
   end
 
-  def remap_annotation_attributes(annotations)
-    annotations.each do |annotation|
+  def remap_annotation_attributes
+    @annotations.each do |annotation|
       annotation.attributes.map! do |attribute|
         remap attribute
       end

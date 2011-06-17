@@ -10,10 +10,16 @@ class Genomer::OutputType::Table < Genomer::OutputType
       updated = self.class.reset_id(updated,@rules.annotation_id_field)
     end
 
+    complement_reverse_strand_annotations updated
+
     render updated
   end
 
   private
+
+  def complement_reverse_strand_annotations(annotations)
+    annotations.each{|i| i.reverse if i.negative_strand? }
+  end
 
   def render(annotations)
     delimiter = "\t"
@@ -22,18 +28,10 @@ class Genomer::OutputType::Table < Genomer::OutputType
     out = Array.new
     out << %W|>Feature #{identifier} annotation_table|
     annotations.each do |annotation|
-      out << strand(annotation)
+      out << [annotation.start,annotation.end,annotation.feature]
       annotation.attributes.each{|attr| out << remap(attr).unshift(indent)}
     end
     out.map{|line| line * delimiter} * "\n" + "\n"
-  end
-
-  def strand(annotation)
-    if annotation.strand == '+'
-      [annotation.start,annotation.end,annotation.feature]
-    else
-      [annotation.end,annotation.start,annotation.feature]
-    end
   end
 
   def remap(attr)

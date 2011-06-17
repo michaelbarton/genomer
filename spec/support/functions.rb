@@ -1,4 +1,12 @@
+# Problems with temporary files being unlinked.
+# Manually controlling garbage collection solves
+# this
+GC.disable
+
 def generate_rules(sequences,annotations = [],options = Hash.new)
+
+  GC.start
+
   scaffold,sequence = generate_scaffold_files(sequences)
 
   rules = Genomer::RulesDSL.new

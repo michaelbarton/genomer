@@ -6,10 +6,8 @@ class Genomer::OutputType::Table < Genomer::OutputType
   def generate
 
     updated = annotations
-    if @rules.reset_annotation_id_field?
-      updated = self.class.reset_id(updated,@rules.annotation_id_field)
-    end
 
+    reset_annotation_id_field updated
     complement_reverse_strand_annotations updated
     remap_annotation_attributes updated
 
@@ -17,6 +15,12 @@ class Genomer::OutputType::Table < Genomer::OutputType
   end
 
   private
+
+  def reset_annotation_id_field(annotations)
+    if @rules.reset_annotation_id_field?
+      self.class.reset_id(annotations,@rules.annotation_id_field)
+    end
+  end
 
   def complement_reverse_strand_annotations(annotations)
     annotations.each{|i| i.reverse if i.negative_strand? }

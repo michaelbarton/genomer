@@ -43,11 +43,8 @@ class Genomer::OutputType::Table < Genomer::OutputType
 
   def reset_annotation_id_field
     if @rules.reset_annotation_id_field?
-      count = 0
-      remap_attributes do |attr|
-        if @rules.annotation_id_field == attr.first
-          [attr.first,sprintf("%06d",count+=1)]
-        end
+      @annotations.each_with_index do |annotation,count|
+        annotation.id = sprintf("%06d",count+1)
       end
     end
   end

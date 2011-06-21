@@ -9,7 +9,7 @@ class Genomer::OutputType
 
   def initialize(rules)
     @rules = rules
-    @annotations = annotations
+    @annotations = annotations.sort{|a,b| a.start <=> b.start }
   end
 
   def file

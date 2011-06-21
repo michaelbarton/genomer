@@ -9,7 +9,25 @@ class Genomer::OutputType::Table < Genomer::OutputType
 
     complement_reverse_strand_annotations
 
-    render @annotations
+    render
+  end
+
+  def render
+    delimiter = "\t"
+    indent    = delimiter * 2
+
+    out = [%W|>Feature #{identifier} annotation_table|]
+    @annotations.each do |attn|
+      out << [attn.start,attn.end,attn.feature]
+      attn.attributes.each do |attr|
+        if attr.first == 'ID'
+          out << [indent,ID_FIELD,attr.last]
+        else
+          out << attr.unshift(indent)
+        end
+      end
+    end
+    out.map{|line| line * delimiter} * "\n" + "\n"
   end
 
   private
@@ -32,25 +50,6 @@ class Genomer::OutputType::Table < Genomer::OutputType
 
   def complement_reverse_strand_annotations
     @annotations.each{|i| i.reverse if i.negative_strand? }
-  end
-
-  def render(annotations)
-    delimiter = "\t"
-    indent    = delimiter * 2
-
-    out = Array.new
-    out << %W|>Feature #{identifier} annotation_table|
-    annotations.each do |annotation|
-      out << [annotation.start,annotation.end,annotation.feature]
-      annotation.attributes.each do |attr|
-        if attr.first == 'ID'
-          out << [indent,ID_FIELD,attr.last]
-        else
-          out << attr.unshift(indent)
-        end
-      end
-    end
-    out.map{|line| line * delimiter} * "\n" + "\n"
   end
 
 end

@@ -159,4 +159,99 @@ describe Genomer::OutputType::Table do
 
   end
 
+  describe "#render" do
+
+    subject do
+      described_class.new(generate_rules(sequences,annotations,metadata)).render
+    end
+
+    let(:sequences) do
+      [Sequence.new(:name => 'seq1', :sequence => 'ATG' * 3)]
+    end
+
+    let(:metadata) do
+      {:identifier => 'something'}
+    end
+
+    context "with no annotations" do
+
+      let(:annotations) do
+        []
+      end
+
+      it "should return an empty annotation table" do
+        subject.should == ">Feature\tsomething\tannotation_table\n"
+      end
+
+    end
+
+    context "with gene features: " do
+
+      context "one gene" do
+
+        let(:annotations) do
+          [@annotation]
+        end
+
+        it "should generate the expected annotation table" do
+          subject.should == <<-EOS.unindent
+            >Feature\tsomething\tannotation_table
+            1\t3\tgene
+          EOS
+        end
+
+      end
+
+      context "two genes" do
+
+        let(:annotations) do
+          [@annotation,@annotation.clone.start(4).end(6)]
+        end
+
+        it "should generate the expected annotation table" do
+          subject.should == <<-EOS.unindent
+            >Feature\tsomething\tannotation_table
+            1\t3\tgene
+            4\t6\tgene
+          EOS
+        end
+
+      end
+
+      context "one gene with attributes" do
+
+        let(:annotations) do
+          [@annotation.clone.attributes({'one' => 'two'})]
+        end
+
+        it "should generate the expected annotation table" do
+          subject.should == <<-EOS.unindent
+            >Feature\tsomething\tannotation_table
+            1\t3\tgene
+            \t\t\tone\ttwo
+          EOS
+        end
+
+      end
+
+      context "one gene with an ID attribute" do
+
+        let(:annotations) do
+          [@annotation.clone.attributes({'ID' => 'gene1'})]
+        end
+
+        it "should generate the expected annotation table" do
+          subject.should == <<-EOS.unindent
+            >Feature\tsomething\tannotation_table
+            1\t3\tgene
+            \t\t\tlocus_tag\tgene1
+          EOS
+        end
+
+      end
+
+    end
+
+  end
+
 end

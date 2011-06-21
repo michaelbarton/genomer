@@ -63,6 +63,9 @@ describe Genomer::OutputType do
 
       its(:annotations){should == [] }
 
+      it "should cache the annotations array" do
+        subject.annotations.should equal(subject.annotations)
+      end
     end
 
     context "when the annotations file is empty" do
@@ -73,6 +76,10 @@ describe Genomer::OutputType do
       end
 
       its(:annotations){should == [] }
+
+      it "should cache the annotations array" do
+        subject.annotations.should equal(subject.annotations)
+      end
 
     end
 
@@ -90,6 +97,10 @@ describe Genomer::OutputType do
       end
 
       its(:annotations){should_not be_empty }
+
+      it "should cache the annotations array" do
+        subject.annotations.should equal(subject.annotations)
+      end
 
     end
 

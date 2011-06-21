@@ -24,9 +24,19 @@ class Genomer::OutputType
   end
 
   def annotations
-    return [] unless @rules.annotation_file
-    Scaffolder::AnnotationLocator.new(
-      @rules.scaffold_file,@rules.sequence_file,@rules.annotation_file)
+    if @__annotations__
+      return @__annotations__
+    else
+      if @rules.annotation_file
+        @__annotations__ = Scaffolder::AnnotationLocator.new(
+          @rules.scaffold_file,
+          @rules.sequence_file,
+          @rules.annotation_file)
+      else
+        @__annotations__ = Array.new
+      end
+      return annotations
+    end
   end
 
   def identifier

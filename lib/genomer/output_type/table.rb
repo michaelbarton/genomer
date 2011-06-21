@@ -4,7 +4,7 @@ class Genomer::OutputType::Table < Genomer::OutputType
   ID_FIELD  = 'locus_tag'
 
   def generate
-    reset_annotation_id_field
+    reset_annotation_id_field if @rules.reset_annotation_id_field?
     prefix_annotation_id_field
 
     complement_reverse_strand_annotations
@@ -30,8 +30,6 @@ class Genomer::OutputType::Table < Genomer::OutputType
     out.map{|line| line * delimiter} * "\n" + "\n"
   end
 
-  private
-
   def prefix_annotation_id_field
     if @rules.annotation_id_field_prefix
       annotations.each do |attn|
@@ -41,10 +39,8 @@ class Genomer::OutputType::Table < Genomer::OutputType
   end
 
   def reset_annotation_id_field
-    if @rules.reset_annotation_id_field?
-      annotations.each_with_index do |annotation,count|
-        annotation.id = sprintf("%06d",count+1)
-      end
+    annotations.each_with_index do |annotation,count|
+      annotation.id = sprintf("%06d",count+1)
     end
   end
 

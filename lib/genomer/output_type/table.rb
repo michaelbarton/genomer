@@ -16,8 +16,8 @@ class Genomer::OutputType::Table < Genomer::OutputType
 
   def prefix_annotation_id_field
     if @rules.annotation_id_field_prefix
-      @annotations.each do |annotation|
-        annotation.id = @rules.annotation_id_field_prefix + annotation.id
+      @annotations.each do |attn|
+        attn.id.insert(0,@rules.annotation_id_field_prefix)
       end
     end
   end

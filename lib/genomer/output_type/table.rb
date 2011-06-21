@@ -43,7 +43,12 @@ class Genomer::OutputType::Table < Genomer::OutputType
 
   def reset_annotation_id_field
     if @rules.reset_annotation_id_field?
-      self.class.reset_id(@annotations,@rules.annotation_id_field)
+      count = 0
+      remap_attributes do |attr|
+        if @rules.annotation_id_field == attr.first
+          [attr.first,sprintf("%06d",count+=1)]
+        end
+      end
     end
   end
 
@@ -62,14 +67,6 @@ class Genomer::OutputType::Table < Genomer::OutputType
       annotation.attributes.each{|attr| out << attr.unshift(indent)}
     end
     out.map{|line| line * delimiter} * "\n" + "\n"
-  end
-
-  def self.reset_id(records,id)
-    records.each_with_index do |record,count|
-      index = record.attributes.index{|a| a.first == id}
-      record.attributes[index][1]= sprintf("%06d",count+1)
-    end
-    records
   end
 
 end

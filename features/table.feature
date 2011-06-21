@@ -107,7 +107,7 @@ Feature: Generating annotation table output
     """
     >Feature	genome	annotation_table
     3	1	gene
-    			ID	gene1
+    			locus_tag	gene1
 
     """
 
@@ -149,82 +149,6 @@ Feature: Generating annotation table output
 
     """
 
-  Scenario: Mapping gff attribute fields to table fields
-    Given a file named "scaffold.yml" with:
-      """
-      ---
-        - sequence:
-            source: contig1
-      """
-    Given a file named "sequences.fna" with:
-      """
-      >contig1
-      AAAAATTTTTGGGGGCCCCC
-      """
-    Given a file named "annotations.gff" with:
-      """
-      ##gff-version 3
-      contig1	.	gene	1	3	.	-	1	ID=gene1
-      """
-    Given a file named "Rules" with:
-      """
-      scaffold_file 'scaffold.yml'
-      sequence_file 'sequences.fna'
-      annotation_file 'annotations.gff'
-      out_file_name 'genome'
-      identifier 'genome'
-      output :table
-      map_annotations 'ID' => 'locus_tag'
-      """
-    When I run `genomer Rules`
-    Then the exit status should be 0
-    And a file named "genome.tbl" should exist
-    And the file "genome.tbl" should contain exactly:
-    """
-    >Feature	genome	annotation_table
-    3	1	gene
-    			locus_tag	gene1
-
-    """
-
-  Scenario: Specifying the gene ID field
-    Given a file named "scaffold.yml" with:
-      """
-      ---
-        - sequence:
-            source: contig1
-      """
-    Given a file named "sequences.fna" with:
-      """
-      >contig1
-      AAAAATTTTTGGGGGCCCCC
-      """
-    Given a file named "annotations.gff" with:
-      """
-      ##gff-version 3
-      contig1	.	gene	1	3	.	-	1	ID=gene1
-      """
-    Given a file named "Rules" with:
-      """
-      scaffold_file 'scaffold.yml'
-      sequence_file 'sequences.fna'
-      annotation_file 'annotations.gff'
-      out_file_name 'genome'
-      identifier 'genome'
-      output :table
-      annotation_id_field 'ID'
-      """
-    When I run `genomer Rules`
-    Then the exit status should be 0
-    And a file named "genome.tbl" should exist
-    And the file "genome.tbl" should contain exactly:
-    """
-    >Feature	genome	annotation_table
-    3	1	gene
-    			locus_tag	gene1
-
-    """
-
   Scenario: Reset the gene id numbering at origin
     Given a file named "scaffold.yml" with:
       """
@@ -251,7 +175,6 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      annotation_id_field 'ID'
       reset_annotation_id_field
       """
     When I run `genomer Rules`
@@ -295,7 +218,6 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      annotation_id_field 'ID'
       reset_annotation_id_field
       """
     When I run `genomer Rules`
@@ -341,7 +263,6 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      annotation_id_field 'ID'
       annotation_id_field_prefix 'S_'
       """
     When I run `genomer Rules`
@@ -357,7 +278,7 @@ Feature: Generating annotation table output
 
     """
 
-  Scenario: Adding a and reseting the annotation ID
+  Scenario: Adding a prefix and reseting the annotation ID
     Given a file named "scaffold.yml" with:
       """
       ---
@@ -383,7 +304,6 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      annotation_id_field 'ID'
       annotation_id_field_prefix 'S_'
       reset_annotation_id_field
       """

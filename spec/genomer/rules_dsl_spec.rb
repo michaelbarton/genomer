@@ -76,16 +76,6 @@ describe Genomer::RulesDSL do
 
   describe "annotation methods" do
 
-    it "should allow map_annotations to be set" do
-      @dsl.map_annotations :type
-      @dsl.map_annotations.should == :type
-    end
-
-    it "should allow map_annotations to be set" do
-      @dsl.annotation_id_field :type
-      @dsl.annotation_id_field.should == :type
-    end
-
     it "should allow reset_annotation_id_field to be set as a boolean" do
       @dsl.reset_annotation_id_field?.should == false
       @dsl.reset_annotation_id_field

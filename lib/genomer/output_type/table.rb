@@ -4,7 +4,6 @@ class Genomer::OutputType::Table < Genomer::OutputType
   ID_FIELD  = 'locus_tag'
 
   def generate
-    remap_annotation_fields
     reset_annotation_id_field
     prefix_annotation_id_field
 
@@ -15,28 +14,10 @@ class Genomer::OutputType::Table < Genomer::OutputType
 
   private
 
-  def remap_attributes
-    @annotations.each do |annotation|
-      annotation.attributes.map! do |attribute|
-        yield(attribute) || attribute
-      end
-    end
-  end
-
   def prefix_annotation_id_field
-    remap_attributes do |attr|
-      if @rules.annotation_id_field == attr.first
-        [ID_FIELD,@rules.annotation_id_field_prefix.to_s + attr.last]
-      end
-    end
-  end
-
-  def remap_annotation_fields
-    if @rules.map_annotations
-      remap_attributes do |attr|
-        if @rules.map_annotations[attr.first]
-          [@rules.map_annotations[attr.first],attr.last]
-        end
+    if @rules.annotation_id_field_prefix
+      @annotations.each do |annotation|
+        annotation.id = @rules.annotation_id_field_prefix + annotation.id
       end
     end
   end
@@ -61,7 +42,13 @@ class Genomer::OutputType::Table < Genomer::OutputType
     out << %W|>Feature #{identifier} annotation_table|
     annotations.each do |annotation|
       out << [annotation.start,annotation.end,annotation.feature]
-      annotation.attributes.each{|attr| out << attr.unshift(indent)}
+      annotation.attributes.each do |attr|
+        if attr.first == 'ID'
+          out << [indent,ID_FIELD,attr.last]
+        else
+          out << attr.unshift(indent)
+        end
+      end
     end
     out.map{|line| line * delimiter} * "\n" + "\n"
   end

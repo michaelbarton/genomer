@@ -16,8 +16,6 @@ class Genomer::RulesDSL
   adorn :description
   adorn :metadata
 
-  adorn :map_annotations
-  adorn :annotation_id_field
   adorn :annotation_id_field_prefix
 
   def reset_annotation_id_field?

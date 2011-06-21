@@ -96,27 +96,7 @@ describe Genomer::OutputType::Table do
           subject.should == <<-EOS.unindent
             >Feature\tsomething\tannotation_table
             1\t3\tgene
-            \t\t\tID\tgene1
-          EOS
-        end
-
-      end
-
-      context "one gene with the ID field specified" do
-
-        let(:metadata) do
-          {:identifier => 'something', :annotation_id_field => 'ID'}
-        end
-
-        let(:annotations) do
-          [@annotation.clone.attributes({'ID' => 'gene1'})]
-        end
-
-        it "should generate the expected annotation table" do
-          subject.should == <<-EOS.unindent
-            >Feature\tsomething\tannotation_table
-            1\t3\tgene
-            \t\t\tlocus_tag\tgene1
+            \t\t\t\locus_tag\tgene1
           EOS
         end
 
@@ -125,7 +105,7 @@ describe Genomer::OutputType::Table do
       context "one gene with the ID prefixed" do
 
         let(:metadata) do
-          {:identifier => 'something', :annotation_id_field => 'ID',
+          {:identifier => 'something',
            :annotation_id_field_prefix => 'S_'}
         end
 
@@ -143,30 +123,10 @@ describe Genomer::OutputType::Table do
 
       end
 
-      context "one gene with the ID field mapped to locus_tag" do
-
-        let(:metadata) do
-          {:identifier => 'something', :map_annotations => {'something' => 'other'}}
-        end
-
-        let(:annotations) do
-          [@annotation.clone.attributes({'something' => 'gene1'})]
-        end
-
-        it "should generate the expected annotation table" do
-          subject.should == <<-EOS.unindent
-            >Feature\tsomething\tannotation_table
-            1\t3\tgene
-            \t\t\tother\tgene1
-          EOS
-        end
-
-      end
-
       context "four genes with the the ID reset" do
 
         let(:metadata) do
-          {:identifier => 'something', :annotation_id_field => 'ID',
+          {:identifier => 'something',
             :reset_annotation_id_field => true}
         end
 

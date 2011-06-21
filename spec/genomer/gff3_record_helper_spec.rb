@@ -26,20 +26,4 @@ describe Genomer::GffRecordHelper do
 
   end
 
-  describe "#reverse" do
-
-    subject do
-      Annotation.new(:start => 1,:end => 3).to_gff3_record.reverse
-    end
-
-    it "should reverse the start coordinate" do
-      subject.start.should == 3
-    end
-
-    it "should reverse the stop coordinate" do
-      subject.end.should == 1
-    end
-
-  end
-
 end

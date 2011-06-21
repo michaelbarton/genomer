@@ -67,34 +67,30 @@ describe Genomer::OutputType::Table do
 
       end
 
-      context "one gene with the ID prefixed" do
-
-        let(:metadata) do
-          {:identifier => 'something',
-           :annotation_id_field_prefix => 'S_'}
-        end
-
-        let(:annotations) do
-          [@annotation.clone.attributes({'ID' => 'gene1'})]
-        end
-
-        it "should generate the expected annotation table" do
-          subject.generate.should == <<-EOS.unindent
-            >Feature\tsomething\tannotation_table
-            1\t3\tgene
-            \t\t\tlocus_tag\tS_gene1
-          EOS
-        end
-
-      end
-
     end
 
   end
 
   describe "#reset_annotation_id_field" do
 
-    context "four genes" do
+    let(:annotations) do
+      [
+        @annotation.clone.attributes({'ID' => 'gene1'}),
+        @annotation.clone.attributes({'ID' => 'gene2'}).start(4).end(6),
+        @annotation.clone.attributes({'ID' => 'gene3'}).start(7).end(9),
+        @annotation.clone.attributes({'ID' => 'gene4'}).start(10).end(12)
+      ]
+    end
+
+    it "should update the id field for the annotations" do
+      subject.reset_annotation_id_field
+      ids = subject.annotations.map{|i| i.id}
+      ids.should == ['000001','000002','000003','000004']
+    end
+
+  end
+
+  describe "#prefix_annotation_id_field" do
 
       let(:annotations) do
         [
@@ -105,13 +101,25 @@ describe Genomer::OutputType::Table do
         ]
       end
 
-      it "should update the id field for the annotations" do
-        subject.reset_annotation_id_field
-        ids = subject.annotations.map{|i| i.id}
-        ids.should == ['000001','000002','000003','000004']
+      context "passed nil" do
+
+        it "should update the id field for the annotations" do
+          subject.prefix_annotation_id_field(nil)
+          ids = subject.annotations.map{|i| i.id}
+          ids.should == ["gene1","gene2","gene3","gene4"]
+        end
+
       end
 
-    end
+      context "passed a string" do
+
+        it "should update the id field for the annotations" do
+          subject.prefix_annotation_id_field("S_")
+          ids = subject.annotations.map{|i| i.id}
+          ids.should == ["S_gene1","S_gene2","S_gene3","S_gene4"]
+        end
+
+      end
 
   end
 

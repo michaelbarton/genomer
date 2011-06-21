@@ -18,7 +18,7 @@ class Genomer::OutputType::Table < Genomer::OutputType
   def remap_attributes
     @annotations.each do |annotation|
       annotation.attributes.map! do |attribute|
-        yield attribute
+        yield(attribute) || attribute
       end
     end
   end
@@ -27,8 +27,6 @@ class Genomer::OutputType::Table < Genomer::OutputType
     remap_attributes do |attr|
       if @rules.annotation_id_field == attr.first
         [ID_FIELD,@rules.annotation_id_field_prefix.to_s + attr.last]
-      else
-        attr
       end
     end
   end
@@ -37,9 +35,7 @@ class Genomer::OutputType::Table < Genomer::OutputType
     if @rules.map_annotations
       remap_attributes do |attr|
         if @rules.map_annotations[attr.first]
-          attr = [@rules.map_annotations[attr.first],attr.last]
-        else
-          attr
+          [@rules.map_annotations[attr.first],attr.last]
         end
       end
     end

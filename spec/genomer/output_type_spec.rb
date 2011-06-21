@@ -53,6 +53,16 @@ describe Genomer::OutputType do
 
     subject{ Genomer::OutputType.new(rules) }
 
+    before do
+      @annotation = Annotation.new(:seqname => 'seq1')
+    end
+
+    let(:rules) do
+      generate_rules(
+        [Sequence.new(:name => 'seq1', :sequence => 'ATG' * 4)],
+        annotations)
+    end
+
     context "when there is no annotations file set" do
 
       let(:rules) do
@@ -86,20 +96,51 @@ describe Genomer::OutputType do
     context "when the annotations file contains an annotation" do
 
       let(:annotations) do
-        [Annotation.new(:seqname => 'seq1',:start => 1, :end => 3,
-                        :feature => 'CDS')]
-      end
-
-      let(:rules) do
-        generate_rules(
-          [Sequence.new(:name => 'seq1', :sequence => 'ATGC')],
-          annotations)
+        [@annotation]
       end
 
       its(:annotations){should_not be_empty }
 
       it "should cache the annotations array" do
         subject.annotations.should equal(subject.annotations)
+      end
+
+    end
+
+    context "sorting by start position" do
+
+      let(:annotations) do
+        [@annotation.clone.start(2),@annotation]
+      end
+
+      its(:annotations){should_not be_empty }
+
+      it "should cache the annotations array" do
+        subject.annotations.should equal(subject.annotations)
+      end
+
+      it "return the sorted array of annotations" do
+        subject.annotations.first.start.should == 1
+        subject.annotations.last.start.should == 2
+      end
+
+    end
+
+    context "sorting by start position" do
+
+      let(:annotations) do
+        [@annotation.clone.end(3),@annotation.end(2)]
+      end
+
+      its(:annotations){should_not be_empty }
+
+      it "should cache the annotations array" do
+        subject.annotations.should equal(subject.annotations)
+      end
+
+      it "return the sorted array of annotations" do
+        subject.annotations.first.end.should == 2
+        subject.annotations.last.end.should == 3
       end
 
     end

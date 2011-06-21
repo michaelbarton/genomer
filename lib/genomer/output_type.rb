@@ -28,10 +28,13 @@ class Genomer::OutputType
       return @__annotations__
     else
       if @rules.annotation_file
-        @__annotations__ = Scaffolder::AnnotationLocator.new(
+        unsorted = Scaffolder::AnnotationLocator.new(
           @rules.scaffold_file,
           @rules.sequence_file,
           @rules.annotation_file)
+        @__annotations__ = unsorted.sort_by do |attn|
+          [attn.start,attn.end]
+        end
       else
         @__annotations__ = Array.new
       end

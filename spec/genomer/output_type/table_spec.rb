@@ -28,49 +28,6 @@ describe Genomer::OutputType::Table do
     []
   end
 
-  describe "#generate" do
-
-    let(:metadata) do
-      {:identifier => 'something'}
-    end
-
-    context "with only gene features: " do
-
-      context "one reversed gene" do
-
-        let(:annotations) do
-          [@annotation.clone.strand('-')]
-        end
-
-        it "should generate the expected annotation table" do
-          subject.generate.should == <<-EOS.unindent
-            >Feature\tsomething\tannotation_table
-            3\t1\tgene
-          EOS
-        end
-
-      end
-
-      context "one gene with attributes" do
-
-        let(:annotations) do
-          [@annotation.clone.attributes({'ID' => 'gene1'})]
-        end
-
-        it "should generate the expected annotation table" do
-          subject.generate.should == <<-EOS.unindent
-            >Feature\tsomething\tannotation_table
-            1\t3\tgene
-            \t\t\t\locus_tag\tgene1
-          EOS
-        end
-
-      end
-
-    end
-
-  end
-
   describe "#reset_annotation_id_field" do
 
     let(:annotations) do
@@ -212,6 +169,55 @@ describe Genomer::OutputType::Table do
           EOS
         end
 
+      end
+
+      context "one reversed gene" do
+
+        let(:annotations) do
+          [@annotation.clone.strand('-')]
+        end
+
+        it "should generate the expected annotation table" do
+          subject.should == <<-EOS.unindent
+            >Feature\tsomething\tannotation_table
+            3\t1\tgene
+          EOS
+        end
+
+      end
+
+    end
+
+  end
+
+  describe "#feature_array" do
+
+    subject do
+      described_class.feature_array annotation.to_gff3_record
+    end
+
+    context "a simple annotation" do
+
+      let(:annotation) do
+        @annotation
+      end
+
+      it "should return an array for the annotation" do
+        subject.should == [annotation.start,annotation.end,
+                          annotation.feature]
+      end
+
+    end
+
+    context "a reversed annotation" do
+
+      let(:annotation) do
+        @annotation.clone.strand('-')
+      end
+
+      it "should reverse the starnd and end coordinates" do
+        subject.should == [annotation.end,annotation.start,
+                          annotation.feature]
       end
 
     end

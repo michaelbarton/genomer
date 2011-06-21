@@ -1,4 +1,5 @@
 class Genomer::OutputType::Table < Genomer::OutputType
+
   SUFFIX = 'tbl'
 
   ID_FIELD  = 'locus_tag'
@@ -9,8 +10,6 @@ class Genomer::OutputType::Table < Genomer::OutputType
     end
     prefix_annotation_id_field @rules.annotation_id_field_prefix
 
-    complement_reverse_strand_annotations
-
     render
   end
 
@@ -20,7 +19,7 @@ class Genomer::OutputType::Table < Genomer::OutputType
 
     out = [%W|>Feature #{identifier} annotation_table|]
     annotations.each do |attn|
-      out << [attn.start,attn.end,attn.feature]
+      out << self.class.feature_array(attn)
       attn.attributes.each do |attr|
         if attr.first == 'ID'
           out << [indent,ID_FIELD,attr.last]
@@ -43,8 +42,12 @@ class Genomer::OutputType::Table < Genomer::OutputType
     end
   end
 
-  def complement_reverse_strand_annotations
-    annotations.each{|i| i.reverse if i.negative_strand? }
+  def self.feature_array(annotation)
+    if annotation.negative_strand?
+      [annotation.end,annotation.start,annotation.feature]
+    else
+      [annotation.start,annotation.end,annotation.feature]
+    end
   end
 
 end

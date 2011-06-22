@@ -86,19 +86,11 @@ describe Genomer::OutputType::Table do
       described_class.new(generate_rules(sequences,annotations,metadata)).render
     end
 
-    let(:sequences) do
-      [Sequence.new(:name => 'seq1', :sequence => 'ATG' * 3)]
-    end
-
     let(:metadata) do
       {:identifier => 'something'}
     end
 
     context "with no annotations" do
-
-      let(:annotations) do
-        []
-      end
 
       it "should return an empty annotation table" do
         subject.should == ">Feature\tsomething\tannotation_table\n"

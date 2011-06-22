@@ -2,8 +2,6 @@ class Genomer::OutputType::Table < Genomer::OutputType
 
   SUFFIX = 'tbl'
 
-  ID_FIELD  = 'locus_tag'
-
   def generate
     if @rules.reset_annotation_id_field?
       reset_annotation_id_field
@@ -20,13 +18,7 @@ class Genomer::OutputType::Table < Genomer::OutputType
     out = [%W|>Feature #{identifier} annotation_table|]
     annotations.map{|i| i.to_genbank_feature_row}.each do |row|
       out << row.shift
-      row.each do |i|
-        if i.first == 'ID'
-          out << [indent,ID_FIELD,i.last]
-        else
-          out << i.unshift(indent)
-        end
-      end
+      row.each{|i| out << i.unshift(indent) }
     end
     out.map{|line| line * delimiter} * "\n" + "\n"
   end

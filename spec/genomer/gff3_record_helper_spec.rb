@@ -72,6 +72,19 @@ describe Genomer::GffRecordHelper do
       end
 
     end
+
+    context "gene feature with ID attributes" do
+
+      let(:annotation) do
+        @attn.feature('gene').attributes('ID' => 'two')
+      end
+
+      it "should return a table array" do
+        subject.should == [[1,3,'gene'],['locus_tag','two']]
+      end
+
+    end
+
   end
 
 end

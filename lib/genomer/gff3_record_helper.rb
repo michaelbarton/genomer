@@ -13,8 +13,12 @@ module Genomer::GffRecordHelper
     else
       out << [self.start,self.end,self.feature]
     end
-    attributes.each{|atr| out << atr}
+    attributes.each{|atr| out << rowise(atr)}
     out
+  end
+
+  def rowise(attr)
+    attr.first == 'ID' ? ['locus_tag',attr.last] : attr
   end
 
 end

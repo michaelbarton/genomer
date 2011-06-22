@@ -8,8 +8,9 @@ describe Genomer::OutputType::Table do
   end
 
   before do
-    @annotation = Annotation.new(:seqname => 'seq1',
-                                 :start => 1, :end => 3,:feature => 'gene')
+    @gene = Annotation.new(:seqname => 'seq1',
+                           :start => 1, :end => 3,
+                           :feature => 'gene')
   end
 
   subject do
@@ -32,10 +33,10 @@ describe Genomer::OutputType::Table do
 
     let(:annotations) do
       [
-        @annotation.clone.attributes({'ID' => 'gene1'}),
-        @annotation.clone.attributes({'ID' => 'gene2'}).start(4).end(6),
-        @annotation.clone.attributes({'ID' => 'gene3'}).start(7).end(9),
-        @annotation.clone.attributes({'ID' => 'gene4'}).start(10).end(12)
+        @gene.clone.attributes({'ID' => 'gene1'}),
+        @gene.clone.attributes({'ID' => 'gene2'}).start(4).end(6),
+        @gene.clone.attributes({'ID' => 'gene3'}).start(7).end(9),
+        @gene.clone.attributes({'ID' => 'gene4'}).start(10).end(12)
       ]
     end
 
@@ -51,10 +52,10 @@ describe Genomer::OutputType::Table do
 
       let(:annotations) do
         [
-          @annotation.clone.attributes({'ID' => 'gene1'}),
-          @annotation.clone.attributes({'ID' => 'gene2'}).start(4).end(6),
-          @annotation.clone.attributes({'ID' => 'gene3'}).start(7).end(9),
-          @annotation.clone.attributes({'ID' => 'gene4'}).start(10).end(12)
+          @gene.clone.attributes({'ID' => 'gene1'}),
+          @gene.clone.attributes({'ID' => 'gene2'}).start(4).end(6),
+          @gene.clone.attributes({'ID' => 'gene3'}).start(7).end(9),
+          @gene.clone.attributes({'ID' => 'gene4'}).start(10).end(12)
         ]
       end
 
@@ -103,7 +104,7 @@ describe Genomer::OutputType::Table do
       context "one gene" do
 
         let(:annotations) do
-          [@annotation]
+          [@gene]
         end
 
         it "should generate the expected annotation table" do
@@ -118,7 +119,7 @@ describe Genomer::OutputType::Table do
       context "two genes" do
 
         let(:annotations) do
-          [@annotation,@annotation.clone.start(4).end(6)]
+          [@gene,@gene.clone.start(4).end(6)]
         end
 
         it "should generate the expected annotation table" do
@@ -134,7 +135,7 @@ describe Genomer::OutputType::Table do
       context "one gene with attributes" do
 
         let(:annotations) do
-          [@annotation.clone.attributes({'one' => 'two'})]
+          [@gene.clone.attributes({'one' => 'two'})]
         end
 
         it "should generate the expected annotation table" do
@@ -150,7 +151,7 @@ describe Genomer::OutputType::Table do
       context "one gene with an ID attribute" do
 
         let(:annotations) do
-          [@annotation.clone.attributes({'ID' => 'gene1'})]
+          [@gene.clone.attributes({'ID' => 'gene1'})]
         end
 
         it "should generate the expected annotation table" do
@@ -166,7 +167,7 @@ describe Genomer::OutputType::Table do
       context "one reversed gene" do
 
         let(:annotations) do
-          [@annotation.clone.strand('-')]
+          [@gene.clone.strand('-')]
         end
 
         it "should generate the expected annotation table" do
@@ -176,40 +177,6 @@ describe Genomer::OutputType::Table do
           EOS
         end
 
-      end
-
-    end
-
-  end
-
-  describe "#feature_array" do
-
-    subject do
-      described_class.feature_array annotation.to_gff3_record
-    end
-
-    context "a simple annotation" do
-
-      let(:annotation) do
-        @annotation
-      end
-
-      it "should return an array for the annotation" do
-        subject.should == [annotation.start,annotation.end,
-                          annotation.feature]
-      end
-
-    end
-
-    context "a reversed annotation" do
-
-      let(:annotation) do
-        @annotation.clone.strand('-')
-      end
-
-      it "should reverse the starnd and end coordinates" do
-        subject.should == [annotation.end,annotation.start,
-                          annotation.feature]
       end
 
     end

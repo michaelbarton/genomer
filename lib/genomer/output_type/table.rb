@@ -19,7 +19,7 @@ class Genomer::OutputType::Table < Genomer::OutputType
 
     out = [%W|>Feature #{identifier} annotation_table|]
     annotations.each do |attn|
-      out << self.class.feature_array(attn)
+      out << attn.to_genbank_feature_row
       attn.attributes.each do |attr|
         if attr.first == 'ID'
           out << [indent,ID_FIELD,attr.last]
@@ -39,14 +39,6 @@ class Genomer::OutputType::Table < Genomer::OutputType
   def reset_annotation_id_field
     annotations.each_with_index do |annotation,count|
       annotation.id = sprintf("%06d",count+1)
-    end
-  end
-
-  def self.feature_array(annotation)
-    if annotation.negative_strand?
-      [annotation.end,annotation.start,annotation.feature]
-    else
-      [annotation.start,annotation.end,annotation.feature]
     end
   end
 

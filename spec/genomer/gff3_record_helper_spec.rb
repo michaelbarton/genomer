@@ -26,4 +26,40 @@ describe Genomer::GffRecordHelper do
 
   end
 
+  describe "#to_feature_table" do
+
+    before(:each) do
+      @attn = Annotation.new(:start => 1, :end => 3)
+    end
+
+    subject do
+      annotation.to_gff3_record.to_genbank_feature_row
+    end
+
+    context "gene feature on the positive strand" do
+
+      let(:annotation) do
+        @attn.strand('+').feature('gene')
+      end
+
+      it "should return a table array" do
+        subject.should == [1,3,'gene']
+      end
+
+    end
+
+    context "gene feature on the negative strand" do
+
+      let(:annotation) do
+        @attn.strand('-').feature('gene')
+      end
+
+      it "should return a table array" do
+        subject.should == [3,1,'gene']
+      end
+
+    end
+
+  end
+
 end

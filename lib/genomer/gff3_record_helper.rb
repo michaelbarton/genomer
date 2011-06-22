@@ -7,11 +7,14 @@ module Genomer::GffRecordHelper
   end
 
   def to_genbank_feature_row
+    out = Array.new
     if negative_strand?
-      [self.end,self.start,self.feature]
+      out << [self.end,self.start,self.feature]
     else
-      [self.start,self.end,self.feature]
+      out << [self.start,self.end,self.feature]
     end
+    attributes.each{|atr| out << atr}
+    out
   end
 
 end

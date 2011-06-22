@@ -18,13 +18,13 @@ class Genomer::OutputType::Table < Genomer::OutputType
     indent    = delimiter * 2
 
     out = [%W|>Feature #{identifier} annotation_table|]
-    annotations.each do |attn|
-      out << attn.to_genbank_feature_row
-      attn.attributes.each do |attr|
-        if attr.first == 'ID'
-          out << [indent,ID_FIELD,attr.last]
+    annotations.map{|i| i.to_genbank_feature_row}.each do |row|
+      out << row.shift
+      row.each do |i|
+        if i.first == 'ID'
+          out << [indent,ID_FIELD,i.last]
         else
-          out << attr.unshift(indent)
+          out << i.unshift(indent)
         end
       end
     end

@@ -29,7 +29,8 @@ describe Genomer::GffRecordHelper do
   describe "#to_feature_table" do
 
     before(:each) do
-      @attn = Annotation.new(:start => 1, :end => 3)
+      @attn = Annotation.new(:start  => 1, :end => 3,
+                             :strand => '+')
     end
 
     subject do
@@ -39,11 +40,11 @@ describe Genomer::GffRecordHelper do
     context "gene feature on the positive strand" do
 
       let(:annotation) do
-        @attn.strand('+').feature('gene')
+        @attn.feature('gene')
       end
 
       it "should return a table array" do
-        subject.should == [1,3,'gene']
+        subject.should == [[1,3,'gene']]
       end
 
     end
@@ -55,11 +56,22 @@ describe Genomer::GffRecordHelper do
       end
 
       it "should return a table array" do
-        subject.should == [3,1,'gene']
+        subject.should == [[3,1,'gene']]
       end
 
     end
 
+    context "gene feature with attributes" do
+
+      let(:annotation) do
+        @attn.feature('gene').attributes('one' => 'two')
+      end
+
+      it "should return a table array" do
+        subject.should == [[1,3,'gene'],['one','two']]
+      end
+
+    end
   end
 
 end

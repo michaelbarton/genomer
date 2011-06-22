@@ -10,7 +10,13 @@ describe Genomer::OutputType::Table do
   before do
     @gene = Annotation.new(:seqname => 'seq1',
                            :start => 1, :end => 3,
-                           :feature => 'gene')
+                           :feature => 'gene',
+                           :attributes => {'ID' => 'gene1'}
+                          )
+    @rna = @gene.clone.feature('mRNA').
+      attributes('ID' => 'rna1', 'Parent' => 'gene1')
+    @cds = @gene.clone.feature('CDS').
+      attributes('ID' => 'cds1', 'Parent' => 'rna1')
   end
 
   subject do
@@ -33,7 +39,7 @@ describe Genomer::OutputType::Table do
 
     let(:annotations) do
       [
-        @gene.clone.attributes({'ID' => 'gene1'}),
+        @gene,
         @gene.clone.attributes({'ID' => 'gene2'}).start(4).end(6),
         @gene.clone.attributes({'ID' => 'gene3'}).start(7).end(9),
         @gene.clone.attributes({'ID' => 'gene4'}).start(10).end(12)
@@ -52,7 +58,7 @@ describe Genomer::OutputType::Table do
 
       let(:annotations) do
         [
-          @gene.clone.attributes({'ID' => 'gene1'}),
+          @gene,
           @gene.clone.attributes({'ID' => 'gene2'}).start(4).end(6),
           @gene.clone.attributes({'ID' => 'gene3'}).start(7).end(9),
           @gene.clone.attributes({'ID' => 'gene4'}).start(10).end(12)
@@ -81,6 +87,170 @@ describe Genomer::OutputType::Table do
 
   end
 
+  describe "#filter_non_protein_annotations" do
+
+    subject do
+      table = described_class.new(generate_rules(
+        sequences,annotations,metadata))
+      table.filter_non_protein_annotations
+      table.annotations
+    end
+
+    context "with one gene annotation" do
+
+      let(:annotations) do
+        [@gene]
+      end
+
+      its(:length){should == 1}
+
+      it "should preserve the gene annotations" do
+        subject.first.feature.should == "gene"
+      end
+
+    end
+
+    context "with a gene and rna annotations" do
+
+      let(:annotations) do
+        [@gene,@rna]
+      end
+
+      its(:length){should == 1}
+
+      it "should preserve the gene annotations" do
+        subject.first.feature.should == "gene"
+      end
+
+    end
+
+    context "with a gene, rna and cds annotations" do
+
+      let(:annotations) do
+        [@gene,@rna,@cds]
+      end
+
+      its(:length){should == 2}
+
+      it "should preserve the gene annotation" do
+        subject.first.feature.should == "gene"
+      end
+
+      it "should preserve the cds annotation" do
+        subject.first.feature.should == "gene"
+      end
+
+    end
+
+  end
+
+  describe "#rename_protein_annotations" do
+
+    subject do
+      table = described_class.new(generate_rules(
+        sequences,annotations,metadata))
+      table.rename_protein_annotations
+      table.annotations
+    end
+
+    context "with no cds annotations" do
+
+      let(:annotations) do
+        [@gene]
+      end
+
+      it "should preserve the gene annotation ID" do
+        subject.first.id.should == "gene1"
+      end
+
+    end
+
+    context "with a cds annotation" do
+
+      let(:annotations) do
+        [@gene,@rna,@cds]
+      end
+
+      it "should preserve the gene annotation ID" do
+        subject.first.id.should == "gene1"
+      end
+
+      it "should rename the cds annotation ID field" do
+        cds = subject.select{|i| i.feature == 'CDS'}.first
+        cds.id.should == "gene1"
+      end
+
+    end
+
+  end
+
+  describe "#parent_gene" do
+
+
+    subject do
+      table = described_class.new(generate_rules(
+        sequences,annotations,metadata))
+    end
+
+    let(:annotations) do
+      [@gene,@rna,@cds]
+    end
+
+    it "should return the parent annotation of a cds" do
+      cds = @cds.to_gff3_record
+      subject.parent_gene(cds).id.should == 'gene1'
+    end
+
+  end
+
+  describe "#annotation_id_map" do
+
+    before do
+      @gene.attributes('ID' => 'gene1')
+      @rna = @gene.clone.feature('mRNA').
+        attributes('ID' => 'rna1', 'Parent' => 'gene1')
+      @cds = @gene.clone.feature('CDS').
+        attributes('ID' => 'cds1', 'Parent' => 'rna1')
+    end
+
+    subject do
+      table = described_class.new(generate_rules(
+        sequences,annotations,metadata))
+      table.annotation_id_map
+    end
+
+    context "from one annotation" do
+
+      let(:annotations) do
+        [@gene]
+      end
+
+      its("keys.length"){should == 1}
+
+      it "should store the annotations by ID" do
+        subject['gene1'].feature.should == 'gene'
+      end
+
+    end
+
+    context "from several annotation" do
+
+      let(:annotations) do
+        [@gene,@rna,@cds]
+      end
+
+      its("keys.length"){should == 3}
+
+      it "should store the annotations by ID" do
+        subject['gene1'].feature.should == 'gene'
+        subject['rna1'].feature.should == 'mRNA'
+        subject['cds1'].feature.should == 'CDS'
+      end
+
+    end
+
+  end
+
   describe "#render" do
 
     subject do
@@ -99,12 +269,12 @@ describe Genomer::OutputType::Table do
 
     end
 
-    context "with gene features: " do
+    context "with gene feature: " do
 
       context "one gene" do
 
         let(:annotations) do
-          [@gene]
+          [@gene.attributes({})]
         end
 
         it "should generate the expected annotation table" do
@@ -119,7 +289,8 @@ describe Genomer::OutputType::Table do
       context "two genes" do
 
         let(:annotations) do
-          [@gene,@gene.clone.start(4).end(6)]
+          [@gene.attributes({}),
+           @gene.clone.attributes({}).start(4).end(6)]
         end
 
         it "should generate the expected annotation table" do
@@ -167,13 +338,33 @@ describe Genomer::OutputType::Table do
       context "one reversed gene" do
 
         let(:annotations) do
-          [@gene.clone.strand('-')]
+          [@gene.clone.strand('-').attributes({})]
         end
 
         it "should generate the expected annotation table" do
           subject.should == <<-EOS.unindent
             >Feature\tsomething\tannotation_table
             3\t1\tgene
+          EOS
+        end
+
+      end
+
+    end
+
+    context "with a cds feature: " do
+
+      context "one cds" do
+
+        let(:annotations) do
+          [@cds]
+        end
+
+        it "should generate the expected annotation table" do
+          subject.should == <<-EOS.unindent
+            >Feature\tsomething\tannotation_table
+            1\t3\tCDS
+            \t\t\tprotein_id\tgnl|ncbi|cds1
           EOS
         end
 

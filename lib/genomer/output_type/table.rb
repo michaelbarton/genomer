@@ -3,10 +3,13 @@ class Genomer::OutputType::Table < Genomer::OutputType
   SUFFIX = 'tbl'
 
   def generate
+
     if @rules.reset_annotation_id_field?
       reset_annotation_id_field
     end
     prefix_annotation_id_field @rules.annotation_id_field_prefix
+    rename_protein_annotations
+    filter_non_protein_annotations
 
     render
   end
@@ -31,6 +34,39 @@ class Genomer::OutputType::Table < Genomer::OutputType
   def reset_annotation_id_field
     annotations.each_with_index do |annotation,count|
       annotation.id = sprintf("%06d",count+1)
+    end
+  end
+
+  def filter_non_protein_annotations
+    annotations.reject! do |attn|
+      ! (attn.feature == 'gene' || attn.feature == 'CDS')
+    end
+  end
+
+  def rename_protein_annotations
+    annotations.select{|i| i.feature == 'CDS'}.each do |attn|
+      attn.id = parent_gene(attn).id
+    end
+  end
+
+  def parent_gene(attn)
+    if attn.feature == 'gene'
+      return attn
+    else
+      return parent_gene(
+        annotation_id_map[attn.get_attribute('Parent')])
+    end
+  end
+
+  def annotation_id_map
+    if @__id_map__
+      return @__id_map__
+    else
+      @__id_map__ = annotations.inject(Hash.new) do |hash,attn|
+        hash[attn.id] = attn
+        hash
+      end
+      return annotation_id_map
     end
   end
 

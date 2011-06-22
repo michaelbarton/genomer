@@ -347,7 +347,6 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      annotation_id_field 'ID'
       """
     When I run `genomer Rules`
     Then the exit status should be 0
@@ -389,7 +388,6 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      annotation_id_field 'ID'
       annotation_id_field_prefix 'S_'
       """
     When I run `genomer Rules`
@@ -432,7 +430,6 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      annotation_id_field 'ID'
       reset_annotation_id_field
       """
     When I run `genomer Rules`
@@ -475,7 +472,6 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      annotation_id_field 'ID'
       annotation_id_field_prefix 'S_'
       reset_annotation_id_field
       """

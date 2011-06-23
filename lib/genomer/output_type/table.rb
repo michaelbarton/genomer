@@ -8,12 +8,13 @@ class Genomer::OutputType::Table < Genomer::OutputType
   end
 
   def process
+    rename_protein_annotations
+    filter_non_protein_annotations
+
     if @rules.reset_annotation_id_field?
       reset_annotation_id_field
     end
     prefix_annotation_id_field @rules.annotation_id_field_prefix
-    rename_protein_annotations
-    filter_non_protein_annotations
   end
 
   def render
@@ -47,7 +48,7 @@ class Genomer::OutputType::Table < Genomer::OutputType
 
   def rename_protein_annotations
     annotations.select{|i| i.feature == 'CDS'}.each do |attn|
-      attn.id = parent_gene(attn).id
+      attn.id = parent_gene(attn).id.clone
     end
   end
 

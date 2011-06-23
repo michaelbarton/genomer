@@ -52,6 +52,87 @@ describe Genomer::OutputType::Table do
 
     end
 
+    context "with gene features: " do
+
+      context "one gene" do
+
+        let(:annotations) do
+          [@gene]
+        end
+
+        it "should return the gene" do
+          expected = annotations.first.clone
+          expected = expected.seqname('scaffold').to_gff3_record
+
+          subject.first.should have_same_fields(expected)
+        end
+
+      end
+
+    end
+
+    context "with cds features: " do
+
+      context "one cds" do
+
+        let(:annotations) do
+          [@gene,@rna,@cds]
+        end
+
+        its(:length){should == 2}
+
+        it "should contain the gene" do
+          expected = @gene.clone.seqname('scaffold')
+          expected = expected.to_gff3_record
+
+          subject.first.should have_same_fields(expected)
+        end
+
+        it "should contain the cds" do
+          expected = @cds.clone
+          expected.seqname('scaffold')
+          expected.attributes([["Parent","rna1"],['ID','gene1']])
+          expected = expected.to_gff3_record
+
+          subject.last.should have_same_fields(expected)
+        end
+
+      end
+
+      context "one cds with the ID prefixed" do
+
+        let(:metadata) do
+          {:annotation_id_field_prefix => 'S_'}
+        end
+
+        let(:annotations) do
+          [@gene,@rna,@cds]
+        end
+
+        its(:length){should == 2}
+
+        it "should contain the gene" do
+          expected = @gene.clone
+          expected.seqname('scaffold')
+          expected.attributes([['ID','S_gene1']])
+          expected = expected.to_gff3_record
+
+          subject.first.should have_same_fields(expected)
+        end
+
+        it "should contain the cds" do
+          expected = @cds.clone
+          expected.seqname('scaffold')
+          expected.attributes([["Parent","rna1"],['ID','S_gene1']])
+          expected = expected.to_gff3_record
+
+          subject.last.should have_same_fields(expected)
+        end
+
+      end
+
+    end
+
   end
 
   describe "#reset_annotation_id_field" do
@@ -197,6 +278,12 @@ describe Genomer::OutputType::Table do
       it "should rename the cds annotation ID field" do
         cds = subject.select{|i| i.feature == 'CDS'}.first
         cds.id.should == "gene1"
+      end
+
+      it "should not use the identical ID object" do
+        cds  = subject.select{|i| i.feature == 'CDS'}.first
+        gene = subject.select{|i| i.feature == 'gene'}.first
+        cds.id.should_not equal(gene.id)
       end
 
     end

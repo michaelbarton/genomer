@@ -3,15 +3,17 @@ class Genomer::OutputType::Table < Genomer::OutputType
   SUFFIX = 'tbl'
 
   def generate
+    process
+    render
+  end
 
+  def process
     if @rules.reset_annotation_id_field?
       reset_annotation_id_field
     end
     prefix_annotation_id_field @rules.annotation_id_field_prefix
     rename_protein_annotations
     filter_non_protein_annotations
-
-    render
   end
 
   def render

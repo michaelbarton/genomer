@@ -31,8 +31,27 @@ describe Genomer::OutputType::Table do
     [Sequence.new(:name => 'seq1', :sequence => 'ATG' * 4)]
   end
 
-  let(:annotations) do
-    []
+  describe "#process" do
+
+    subject do
+      table = described_class.new(generate_rules(
+        sequences,annotations,metadata))
+      table.process
+      table.annotations
+    end
+
+    context "with no annotations" do
+
+      let(:annotations) do
+        []
+      end
+
+      it "should return an empty annotation array" do
+        subject.should == []
+      end
+
+    end
+
   end
 
   describe "#reset_annotation_id_field" do
@@ -186,7 +205,6 @@ describe Genomer::OutputType::Table do
 
   describe "#parent_gene" do
 
-
     subject do
       table = described_class.new(generate_rules(
         sequences,annotations,metadata))
@@ -262,6 +280,10 @@ describe Genomer::OutputType::Table do
     end
 
     context "with no annotations" do
+
+      let(:annotations) do
+        []
+      end
 
       it "should return an empty annotation table" do
         subject.should == ">Feature\tsomething\tannotation_table\n"

@@ -102,7 +102,7 @@ describe Genomer::OutputType::Table do
       context "one cds with the ID prefixed" do
 
         let(:metadata) do
-          {:annotation_id_field_prefix => 'S_'}
+          {:id_prefix => 'S_'}
         end
 
         let(:annotations) do
@@ -134,7 +134,7 @@ describe Genomer::OutputType::Table do
       context "one cds with the ID reset" do
 
         let(:metadata) do
-          {:reset_annotation_id_field => true}
+          {:reset_id => true}
         end
 
         let(:annotations) do
@@ -167,7 +167,7 @@ describe Genomer::OutputType::Table do
 
   end
 
-  describe "#reset_annotation_id_field" do
+  describe "#reset_id" do
 
     context "with gene only annotations" do
 
@@ -179,14 +179,14 @@ describe Genomer::OutputType::Table do
       end
 
       it "should update the id field for the annotations" do
-        subject.reset_annotation_id_field
+        subject.reset_id
         ids = subject.annotations.map{|i| i.id}
         ids.should == ['000001','000002']
       end
 
       it "should maintain the same string object" do
         before = subject.annotations.first.id
-        subject.reset_annotation_id_field
+        subject.reset_id
         after = subject.annotations.first.id
         before.object_id.should == after.object_id
       end
@@ -199,14 +199,14 @@ describe Genomer::OutputType::Table do
       end
 
       it "should only update the id field of the gene" do
-        subject.reset_annotation_id_field
+        subject.reset_id
         ids = subject.annotations.map{|i| i.id}
         ids.should == ['000001','rna1','cds1']
       end
 
       it "should maintain the same string object" do
         before = subject.annotations.first.id
-        subject.reset_annotation_id_field
+        subject.reset_id
         after = subject.annotations.first.id
         before.object_id.should == after.object_id
       end
@@ -224,7 +224,7 @@ describe Genomer::OutputType::Table do
         end
 
         it "should update the id field for the annotations" do
-          subject.prefix_annotation_id_field(nil)
+          subject.prefix_id(nil)
           ids = subject.annotations.map{|i| i.id}
           ids.should == ["gene1"]
         end
@@ -240,7 +240,7 @@ describe Genomer::OutputType::Table do
           end
 
           it "should update the id field for the gene" do
-            subject.prefix_annotation_id_field("S_")
+            subject.prefix_id("S_")
             ids = subject.annotations.map{|i| i.id}
             ids.should == ["S_gene1"]
           end
@@ -254,7 +254,7 @@ describe Genomer::OutputType::Table do
           end
 
           it "should only prefix the gene annotation id" do
-            subject.prefix_annotation_id_field("S_")
+            subject.prefix_id("S_")
             ids = subject.annotations.map{|i| i.id}
             ids.should == ["S_gene1","rna1","cds1"]
           end
@@ -322,12 +322,12 @@ describe Genomer::OutputType::Table do
 
   end
 
-  describe "#link_cds_id_to_parent_gene" do
+  describe "#link_cds_id_to_parent_gene_id" do
 
     subject do
       table = described_class.new(generate_rules(
         sequences,annotations,metadata))
-      table.link_cds_id_to_parent_gene
+      table.link_cds_id_to_parent_gene_id
       table.annotations
     end
 

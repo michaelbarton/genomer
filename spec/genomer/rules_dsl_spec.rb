@@ -76,22 +76,16 @@ describe Genomer::RulesDSL do
 
   describe "annotation methods" do
 
-    it "should allow reset_annotation_id_field to be set as a boolean" do
-      @dsl.reset_annotation_id_field?.should == false
-      @dsl.reset_annotation_id_field
-      @dsl.reset_annotation_id_field?.should == true
+    it "should allow reset_id to be set" do
+      @dsl.reset_id :type
+      @dsl.reset_id.should == :type
     end
 
-    it "should allow reset_annotation_id_field to be with an arg" do
-      @dsl.reset_annotation_id_field?.should == false
-      @dsl.reset_annotation_id_field true
-      @dsl.reset_annotation_id_field?.should == true
+    it "should allow id_prefix to be set" do
+      @dsl.id_prefix :type
+      @dsl.id_prefix.should == :type
     end
 
-    it "should allow annotation_id_field_prefix to be set" do
-      @dsl.annotation_id_field_prefix :type
-      @dsl.annotation_id_field_prefix.should == :type
-    end
   end
 
 end

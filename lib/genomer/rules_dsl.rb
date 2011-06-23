@@ -16,14 +16,7 @@ class Genomer::RulesDSL
   adorn :description
   adorn :metadata
 
-  adorn :annotation_id_field_prefix
-
-  def reset_annotation_id_field?
-    ! @reset_annotation_id_field.nil?
-  end
-
-  def reset_annotation_id_field(arg = true)
-    @reset_annotation_id_field = arg
-  end
+  adorn :id_prefix
+  adorn :reset_id
 
 end

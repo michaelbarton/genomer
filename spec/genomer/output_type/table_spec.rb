@@ -131,56 +131,134 @@ describe Genomer::OutputType::Table do
 
       end
 
+      context "one cds with the ID reset" do
+
+        let(:metadata) do
+          {:reset_annotation_id_field => true}
+        end
+
+        let(:annotations) do
+          [@gene,@rna,@cds]
+        end
+
+        its(:length){should == 2}
+
+        it "should contain the gene" do
+          expected = @gene.clone
+          expected.seqname('scaffold')
+          expected.attributes([['ID','000001']])
+          expected = expected.to_gff3_record
+
+          subject.first.should have_same_fields(expected)
+        end
+
+        it "should contain the cds" do
+          expected = @cds.clone
+          expected.seqname('scaffold')
+          expected.attributes([["Parent","rna1"],['ID','000001']])
+          expected = expected.to_gff3_record
+
+          subject.last.should have_same_fields(expected)
+        end
+
+      end
+
     end
 
   end
 
   describe "#reset_annotation_id_field" do
 
-    let(:annotations) do
-      [
-        @gene,
-        @gene.clone.attributes({'ID' => 'gene2'}).start(4).end(6),
-        @gene.clone.attributes({'ID' => 'gene3'}).start(7).end(9),
-        @gene.clone.attributes({'ID' => 'gene4'}).start(10).end(12)
-      ]
+    context "with gene only annotations" do
+
+      let(:annotations) do
+        [
+          @gene,
+          @gene.clone.attributes({'ID' => 'gene2'}).start(4).end(6),
+        ]
+      end
+
+      it "should update the id field for the annotations" do
+        subject.reset_annotation_id_field
+        ids = subject.annotations.map{|i| i.id}
+        ids.should == ['000001','000002']
+      end
+
+      it "should maintain the same string object" do
+        before = subject.annotations.first.id
+        subject.reset_annotation_id_field
+        after = subject.annotations.first.id
+        before.object_id.should == after.object_id
+      end
     end
 
-    it "should update the id field for the annotations" do
-      subject.reset_annotation_id_field
-      ids = subject.annotations.map{|i| i.id}
-      ids.should == ['000001','000002','000003','000004']
+    context "with gene and cds annotations" do
+
+      let(:annotations) do
+        [@gene,@rna,@cds]
+      end
+
+      it "should only update the id field of the gene" do
+        subject.reset_annotation_id_field
+        ids = subject.annotations.map{|i| i.id}
+        ids.should == ['000001','rna1','cds1']
+      end
+
+      it "should maintain the same string object" do
+        before = subject.annotations.first.id
+        subject.reset_annotation_id_field
+        after = subject.annotations.first.id
+        before.object_id.should == after.object_id
+      end
+
     end
 
   end
 
   describe "#prefix_annotation_id_field" do
 
-      let(:annotations) do
-        [
-          @gene,
-          @gene.clone.attributes({'ID' => 'gene2'}).start(4).end(6),
-          @gene.clone.attributes({'ID' => 'gene3'}).start(7).end(9),
-          @gene.clone.attributes({'ID' => 'gene4'}).start(10).end(12)
-        ]
-      end
-
       context "passed nil" do
+
+        let(:annotations) do
+          [@gene]
+        end
 
         it "should update the id field for the annotations" do
           subject.prefix_annotation_id_field(nil)
           ids = subject.annotations.map{|i| i.id}
-          ids.should == ["gene1","gene2","gene3","gene4"]
+          ids.should == ["gene1"]
         end
 
       end
 
       context "passed a string" do
 
-        it "should update the id field for the annotations" do
-          subject.prefix_annotation_id_field("S_")
-          ids = subject.annotations.map{|i| i.id}
-          ids.should == ["S_gene1","S_gene2","S_gene3","S_gene4"]
+        context "with gene annotations only" do
+
+          let(:annotations) do
+            [@gene]
+          end
+
+          it "should update the id field for the gene" do
+            subject.prefix_annotation_id_field("S_")
+            ids = subject.annotations.map{|i| i.id}
+            ids.should == ["S_gene1"]
+          end
+
+        end
+
+        context "with gene and cds annotations" do
+
+          let(:annotations) do
+            [@gene,@rna,@cds]
+          end
+
+          it "should only prefix the gene annotation id" do
+            subject.prefix_annotation_id_field("S_")
+            ids = subject.annotations.map{|i| i.id}
+            ids.should == ["S_gene1","rna1","cds1"]
+          end
+
         end
 
       end
@@ -244,12 +322,12 @@ describe Genomer::OutputType::Table do
 
   end
 
-  describe "#rename_protein_annotations" do
+  describe "#link_cds_id_to_parent_gene" do
 
     subject do
       table = described_class.new(generate_rules(
         sequences,annotations,metadata))
-      table.rename_protein_annotations
+      table.link_cds_id_to_parent_gene
       table.annotations
     end
 
@@ -275,15 +353,10 @@ describe Genomer::OutputType::Table do
         subject.first.id.should == "gene1"
       end
 
-      it "should rename the cds annotation ID field" do
-        cds = subject.select{|i| i.feature == 'CDS'}.first
-        cds.id.should == "gene1"
-      end
-
-      it "should not use the identical ID object" do
+      it "should link the cds ID to the gene ID" do
         cds  = subject.select{|i| i.feature == 'CDS'}.first
         gene = subject.select{|i| i.feature == 'gene'}.first
-        cds.id.should_not equal(gene.id)
+        cds.id.should equal(gene.id)
       end
 
     end

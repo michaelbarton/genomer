@@ -445,7 +445,6 @@ Feature: Generating annotation table output
 
     """
 
-  @announce
   Scenario: A CDS annotation with the ID reset and prefixed
     Given a file named "scaffold.yml" with:
       """

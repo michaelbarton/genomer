@@ -8,7 +8,7 @@ class Genomer::OutputType::Table < Genomer::OutputType
   end
 
   def process
-    rename_protein_annotations
+    link_cds_id_to_parent_gene
     filter_non_protein_annotations
 
     if @rules.reset_annotation_id_field?
@@ -31,12 +31,14 @@ class Genomer::OutputType::Table < Genomer::OutputType
 
   def prefix_annotation_id_field(prefix)
     return unless prefix
-    annotations.each{|attn| attn.id.insert(0,prefix) }
+    genes = annotations.select{|i| i.feature == 'gene'}
+    genes.each{|attn| attn.id.insert(0,prefix) }
   end
 
   def reset_annotation_id_field
-    annotations.each_with_index do |annotation,count|
-      annotation.id = sprintf("%06d",count+1)
+    genes = annotations.select{|i| i.feature == 'gene'}
+    genes.each_with_index do |annotation,count|
+      annotation.id.replace sprintf("%06d",count+1)
     end
   end
 
@@ -46,9 +48,9 @@ class Genomer::OutputType::Table < Genomer::OutputType
     end
   end
 
-  def rename_protein_annotations
+  def link_cds_id_to_parent_gene
     annotations.select{|i| i.feature == 'CDS'}.each do |attn|
-      attn.id = parent_gene(attn).id.clone
+      attn.id = parent_gene(attn).id
     end
   end
 

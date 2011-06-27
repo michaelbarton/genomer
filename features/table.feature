@@ -175,7 +175,7 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      reset_annotation_id_field
+      reset_id
       """
     When I run `genomer Rules`
     Then the exit status should be 0
@@ -218,7 +218,7 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      reset_annotation_id_field
+      reset_id
       """
     When I run `genomer Rules`
     Then the exit status should be 0
@@ -263,7 +263,7 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      annotation_id_field_prefix 'S_'
+      id_prefix 'S_'
       """
     When I run `genomer Rules`
     Then the exit status should be 0
@@ -304,8 +304,8 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      annotation_id_field_prefix 'S_'
-      reset_annotation_id_field
+      id_prefix 'S_'
+      reset_id
       """
     When I run `genomer Rules`
     Then the exit status should be 0
@@ -388,7 +388,7 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      annotation_id_field_prefix 'S_'
+      id_prefix 'S_'
       """
     When I run `genomer Rules`
     Then the exit status should be 0
@@ -430,7 +430,7 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      reset_annotation_id_field
+      reset_id
       """
     When I run `genomer Rules`
     Then the exit status should be 0
@@ -472,8 +472,8 @@ Feature: Generating annotation table output
       out_file_name 'genome'
       identifier 'genome'
       output :table
-      annotation_id_field_prefix 'S_'
-      reset_annotation_id_field
+      id_prefix 'S_'
+      reset_id
       """
     When I run `genomer Rules`
     Then the exit status should be 0

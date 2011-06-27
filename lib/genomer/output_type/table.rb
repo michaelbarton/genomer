@@ -11,7 +11,7 @@ class Genomer::OutputType::Table < Genomer::OutputType
     link_cds_id_to_parent_gene_id
     filter_non_protein_annotations
 
-    reset_id if @rules.reset_id
+    reset_id if @rules.reset_id?
     prefix_id @rules.id_prefix
   end
 

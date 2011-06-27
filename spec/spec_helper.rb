@@ -20,4 +20,11 @@ RSpec.configure do |config|
 
   include Scaffolder::Test
   include Scaffolder::Test::Helpers
+
+  config.after(:each) do
+    instance_variables.each do |ivar|
+      instance_variable_set(ivar, nil)
+    end
+  end
+
 end

@@ -1,6 +1,6 @@
 class Genomer::OutputType::Fasta < Genomer::OutputType
 
-  SUFFIX = 'fna'
+  SUFFIX = 'fsa'
 
   def generate
     header = identifier ? identifier : ". "

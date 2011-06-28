@@ -23,8 +23,8 @@ Feature: Generating fasta output
       """
     When I run `genomer Rules`
     Then the exit status should be 0
-    And a file named "genome.fna" should exist
-    And the file "genome.fna" should contain exactly:
+    And a file named "genome.fsa" should exist
+    And the file "genome.fsa" should contain exactly:
     """
     >. 
     ATG
@@ -53,8 +53,8 @@ Feature: Generating fasta output
       """
     When I run `genomer Rules`
     Then the exit status should be 0
-    And a file named "genome.fna" should exist
-    And the file "genome.fna" should contain exactly:
+    And a file named "genome.fsa" should exist
+    And the file "genome.fsa" should contain exactly:
     """
     >something
     ATG
@@ -83,8 +83,8 @@ Feature: Generating fasta output
       """
     When I run `genomer Rules`
     Then the exit status should be 0
-    And a file named "genome.fna" should exist
-    And the file "genome.fna" should contain exactly:
+    And a file named "genome.fsa" should exist
+    And the file "genome.fsa" should contain exactly:
     """
     >. [organism=something]
     ATG

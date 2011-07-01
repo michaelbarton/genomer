@@ -3,11 +3,11 @@ class Genomer::OutputType::Fasta < Genomer::OutputType
   SUFFIX = 'fsa'
 
   def generate
-    header = identifier ? identifier : ". "
-    if @rules.metadata
-      header << @rules.metadata.map{ |k,v| "[#{k}=#{v}]"} * ' '
-    end
-    Bio::Sequence.new(sequence).output(:fasta,:header => header)
+    header = Array.new
+    header << (identifier || ".")
+    header << @rules.metadata.map{|k,v| "[#{k}=#{v}]"} if @rules.metadata
+
+    Bio::Sequence.new(sequence).output(:fasta,:header => (header * ' '))
   end
 
 end

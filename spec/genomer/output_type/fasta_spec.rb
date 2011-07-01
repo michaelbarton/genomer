@@ -25,7 +25,7 @@ describe Genomer::OutputType::Fasta do
 
       it "should generate the expected fasta" do
         subject.should == <<-EOS.unindent
-          >. 
+          >.
           ATGC
         EOS
       end
@@ -56,6 +56,22 @@ describe Genomer::OutputType::Fasta do
       it "should generate the expected fasta" do
         subject.should == <<-EOS.unindent
           >. [something=other]
+          ATGC
+        EOS
+      end
+
+    end
+
+    describe "with metadata and identifier" do
+
+      let(:rules) do
+        generate_rules([@sequence],[],
+                       {:metadata => {'one' => '1'}, :identifier => 'genome'})
+      end
+
+      it "should generate the expected fasta" do
+        subject.should == <<-EOS.unindent
+          >genome [one=1]
           ATGC
         EOS
       end

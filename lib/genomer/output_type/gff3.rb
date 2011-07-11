@@ -9,6 +9,7 @@ class Genomer::OutputType::Gff3 < Genomer::OutputType
 
   def process
     reset_id if @rules.reset_id?
+    prefix_id @rules.id_prefix
   end
 
   def render

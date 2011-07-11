@@ -92,6 +92,27 @@ describe Genomer::OutputType::Gff3 do
 
       end
 
+      context "one cds with the ID prefixed" do
+
+        let(:metadata) do
+          {:id_prefix => 'S_'}
+        end
+
+        let(:annotations) do
+          [@gene]
+        end
+
+        it "should contain the gene" do
+          expected = @gene.clone
+          expected.seqname('scaffold')
+          expected.attributes([['ID','S_gene1']])
+          expected = expected.to_gff3_record
+
+          subject.first.should have_same_fields(expected)
+        end
+
+      end
+
     end
 
   end

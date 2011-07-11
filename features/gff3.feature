@@ -155,3 +155,82 @@ Feature: Generating gff output
       scaffold	.	gene	10	12	.	+	1	ID=000004
 
       """
+
+  Scenario: Adding a prefix to the annotation id
+    Given a file named "scaffold.yml" with:
+      """
+      ---
+        - sequence:
+            source: contig1
+      """
+    Given a file named "sequences.fna" with:
+      """
+      >contig1
+      AAAAATTTTTGGGGGCCCCC
+      """
+    Given a file named "annotations.gff" with:
+      """
+      ##gff-version 3
+      contig1	.	gene	1	3	.	+	1	ID=gene1
+      contig1	.	gene	4	6	.	+	1	ID=gene2
+      """
+    Given a file named "Rules" with:
+      """
+      scaffold_file 'scaffold.yml'
+      sequence_file 'sequences.fna'
+      annotation_file 'annotations.gff'
+      out_file_name 'genome'
+      identifier 'genome'
+      output :gff3
+      id_prefix 'S_'
+      """
+    When I run `genomer Rules`
+    Then the exit status should be 0
+    And a file named "genome.gff" should exist
+    And the file "genome.gff" should contain exactly:
+      """
+      ##gff-version 3
+      scaffold	.	gene	1	3	.	+	1	ID=S_gene1
+      scaffold	.	gene	4	6	.	+	1	ID=S_gene2
+
+      """
+
+  Scenario: Adding a prefix and reseting the annotation ID
+    Given a file named "scaffold.yml" with:
+      """
+      ---
+        - sequence:
+            source: contig1
+      """
+    Given a file named "sequences.fna" with:
+      """
+      >contig1
+      AAAAATTTTTGGGGGCCCCC
+      """
+    Given a file named "annotations.gff" with:
+      """
+      ##gff-version 3
+      contig1	.	gene	1	3	.	+	1	ID=gene1
+      contig1	.	gene	4	6	.	+	1	ID=gene2
+      """
+    Given a file named "Rules" with:
+      """
+      scaffold_file 'scaffold.yml'
+      sequence_file 'sequences.fna'
+      annotation_file 'annotations.gff'
+      out_file_name 'genome'
+      identifier 'genome'
+      output :gff3
+      id_prefix 'S_'
+      reset_id
+      """
+    When I run `genomer Rules`
+    Then the exit status should be 0
+    And a file named "genome.gff" should exist
+    And the file "genome.gff" should contain exactly:
+      """
+      ##gff-version 3
+      scaffold	.	gene	1	3	.	+	1	ID=S_000001
+      scaffold	.	gene	4	6	.	+	1	ID=S_000002
+
+      """

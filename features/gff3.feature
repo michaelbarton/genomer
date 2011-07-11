@@ -2,7 +2,6 @@ Feature: Generating gff output
   In order to view and share genome annotations
   A user can generate the gff3 output format
 
-  @announce
   Scenario: Generating a table file from a single annotation
     Given a file named "scaffold.yml" with:
       """
@@ -34,7 +33,7 @@ Feature: Generating gff output
     And a file named "genome.gff" should exist
     And the file "genome.gff" should contain exactly:
     """
-      ##gff-version 3
-      scaffold	.	gene	1	3	.	+	1	.
+    ##gff-version 3
+    scaffold	.	gene	1	3	.	+	1	.
 
     """

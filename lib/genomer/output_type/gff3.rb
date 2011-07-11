@@ -2,6 +2,11 @@ class Genomer::OutputType::Gff3 < Genomer::OutputType
 
   SUFFIX = 'gff'
 
+  def generate
+    process
+    render
+  end
+
   def process
   end
 

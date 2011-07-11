@@ -8,6 +8,7 @@ class Genomer::OutputType::Gff3 < Genomer::OutputType
   end
 
   def process
+    reset_id if @rules.reset_id?
   end
 
   def render

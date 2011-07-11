@@ -71,6 +71,27 @@ describe Genomer::OutputType::Gff3 do
 
       end
 
+      context "one gene with the ID reset" do
+
+        let(:metadata) do
+          {:reset_id => true}
+        end
+
+        let(:annotations) do
+          [@gene]
+        end
+
+        it "should contain the gene" do
+          expected = @gene.clone
+          expected.seqname('scaffold')
+          expected.attributes([['ID','000001']])
+          expected = expected.to_gff3_record
+
+          subject.first.should have_same_fields(expected)
+        end
+
+      end
+
     end
 
   end

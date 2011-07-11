@@ -1,4 +1,4 @@
-class Genomer::OutputType::GFF3 < Genomer::OutputType
+class Genomer::OutputType::Gff3 < Genomer::OutputType
 
   SUFFIX = 'gff'
 

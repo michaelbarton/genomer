@@ -8,6 +8,30 @@ describe Genomer::OutputType do
     Genomer::OutputType[:type].should == Genomer::OutputType::Type
   end
 
+  before do
+    @gene = Annotation.new(:seqname => 'seq1',
+                           :start => 1, :end => 3,
+                           :feature => 'gene',
+                           :attributes => {'ID' => 'gene1'}
+                          )
+    @rna = @gene.clone.feature('mRNA').
+      attributes('ID' => 'rna1', 'Parent' => 'gene1')
+    @cds = @gene.clone.feature('CDS').
+      attributes('ID' => 'cds1', 'Parent' => 'rna1')
+  end
+
+  subject do
+    described_class.new(generate_rules(sequences,annotations,metadata))
+  end
+
+  let(:metadata) do
+    []
+  end
+
+  let(:sequences) do
+    [Sequence.new(:name => 'seq1', :sequence => 'ATG' * 4)]
+  end
+
   describe "#file" do
 
     before(:each) do
@@ -172,6 +196,268 @@ describe Genomer::OutputType do
       end
 
       its(:identifier){should == 'something' }
+
+    end
+
+  end
+
+  describe "#reset_id" do
+
+    context "with gene only annotations" do
+
+      let(:annotations) do
+        [
+          @gene,
+          @gene.clone.attributes({'ID' => 'gene2'}).start(4).end(6),
+        ]
+      end
+
+      it "should update the id field for the annotations" do
+        subject.reset_id
+        ids = subject.annotations.map{|i| i.id}
+        ids.should == ['000001','000002']
+      end
+
+      it "should maintain the same string object" do
+        before = subject.annotations.first.id
+        subject.reset_id
+        after = subject.annotations.first.id
+        before.object_id.should == after.object_id
+      end
+    end
+
+    context "with gene and cds annotations" do
+
+      let(:annotations) do
+        [@gene,@rna,@cds]
+      end
+
+      it "should only update the id field of the gene" do
+        subject.reset_id
+        ids = subject.annotations.map{|i| i.id}
+        ids.should == ['000001','rna1','cds1']
+      end
+
+      it "should maintain the same string object" do
+        before = subject.annotations.first.id
+        subject.reset_id
+        after = subject.annotations.first.id
+        before.object_id.should == after.object_id
+      end
+
+    end
+
+  end
+
+  describe "#prefix_annotation_id_field" do
+
+      context "passed nil" do
+
+        let(:annotations) do
+          [@gene]
+        end
+
+        it "should update the id field for the annotations" do
+          subject.prefix_id(nil)
+          ids = subject.annotations.map{|i| i.id}
+          ids.should == ["gene1"]
+        end
+
+      end
+
+      context "passed a string" do
+
+        context "with gene annotations only" do
+
+          let(:annotations) do
+            [@gene]
+          end
+
+          it "should update the id field for the gene" do
+            subject.prefix_id("S_")
+            ids = subject.annotations.map{|i| i.id}
+            ids.should == ["S_gene1"]
+          end
+
+        end
+
+        context "with gene and cds annotations" do
+
+          let(:annotations) do
+            [@gene,@rna,@cds]
+          end
+
+          it "should only prefix the gene annotation id" do
+            subject.prefix_id("S_")
+            ids = subject.annotations.map{|i| i.id}
+            ids.should == ["S_gene1","rna1","cds1"]
+          end
+
+        end
+
+      end
+
+  end
+
+  describe "#filter_non_protein_annotations" do
+
+    subject do
+      table = described_class.new(generate_rules(
+        sequences,annotations,metadata))
+      table.filter_non_protein_annotations
+      table.annotations
+    end
+
+    context "with one gene annotation" do
+
+      let(:annotations) do
+        [@gene]
+      end
+
+      its(:length){should == 1}
+
+      it "should preserve the gene annotations" do
+        subject.first.feature.should == "gene"
+      end
+
+    end
+
+    context "with a gene and rna annotations" do
+
+      let(:annotations) do
+        [@gene,@rna]
+      end
+
+      its(:length){should == 1}
+
+      it "should preserve the gene annotations" do
+        subject.first.feature.should == "gene"
+      end
+
+    end
+
+    context "with a gene, rna and cds annotations" do
+
+      let(:annotations) do
+        [@gene,@rna,@cds]
+      end
+
+      its(:length){should == 2}
+
+      it "should preserve the gene annotation" do
+        subject.first.feature.should == "gene"
+      end
+
+      it "should preserve the cds annotation" do
+        subject.first.feature.should == "gene"
+      end
+
+    end
+
+  end
+
+  describe "#link_cds_id_to_parent_gene_id" do
+
+    subject do
+      table = described_class.new(generate_rules(
+        sequences,annotations,metadata))
+      table.link_cds_id_to_parent_gene_id
+      table.annotations
+    end
+
+    context "with no cds annotations" do
+
+      let(:annotations) do
+        [@gene]
+      end
+
+      it "should preserve the gene annotation ID" do
+        subject.first.id.should == "gene1"
+      end
+
+    end
+
+    context "with a cds annotation" do
+
+      let(:annotations) do
+        [@gene,@rna,@cds]
+      end
+
+      it "should preserve the gene annotation ID" do
+        subject.first.id.should == "gene1"
+      end
+
+      it "should link the cds ID to the gene ID" do
+        cds  = subject.select{|i| i.feature == 'CDS'}.first
+        gene = subject.select{|i| i.feature == 'gene'}.first
+        cds.id.should equal(gene.id)
+      end
+
+    end
+
+  end
+
+  describe "#parent_gene" do
+
+    subject do
+      table = described_class.new(generate_rules(
+        sequences,annotations,metadata))
+    end
+
+    let(:annotations) do
+      [@gene,@rna,@cds]
+    end
+
+    it "should return the parent annotation of a cds" do
+      cds = @cds.to_gff3_record
+      subject.parent_gene(cds).id.should == 'gene1'
+    end
+
+  end
+
+  describe "#annotation_id_map" do
+
+    before do
+      @gene.attributes('ID' => 'gene1')
+      @rna = @gene.clone.feature('mRNA').
+        attributes('ID' => 'rna1', 'Parent' => 'gene1')
+      @cds = @gene.clone.feature('CDS').
+        attributes('ID' => 'cds1', 'Parent' => 'rna1')
+    end
+
+    subject do
+      table = described_class.new(generate_rules(
+        sequences,annotations,metadata))
+      table.annotation_id_map
+    end
+
+    context "from one annotation" do
+
+      let(:annotations) do
+        [@gene]
+      end
+
+      its("keys.length"){should == 1}
+
+      it "should store the annotations by ID" do
+        subject['gene1'].feature.should == 'gene'
+      end
+
+    end
+
+    context "from several annotation" do
+
+      let(:annotations) do
+        [@gene,@rna,@cds]
+      end
+
+      its("keys.length"){should == 3}
+
+      it "should store the annotations by ID" do
+        subject['gene1'].feature.should == 'gene'
+        subject['rna1'].feature.should == 'mRNA'
+        subject['cds1'].feature.should == 'CDS'
+      end
 
     end
 

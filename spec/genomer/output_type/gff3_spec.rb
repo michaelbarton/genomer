@@ -73,4 +73,21 @@ describe Genomer::OutputType::Gff3 do
 
   end
 
+  describe "#render" do
+
+    let(:annotations) do
+      [@gene]
+    end
+
+    it "should produce a gff3 string" do
+      expected = Bio::GFF::GFF3.new
+      ants = annotations.map do |i|
+        i.clone.seqname('scaffold').to_gff3_record
+      end
+      expected.records = ants
+      subject.render.should == expected.to_s
+    end
+
+  end
+
 end

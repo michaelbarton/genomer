@@ -5,11 +5,12 @@ RSpec::Matchers.define :have_same_fields do |expected|
   diffable
 end
 
-
-def attributes_to_hash(gff3)
-  [:attributes,:end,:feature,:frame,:score,:seqname,
-    :source,:strand].inject(Hash.new) do |hash,attr|
-    hash[attr] = gff3.send(attr)
-    hash
+def attributes_to_hash(gff)
+  fields = [:end,:feature,:frame,:score,:seqname,:source,:strand]
+  hash = fields.inject(Hash.new) do |h,f|
+    h[f] = gff.send(f)
+    h
   end
+  hash[:attributes] = gff.attributes.sort
+  hash
 end

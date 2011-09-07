@@ -1,4 +1,4 @@
-require 'spec/spec_helper'
+require 'spec_helper'
 
 describe Genomer::Runtime do
   include FakeFS::SpecHelpers

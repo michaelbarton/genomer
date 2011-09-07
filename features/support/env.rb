@@ -16,6 +16,6 @@ require 'tempfile'
 require 'english'
 
 require 'rspec/expectations'
-require 'spec/support/functions'
+require 'support/functions'
 
 require 'aruba/cucumber'

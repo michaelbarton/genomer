@@ -5,6 +5,7 @@ group :default do
   gem "scaffolder",                    "~> 0.4"
   gem "classy-adornments",             "~> 0.2"
   gem "scaffolder-annotation-locator", "~> 0.1"
+  gem "psych",                         "~> 1.2.1"
 end
 
 group :development do

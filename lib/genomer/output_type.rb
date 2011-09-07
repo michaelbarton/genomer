@@ -1,3 +1,4 @@
+require 'psych'
 require 'scaffolder'
 require 'scaffolder/annotation_locator'
 
@@ -17,7 +18,7 @@ class Genomer::OutputType
   end
 
   def sequence
-    scaffold = Scaffolder.new(YAML.load(File.read(@rules.scaffold_file)),
+    scaffold = Scaffolder.new(Psych.load(File.read(@rules.scaffold_file)),
                               @rules.sequence_file)
     scaffold.inject(String.new){|build,e| build << e.sequence }
   end

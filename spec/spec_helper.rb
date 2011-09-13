@@ -16,15 +16,9 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each do |f|
 end
 
 RSpec.configure do |config|
-  config.mock_with :mocha
-
-  include Scaffolder::Test
-  include Scaffolder::Test::Helpers
-
   config.after(:each) do
     instance_variables.each do |ivar|
       instance_variable_set(ivar, nil)
     end
   end
-
 end

@@ -10,12 +10,4 @@ end
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../lib')
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../spec')
 
-require 'genomer'
-
-require 'tempfile'
-require 'english'
-
-require 'rspec/expectations'
-require 'support/functions'
-
 require 'aruba/cucumber'

@@ -1,11 +1,6 @@
 source "http://rubygems.org"
 
 group :default do
-  gem "bio",                           "~> 1.4"
-  gem "scaffolder",                    "~> 0.4"
-  gem "classy-adornments",             "~> 0.2"
-  gem "scaffolder-annotation-locator", "~> 0.1"
-  gem "psych",                         "~> 1.2.1"
 end
 
 group :development do
@@ -13,16 +8,9 @@ group :development do
   gem "jeweler",  "~> 1.5"
 
   # Specs
-  gem "rspec",                    "~> 2.5"
-  gem "fakefs",                   "~> 0.2"
-  gem "mocha",                    "~> 0.9"
-  gem "scaffolder-test-helpers",  ">= 0.4.1"
-  gem "heredoc_unindent",         "~> 1.1"
+  gem "rspec",    "~> 2.6"
 
   # Features
-  gem "cucumber", "~> 0.10"
-  gem "aruba",    "~> 0.3"
-
-  # Documentation
-  gem "yard",     "~> 0.6"
+  gem "cucumber", "~> 1.0.4"
+  gem "aruba",    "~> 0.4.6"
 end

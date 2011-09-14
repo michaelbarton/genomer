@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
+require 'rubygems'
+require 'configliere'
 require 'genomer'
-Genomer::Runtime.new(ARGV.shift).execute!
+
+Settings.use :commandline
+Settings.resolve!
+Genomer::Runtime.new(Settings).execute!
 exit 0

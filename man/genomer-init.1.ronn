@@ -1,0 +1,20 @@
+genomer-init(1) -- create a new genomer project
+===============================================
+
+## SYNOPSIS
+
+`genomer init` <project-name>
+
+## DESCRIPTION
+
+Creates a new genomer project directory named **project-name**. Returns an
+error if the project directory already exists.
+
+## BUGS
+
+**Genomer-init** is written in Ruby and uses several RubyGems dependencies. See
+the Gemfile in the genomer gem install directory for version details.
+
+## COPYRIGHT
+
+**Genomer** is Copyright (C) 2011 Michael Barton <http://michaelbarton.me.uk>

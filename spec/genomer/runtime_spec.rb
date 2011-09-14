@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Genomer::Runtime do
+  include FakeFS::SpecHelpers
 
   describe "init command" do
 

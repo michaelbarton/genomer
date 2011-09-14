@@ -10,6 +10,22 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each do |f|
 end
 
 RSpec.configure do |config|
+
+  class MockSettings
+
+    attr :rest
+
+    def initialize(rest = [], command_args = {})
+      @rest = rest
+      @args = command_args
+    end
+
+    def [](arg)
+      @args[arg]
+    end
+
+  end
+
   config.after(:each) do
     instance_variables.each do |ivar|
       instance_variable_set(ivar, nil)

@@ -1,0 +1,2 @@
+class Genomer::Runtime
+end

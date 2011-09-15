@@ -1,6 +1,7 @@
 source "http://rubygems.org"
 
 group :default do
+  gem "psych"
   gem "configliere", "~> 0.4.8"
 end
 

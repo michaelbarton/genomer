@@ -6,7 +6,12 @@ class Genomer::Runtime
 
   def execute!
     _, project_name = @settings.rest
-    Dir.mkdir project_name
+
+    if File.exists?(project_name)
+      raise GenomerError, "Directory '#{project_name}' already exists."
+    else
+      Dir.mkdir project_name
+    end
   end
 
 end

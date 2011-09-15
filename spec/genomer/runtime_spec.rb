@@ -25,6 +25,27 @@ describe Genomer::Runtime do
 
     end
 
+    describe "when project already exists" do
+
+      subject do
+        Genomer::Runtime.new MockSettings.new(%w|init project_name|)
+      end
+
+      before do
+        Dir.mkdir('project_name')
+      end
+
+      after do
+        Dir.rmdir('project_name')
+      end
+
+      it "should create a directory from the named argument" do
+        lambda{ subject.execute! }.should raise_error(GenomerError,
+          "Directory 'project_name' already exists.")
+      end
+
+    end
+
   end
 
 end

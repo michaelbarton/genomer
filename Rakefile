@@ -7,7 +7,7 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
-require 'rake'
+require 'rake/dsl_definition'
 
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
@@ -31,6 +31,3 @@ require 'cucumber/rake/task'
 Cucumber::Rake::Task.new(:features)
 
 task :default => :spec
-
-require 'yard'
-YARD::Rake::YardocTask.new

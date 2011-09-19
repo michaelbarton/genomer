@@ -48,4 +48,22 @@ describe Genomer::Runtime do
 
   end
 
+  describe "no command" do
+
+    subject do
+      Genomer::Runtime.new MockSettings.new
+    end
+
+    it "should create a directory from the named argument" do
+      msg = <<-EOF
+        genomer COMMAND [options]
+        run `genomer help` for a list of available commands`
+      EOF
+
+      subject.execute!.should == msg.unindent
+    end
+
+  end
+
 end
+

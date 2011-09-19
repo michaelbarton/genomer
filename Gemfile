@@ -3,6 +3,7 @@ source "http://rubygems.org"
 group :default do
   gem "psych"
   gem "configliere", "~> 0.4.8"
+  gem "unindent",    "~> 0.9"
 end
 
 group :development do

@@ -58,7 +58,7 @@ describe Genomer::Runtime do
       Genomer::Runtime.new MockSettings.new
     end
 
-    it "should create a directory from the named argument" do
+    it "should print the short help description" do
       msg = <<-EOF
         genomer COMMAND [options]
         run `genomer help` for a list of available commands`
@@ -75,7 +75,7 @@ describe Genomer::Runtime do
       Genomer::Runtime.new MockSettings.new(%w|help|)
     end
 
-    it "should create a directory from the named argument" do
+    it "should print the help description" do
       msg = <<-EOF
         genomer COMMAND [options]
 

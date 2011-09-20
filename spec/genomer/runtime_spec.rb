@@ -16,11 +16,15 @@ describe Genomer::Runtime do
       end
 
       after do
-        Dir.rmdir('project_name') if File.exists?('project_name')
+        FileUtils.rm_rf('project_name') if File.exists?('project_name')
       end
 
       it "should create a directory from the named argument" do
         File.exists?('project_name').should be_true
+      end
+
+      it "should create a '.gnmr' directory" do
+        File.exists?(File.join('project_name','.gnmr')).should be_true
       end
 
     end

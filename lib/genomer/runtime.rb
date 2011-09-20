@@ -37,6 +37,7 @@ class Genomer::Runtime
       raise GenomerError, "Directory '#{project_name}' already exists."
     else
       Dir.mkdir project_name
+      Dir.mkdir File.join(project_name,'.gnmr')
     end
   end
 

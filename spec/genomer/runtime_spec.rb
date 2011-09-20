@@ -71,18 +71,148 @@ describe Genomer::Runtime do
 
   describe "help command" do
 
-    subject do
-      Genomer::Runtime.new MockSettings.new(%w|help|)
+    describe "with no plugins" do
+
+      subject do
+        Genomer::Runtime.new MockSettings.new(%w|help|)
+      end
+
+      it "should print the help description" do
+        msg = <<-EOF
+          genomer COMMAND [options]
+
+          Available commands:
+        EOF
+
+        subject.execute!.split("\n")[0..2].join("\n").should == msg.unindent.strip
+      end
+
     end
 
-    it "should print the help description" do
-      msg = <<-EOF
-        genomer COMMAND [options]
+    describe "with avaiable genomer plugins" do
 
-        Available commands:
-      EOF
+      before do
+        mock(subject).plugins do
+          [Gem::Specification.new do |s|
+            s.name        = 'genomer-plugin-fake'
+            s.description = 'A fake scaffolder command'
+          end]
+        end
+      end
 
-      subject.execute!.split("\n")[0..2].join("\n").should == msg.unindent.strip
+      subject do
+        Genomer::Runtime.new MockSettings.new(%w|help|)
+      end
+
+      it "should print the help description" do
+        msg = <<-EOF
+          genomer COMMAND [options]
+
+          Available commands:
+            fake        A fake scaffolder command
+        EOF
+
+        subject.execute!.should == msg.unindent.strip
+      end
+
+    end
+
+    describe "with non-genomer plugins in the Gemfile" do
+
+      before do
+        mock(subject).plugins do
+          []
+        end
+      end
+
+      subject do
+        Genomer::Runtime.new MockSettings.new(%w|help|)
+      end
+
+      it "should print the help description without plugins" do
+        msg = <<-EOF
+          genomer COMMAND [options]
+
+          Available commands:
+        EOF
+        subject.execute!.should == msg.unindent.strip
+      end
+
+    end
+
+  end
+
+  describe "#plugins" do
+
+    let(:plugin) do
+      Gem::Specification.new do |s|
+        s.name = 'genomer-plugin-fake'
+      end
+    end
+
+    let(:not_a_plugin) do
+      Gem::Specification.new do |s|
+        s.name = 'rr'
+      end
+    end
+
+    after do
+      FileUtils.rm('Gemfile') if File.exists?('Gemfile')
+    end
+
+    subject do
+      Genomer::Runtime.new(MockSettings.new(%w|help|)).plugins
+    end
+
+    describe "where a single genomer plugins is specified" do
+
+      before do
+        FileUtils.touch 'Gemfile'
+
+        # Mock Bundler behavior
+        bundle = Object.new
+        mock(bundle).gems{ [plugin] }
+        mock(Bundler).setup{ bundle }
+      end
+
+      it "should return the genomer plugin" do
+        subject.should == [plugin]
+      end
+
+    end
+
+    describe "where no genomer plugins are specified" do
+
+      before do
+        FileUtils.touch 'Gemfile'
+
+        # Mock Bundler behavior
+        bundle = Object.new
+        mock(bundle).gems{ [not_a_plugin] }
+        mock(Bundler).setup{ bundle }
+      end
+
+      it "should return an empty array" do
+        subject.should be_empty
+      end
+
+    end
+
+    describe "where one plugins and non plugin are specified" do
+
+      before do
+        FileUtils.touch 'Gemfile'
+
+        # Mock Bundler behavior
+        bundle = Object.new
+        mock(bundle).gems{ [plugin, not_a_plugin] }
+        mock(Bundler).setup{ bundle }
+      end
+
+      it "should return the genomer plugin" do
+        subject.should == [plugin]
+      end
+
     end
 
   end

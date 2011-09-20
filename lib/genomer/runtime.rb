@@ -29,7 +29,15 @@ class Genomer::Runtime
 
       Available commands:
     EOF
-    msg.unindent
+    msg.unindent!
+
+    msg << plugins.inject(String.new) do |str,p|
+      str << '  '
+      str << p.name.gsub("genomer-plugin-","").ljust(12)
+      str << p.description
+      str << "\n"
+    end
+    msg.strip
   end
 
   def init(project_name)
@@ -38,6 +46,17 @@ class Genomer::Runtime
     else
       Dir.mkdir project_name
       Dir.mkdir File.join(project_name,'.gnmr')
+    end
+  end
+
+  def plugins
+    if File.exists?("Gemfile")
+      bundle = Bundler.setup
+      return bundle.gems.select do |gem|
+        gem.name =~ /genomer-plugin-.+/
+      end
+    else
+      Array.new
     end
   end
 

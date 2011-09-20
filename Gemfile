@@ -13,6 +13,7 @@ group :development do
   # Specs
   gem "rspec",    "~> 2.6"
   gem "fakefs",   "~> 0.4.0"
+  gem "rr",       "~> 1.0.4"
 
   # Features
   gem "cucumber", "~> 1.0.4"

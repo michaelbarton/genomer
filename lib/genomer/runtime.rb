@@ -10,6 +10,7 @@ class Genomer::Runtime
     command = @settings.rest.shift
     case command
     when nil    then short_help
+    when "help" then help
     when "init" then init(@settings.rest.shift)
     end
   end
@@ -18,6 +19,15 @@ class Genomer::Runtime
     msg =<<-EOF
       genomer COMMAND [options]
       run `genomer help` for a list of available commands`
+    EOF
+    msg.unindent
+  end
+
+  def help
+    msg =<<-EOF
+      genomer COMMAND [options]
+
+      Available commands:
     EOF
     msg.unindent
   end

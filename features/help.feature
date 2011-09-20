@@ -3,11 +3,20 @@ Feature: Listing available commands
   A user can use the help command
   To list the available options to the console
 
-  Scenario: Running the genomer command
+  Scenario: Running genomer with no commands
      When I run the genomer command with no arguments
      Then the output should contain:
      """
      genomer COMMAND [options]
      run `genomer help` for a list of available commands`
 
+     """
+
+  Scenario: Running genomer with the help command
+     When I run the genomer command with the arguments "help"
+     Then the output should contain:
+     """
+     genomer COMMAND [options]
+
+     Available commands:
      """

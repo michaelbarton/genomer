@@ -65,5 +65,23 @@ describe Genomer::Runtime do
 
   end
 
+  describe "help command" do
+
+    subject do
+      Genomer::Runtime.new MockSettings.new(%w|help|)
+    end
+
+    it "should create a directory from the named argument" do
+      msg = <<-EOF
+        genomer COMMAND [options]
+
+        Available commands:
+      EOF
+
+      subject.execute!.split("\n")[0..2].join("\n").should == msg.unindent.strip
+    end
+
+  end
+
 end
 

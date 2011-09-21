@@ -34,7 +34,7 @@ class Genomer::Runtime
     msg << plugins.inject(String.new) do |str,p|
       str << '  '
       str << p.name.gsub("genomer-plugin-","").ljust(12)
-      str << p.description
+      str << p.summary
       str << "\n"
     end
     msg.strip

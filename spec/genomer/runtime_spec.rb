@@ -87,7 +87,7 @@ describe Genomer::Runtime do
         mock(subject).plugins do
           [Gem::Specification.new do |s|
             s.name        = 'genomer-plugin-fake'
-            s.description = 'A fake scaffolder command'
+            s.summary     = 'A fake scaffolder command'
           end]
         end
       end

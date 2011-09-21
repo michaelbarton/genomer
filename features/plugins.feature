@@ -16,7 +16,7 @@ Feature: Using plugins as part of a genomer project
      genomer COMMAND [options]
 
      Available commands:
-       fake       Fake genomer plugin for testing purposes
+       fake         Fake genomer plugin for testing purposes
      """
 
   Scenario: Genomer plugins described in the gem file

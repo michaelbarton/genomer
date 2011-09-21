@@ -5,18 +5,18 @@ describe Genomer::Runtime do
 
   describe "init command" do
 
-    describe "with project name argument" do
+    subject do
+      Genomer::Runtime.new MockSettings.new(%w|init project_name|)
+    end
 
-      subject do
-        Genomer::Runtime.new MockSettings.new(%w|init project_name|)
-      end
+    after do
+      FileUtils.rm_rf('project_name') if File.exists?('project_name')
+    end
+
+    describe "with project name argument" do
 
       before do
         subject.execute!
-      end
-
-      after do
-        FileUtils.rm_rf('project_name') if File.exists?('project_name')
       end
 
       it "should create a directory from the named argument" do
@@ -31,19 +31,11 @@ describe Genomer::Runtime do
 
     describe "when project already exists" do
 
-      subject do
-        Genomer::Runtime.new MockSettings.new(%w|init project_name|)
-      end
-
       before do
         Dir.mkdir('project_name')
       end
 
-      after do
-        Dir.rmdir('project_name')
-      end
-
-      it "should create a directory from the named argument" do
+      it "should raise an error" do
         lambda{ subject.execute! }.should raise_error(GenomerError,
           "Directory 'project_name' already exists.")
       end
@@ -71,11 +63,11 @@ describe Genomer::Runtime do
 
   describe "help command" do
 
-    describe "with no plugins" do
+    subject do
+      Genomer::Runtime.new MockSettings.new(%w|help|)
+    end
 
-      subject do
-        Genomer::Runtime.new MockSettings.new(%w|help|)
-      end
+    describe "with no plugins" do
 
       it "should print the help description" do
         msg = <<-EOF
@@ -84,12 +76,12 @@ describe Genomer::Runtime do
           Available commands:
         EOF
 
-        subject.execute!.split("\n")[0..2].join("\n").should == msg.unindent.strip
+        subject.execute!.should == msg.unindent.strip
       end
 
     end
 
-    describe "with avaiable genomer plugins" do
+    describe "with available genomer plugins" do
 
       before do
         mock(subject).plugins do
@@ -98,10 +90,6 @@ describe Genomer::Runtime do
             s.description = 'A fake scaffolder command'
           end]
         end
-      end
-
-      subject do
-        Genomer::Runtime.new MockSettings.new(%w|help|)
       end
 
       it "should print the help description" do
@@ -125,10 +113,6 @@ describe Genomer::Runtime do
         end
       end
 
-      subject do
-        Genomer::Runtime.new MockSettings.new(%w|help|)
-      end
-
       it "should print the help description without plugins" do
         msg = <<-EOF
           genomer COMMAND [options]
@@ -144,6 +128,14 @@ describe Genomer::Runtime do
 
   describe "#plugins" do
 
+    after do
+      FileUtils.rm('Gemfile') if File.exists?('Gemfile')
+    end
+
+    before do
+      FileUtils.touch 'Gemfile'
+    end
+
     let(:plugin) do
       Gem::Specification.new do |s|
         s.name = 'genomer-plugin-fake'
@@ -156,10 +148,6 @@ describe Genomer::Runtime do
       end
     end
 
-    after do
-      FileUtils.rm('Gemfile') if File.exists?('Gemfile')
-    end
-
     subject do
       Genomer::Runtime.new(MockSettings.new(%w|help|)).plugins
     end
@@ -167,9 +155,6 @@ describe Genomer::Runtime do
     describe "where a single genomer plugins is specified" do
 
       before do
-        FileUtils.touch 'Gemfile'
-
-        # Mock Bundler behavior
         bundle = Object.new
         mock(bundle).gems{ [plugin] }
         mock(Bundler).setup{ bundle }
@@ -184,9 +169,6 @@ describe Genomer::Runtime do
     describe "where no genomer plugins are specified" do
 
       before do
-        FileUtils.touch 'Gemfile'
-
-        # Mock Bundler behavior
         bundle = Object.new
         mock(bundle).gems{ [not_a_plugin] }
         mock(Bundler).setup{ bundle }
@@ -201,9 +183,6 @@ describe Genomer::Runtime do
     describe "where one plugins and non plugin are specified" do
 
       before do
-        FileUtils.touch 'Gemfile'
-
-        # Mock Bundler behavior
         bundle = Object.new
         mock(bundle).gems{ [plugin, not_a_plugin] }
         mock(Bundler).setup{ bundle }
@@ -218,4 +197,3 @@ describe Genomer::Runtime do
   end
 
 end
-

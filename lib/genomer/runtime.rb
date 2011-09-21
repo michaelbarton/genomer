@@ -50,6 +50,7 @@ class Genomer::Runtime
   end
 
   def plugins
+    require 'bundler'
     if File.exists?("Gemfile")
       bundle = Bundler.setup
       return bundle.gems.select do |gem|

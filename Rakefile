@@ -1,4 +1,5 @@
 require 'rubygems'
+gem 'psych'
 require 'bundler'
 begin
   Bundler.setup(:default, :development)

@@ -12,6 +12,7 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each do |f|
 end
 
 RSpec.configure do |config|
+  config.mock_with :rr
 
   class MockSettings
 

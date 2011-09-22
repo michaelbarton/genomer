@@ -13,6 +13,6 @@ Given /^I have installed the gem "([^"]*)"$/ do |gem|
   gem_dir = File.join(File.dirname(__FILE__),'..',gem)
   gemspec = File.join(gem_dir, gem + '.gemspec')
 
-  `gem build #{gemspec}`
-  `gem install #{gem}-0.0.0.gem`
+  When "I successfully run `gem build #{gemspec}`"
+  When "I successfully run `gem install #{gem}`"
 end

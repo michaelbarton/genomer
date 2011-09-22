@@ -6,6 +6,7 @@ Feature: Using plugins as part of a genomer project
   Background:
     Given I have installed the gem "genomer-plugin-fake"
 
+  @disable-bundler
   Scenario: Genomer plugins described in the gem file
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
@@ -16,9 +17,10 @@ Feature: Using plugins as part of a genomer project
      genomer COMMAND [options]
 
      Available commands:
-       fake         Fake genomer plugin for testing purposes
+       fake        Fake genomer plugin for testing purposes
      """
 
+  @disable-bundler
   Scenario: Genomer plugins described in the gem file
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"

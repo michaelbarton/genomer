@@ -4,7 +4,7 @@ class GenomerPluginFake
   end
 
   def run
-    puts 'Plugin "fake" called'
+    'Plugin "fake" called'
   end
 
 end

@@ -33,7 +33,7 @@ Feature: Using plugins as part of a genomer project
      """
 
   @disable-bundler
-  Scenario: Calling a specified genomer plugin using a command
+  Scenario: Calling a specified genomer plugin
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
       And I append to "Gemfile" with "gem 'genomer-plugin-fake'"
@@ -42,4 +42,17 @@ Feature: Using plugins as part of a genomer project
       And the output should contain:
      """
      Plugin "fake" called
+     """
+
+  @disable-bundler
+  Scenario: Calling a non-specified genomer plugin
+    Given I run the genomer command with the arguments "init project"
+      And I cd to "project"
+      And I append to "Gemfile" with ""
+     When I run the genomer command with the arguments "fake"
+     Then the exit status should be 1
+      And the output should contain:
+     """
+     Unknown command or plugin "fake"
+
      """

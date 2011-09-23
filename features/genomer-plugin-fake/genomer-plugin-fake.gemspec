@@ -13,5 +13,6 @@ Gem::Specification.new do |s|
   # required for validation
   s.rubyforge_project         = "genomer-plugin-fake"
 
+  s.files        = Dir["{lib}/**/*.rb"]
   s.require_path = 'lib'
 end

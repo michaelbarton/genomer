@@ -5,7 +5,8 @@ Feature: Listing available commands
 
   Scenario: Running genomer with no commands
      When I run the genomer command with no arguments
-     Then the output should contain:
+     Then the exit status should be 0
+      And the output should contain:
      """
      genomer COMMAND [options]
      run `genomer help` for a list of available commands`
@@ -14,7 +15,8 @@ Feature: Listing available commands
 
   Scenario: Running genomer with the help command
      When I run the genomer command with the arguments "help"
-     Then the output should contain:
+     Then the exit status should be 0
+      And the output should contain:
      """
      genomer COMMAND [options]
 

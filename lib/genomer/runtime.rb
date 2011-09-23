@@ -12,6 +12,7 @@ class Genomer::Runtime
     when nil    then short_help
     when "help" then help
     when "init" then init(@settings.rest.shift)
+    else             run(command,@settings)
     end
   end
 
@@ -49,6 +50,14 @@ class Genomer::Runtime
     end
   end
 
+  def run(command,settings)
+    plugin_name = plugins.detect{|i| i.name == "genomer-plugin-#{command}" }.name
+    require plugin_name
+
+    plugin = Kernel.const_get(to_class_name(plugin_name)).new(settings)
+    plugin.run
+  end
+
   def plugins
     require 'bundler'
     if File.exists?("Gemfile")
@@ -59,6 +68,10 @@ class Genomer::Runtime
     else
       Array.new
     end
+  end
+
+  def to_class_name(string)
+    string.split('-').map{|i| i.capitalize}.join
   end
 
 end

@@ -3,9 +3,6 @@ Feature: Using plugins as part of a genomer project
   A user can specify genomer plugins in a Gemfile
   So that these plugins are available on the command line
 
-  Background:
-    Given I have installed the gem "genomer-plugin-fake"
-
   @disable-bundler
   Scenario: Running help with no genomer plugins specified
     Given I run the genomer command with the arguments "init project"

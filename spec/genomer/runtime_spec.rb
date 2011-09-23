@@ -126,6 +126,31 @@ describe Genomer::Runtime do
 
   end
 
+  describe "using plugins on the command line" do
+
+    subject do
+      Genomer::Runtime.new(MockSettings.new(%w|fake|))
+    end
+
+    before do
+      mock(subject).plugins do
+        [Gem::Specification.new do |s|
+          s.name        = 'genomer-plugin-fake'
+        end]
+      end
+    end
+
+    let(:plugin) do
+      require 'genomer-plugin-fake'
+      GenomerPluginFake.new(nil)
+    end
+
+    it "should return the expected result of calling the gem" do
+      subject.execute!.should == plugin.run
+    end
+
+  end
+
   describe "#plugins" do
 
     after do
@@ -192,6 +217,18 @@ describe Genomer::Runtime do
         subject.should == [plugin]
       end
 
+    end
+
+  end
+
+  describe "#to_class_name" do
+
+    subject do
+      Genomer::Runtime.new MockSettings.new
+    end
+
+    it "should dash separated words to camel case" do
+      subject.to_class_name('words-with-dashes').should == "WordsWithDashes"
     end
 
   end

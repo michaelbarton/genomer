@@ -1,13 +1,15 @@
 require 'rubygems'
+gem 'psych'
 require 'bundler'
 begin
   Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e
   $stderr.puts e.message
   $stderr.puts "Run `bundle install` to install missing gems"
+  $stderr.puts "Run `rake install_fake` to install test plugin"
   exit e.status_code
 end
-require 'rake'
+require 'rake/dsl_definition'
 
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
@@ -30,7 +32,12 @@ end
 require 'cucumber/rake/task'
 Cucumber::Rake::Task.new(:features)
 
-task :default => :spec
+desc "Installs genomer-fake-plugin for testing"
+task :install_fake do
+  FileUtils.cd('features/genomer-plugin-fake') do
+    `gem build genomer-plugin-fake.gemspec`
+    `gem install genomer-plugin-fake-0.0.0.gem`
+  end
+end
 
-require 'yard'
-YARD::Rake::YardocTask.new
+task :default => :spec

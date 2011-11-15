@@ -28,6 +28,6 @@ Feature: Listing available commands
      Then the exit status should be 1
       And the output should contain:
      """
-     Unknown command or plugin "fake"
+     Error. Unknown command or plugin 'unknown.'
 
      """

@@ -53,6 +53,6 @@ Feature: Using plugins as part of a genomer project
      Then the exit status should be 1
       And the output should contain:
      """
-     Unknown command or plugin "fake"
+     Error. Unknown command or plugin 'fake.'
 
      """

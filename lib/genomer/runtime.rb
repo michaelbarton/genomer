@@ -51,11 +51,12 @@ class Genomer::Runtime
   end
 
   def run(command,settings)
-    plugin_name = plugins.detect{|i| i.name == "genomer-plugin-#{command}" }.name
-    require plugin_name
-
-    plugin = Kernel.const_get(to_class_name(plugin_name)).new(settings)
-    plugin.run
+    plugin = plugins.detect{|i| i.name == "genomer-plugin-#{command}" }
+    unless plugin 
+      raise GenomerError, "Unknown command or plugin '#{command}.'"
+    end
+    require plugin.name
+    Kernel.const_get(to_class_name(plugin.name)).new(settings).run
   end
 
   def plugins

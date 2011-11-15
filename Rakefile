@@ -6,6 +6,7 @@ begin
 rescue Bundler::BundlerError => e
   $stderr.puts e.message
   $stderr.puts "Run `bundle install` to install missing gems"
+  $stderr.puts "Run `rake install_fake` to install test plugin"
   exit e.status_code
 end
 require 'rake/dsl_definition'
@@ -31,6 +32,7 @@ end
 require 'cucumber/rake/task'
 Cucumber::Rake::Task.new(:features)
 
+desc "Installs genomer-fake-plugin for testing"
 task :install_fake do
   FileUtils.cd('features/genomer-plugin-fake') do
     `gem build genomer-plugin-fake.gemspec`

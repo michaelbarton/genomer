@@ -22,3 +22,12 @@ Feature: Listing available commands
 
      Available commands:
      """
+
+  Scenario: Running genomer with an unknown command
+     When I run the genomer command with the arguments "unknown"
+     Then the exit status should be 1
+      And the output should contain:
+     """
+     Error. Unknown command or plugin 'unknown.'
+
+     """

@@ -126,6 +126,19 @@ describe Genomer::Runtime do
 
   end
 
+  describe "unknown command" do
+
+    subject do
+      Genomer::Runtime.new MockSettings.new(%w|unknown|)
+    end
+
+    it "should print an error message" do
+      lambda{ subject.execute! }.should raise_error(GenomerError,
+        "Unknown command or plugin 'unknown.'")
+    end
+
+  end
+
   describe "using plugins on the command line" do
 
     subject do

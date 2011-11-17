@@ -54,5 +54,6 @@ Feature: Using plugins as part of a genomer project
       And the output should contain:
      """
      Error. Unknown command or plugin 'fake.'
+     run `genomer help` for a list of available commands
 
      """

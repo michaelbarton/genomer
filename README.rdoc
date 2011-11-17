@@ -9,7 +9,7 @@ directory and updated at the command line using the `genomer` command.
 Ruby and RubyGems are required to use genomer and related plugins. Genomer is
 installed on the command line using:
 
-  $ gem install genomer-tools
+  $ gem install genomer
 
 == Contact
 

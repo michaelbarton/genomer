@@ -19,7 +19,7 @@ class Genomer::Runtime
   def short_help
     msg =<<-EOF
       genomer COMMAND [options]
-      run `genomer help` for a list of available commands`
+      run `genomer help` for a list of available commands
     EOF
     msg.unindent
   end
@@ -53,7 +53,9 @@ class Genomer::Runtime
   def run(command,settings)
     plugin = plugins.detect{|i| i.name == "genomer-plugin-#{command}" }
     unless plugin 
-      raise GenomerError, "Unknown command or plugin '#{command}.'"
+      error =  "Unknown command or plugin '#{command}.'\n"
+      error << "run `genomer help` for a list of available commands\n"
+      raise GenomerError, error
     end
     require plugin.name
     Kernel.const_get(to_class_name(plugin.name)).new(settings).run

@@ -53,7 +53,7 @@ describe Genomer::Runtime do
     it "should print the short help description" do
       msg = <<-EOF
         genomer COMMAND [options]
-        run `genomer help` for a list of available commands`
+        run `genomer help` for a list of available commands
       EOF
 
       subject.execute!.should == msg.unindent
@@ -133,8 +133,9 @@ describe Genomer::Runtime do
     end
 
     it "should print an error message" do
-      lambda{ subject.execute! }.should raise_error(GenomerError,
-        "Unknown command or plugin 'unknown.'")
+      error =  "Unknown command or plugin 'unknown.'\n"
+      error << "run `genomer help` for a list of available commands\n"
+      lambda{ subject.execute! }.should raise_error(GenomerError,error)
     end
 
   end

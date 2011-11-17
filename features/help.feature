@@ -9,7 +9,7 @@ Feature: Listing available commands
       And the output should contain:
      """
      genomer COMMAND [options]
-     run `genomer help` for a list of available commands`
+     run `genomer help` for a list of available commands
 
      """
 
@@ -22,6 +22,10 @@ Feature: Listing available commands
 
      Available commands:
      """
+      And the output should contain:
+     """
+       init        Create a new genomer project
+     """
 
   Scenario: Running genomer with an unknown command
      When I run the genomer command with the arguments "unknown"
@@ -29,5 +33,6 @@ Feature: Listing available commands
       And the output should contain:
      """
      Error. Unknown command or plugin 'unknown.'
+     run `genomer help` for a list of available commands
 
      """

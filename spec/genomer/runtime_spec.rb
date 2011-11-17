@@ -74,6 +74,7 @@ describe Genomer::Runtime do
           genomer COMMAND [options]
 
           Available commands:
+            init        Create a new genomer project
         EOF
 
         subject.execute!.should == msg.unindent.strip
@@ -97,6 +98,7 @@ describe Genomer::Runtime do
           genomer COMMAND [options]
 
           Available commands:
+            init        Create a new genomer project
             fake        A fake scaffolder command
         EOF
 
@@ -118,6 +120,7 @@ describe Genomer::Runtime do
           genomer COMMAND [options]
 
           Available commands:
+            init        Create a new genomer project
         EOF
         subject.execute!.should == msg.unindent.strip
       end

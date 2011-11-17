@@ -21,9 +21,6 @@ Feature: Listing available commands
      genomer COMMAND [options]
 
      Available commands:
-     """
-      And the output should contain:
-     """
        init        Create a new genomer project
      """
 

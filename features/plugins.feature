@@ -15,6 +15,7 @@ Feature: Using plugins as part of a genomer project
      genomer COMMAND [options]
 
      Available commands:
+       init        Create a new genomer project
      """
 
   @disable-bundler
@@ -29,6 +30,7 @@ Feature: Using plugins as part of a genomer project
      genomer COMMAND [options]
 
      Available commands:
+       init        Create a new genomer project
        fake        Fake genomer plugin for testing purposes
      """
 

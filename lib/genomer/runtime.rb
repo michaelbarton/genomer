@@ -29,6 +29,7 @@ class Genomer::Runtime
       genomer COMMAND [options]
 
       Available commands:
+        init        Create a new genomer project
     EOF
     msg.unindent!
 

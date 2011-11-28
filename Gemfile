@@ -17,4 +17,7 @@ group :development do
   # Features
   gem "cucumber", "~> 1.0.4"
   gem "aruba",    "~> 0.4.6"
+
+  # Fake gem for testing
+  gem "genomer-plugin-fake", "0.0.0", :path => "#{File.dirname(__FILE__)}/features/genomer-plugin-fake/"
 end

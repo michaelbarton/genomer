@@ -1,10 +1,13 @@
 class GenomerPluginFake
 
-  def initialize(settings = {})
+  def initialize(arguments,settings = {})
+    @arguments = arguments
   end
 
   def run
-    'Plugin "fake" called'
+    msg = 'Plugin "fake" called'
+    msg << @arguments.unshift(' with arguments:').join(' ') unless arguments.empty?
+    msg
   end
 
 end

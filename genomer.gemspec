@@ -4,70 +4,87 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{genomer}
+  s.name = "genomer"
   s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Barton"]
-  s.date = %q{2010-11-30}
-  s.description = %q{TODO: longer description of your gem}
-  s.email = %q{mail@michaelbarton.me.uk}
+  s.date = "2011-11-30"
+  s.description = "Turns scaffolded contigs and annotations into a genome."
+  s.email = "mail@michaelbarton.me.uk"
+  s.executables = ["genomer"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
   ]
   s.files = [
     ".document",
-    ".rspec",
     "Gemfile",
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "bin/genomer",
     "cucumber.yml",
-    "features/genomer.feature",
+    "features/genomer-plugin-fake/genomer-plugin-fake.gemspec",
+    "features/genomer-plugin-fake/lib/genomer-plugin-fake.rb",
+    "features/help.feature",
+    "features/plugins.feature",
+    "features/project_creation.feature",
     "features/step_definitions/genomer_steps.rb",
     "features/support/env.rb",
+    "genomer.gemspec",
     "lib/genomer.rb",
+    "lib/genomer/genomer_error.rb",
+    "lib/genomer/runtime.rb",
+    "man/genomer-init.1.ronn",
+    "spec/genomer/runtime_spec.rb",
     "spec/genomer_spec.rb",
     "spec/spec_helper.rb"
   ]
-  s.homepage = %q{http://github.com/michaelbarton/genomer}
+  s.homepage = "http://github.com/michaelbarton/genomer"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.7}
-  s.summary = %q{TODO: one-line summary of your gem}
-  s.test_files = [
-    "spec/genomer_spec.rb",
-    "spec/spec_helper.rb"
-  ]
+  s.rubygems_version = "1.8.11"
+  s.summary = "Build genome output files"
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<bundler>, ["~> 1.0"])
+      s.add_runtime_dependency(%q<configliere>, ["~> 0.4.8"])
+      s.add_runtime_dependency(%q<unindent>, ["~> 1.0.0"])
+      s.add_runtime_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5"])
-      s.add_development_dependency(%q<rspec>, ["~> 2.1"])
-      s.add_development_dependency(%q<cucumber>, ["~> 0.9"])
-      s.add_development_dependency(%q<redgreen>, ["~> 1.2"])
-      s.add_development_dependency(%q<yard>, ["~> 0.6"])
+      s.add_development_dependency(%q<rspec>, ["~> 2.6"])
+      s.add_development_dependency(%q<fakefs>, ["~> 0.4.0"])
+      s.add_development_dependency(%q<rr>, ["~> 1.0.4"])
+      s.add_development_dependency(%q<cucumber>, ["~> 1.0.4"])
+      s.add_development_dependency(%q<aruba>, ["~> 0.4.6"])
+      s.add_development_dependency(%q<genomer-plugin-fake>, ["= 0.0.0"])
     else
-      s.add_dependency(%q<bundler>, ["~> 1.0"])
+      s.add_dependency(%q<configliere>, ["~> 0.4.8"])
+      s.add_dependency(%q<unindent>, ["~> 1.0.0"])
+      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5"])
-      s.add_dependency(%q<rspec>, ["~> 2.1"])
-      s.add_dependency(%q<cucumber>, ["~> 0.9"])
-      s.add_dependency(%q<redgreen>, ["~> 1.2"])
-      s.add_dependency(%q<yard>, ["~> 0.6"])
+      s.add_dependency(%q<rspec>, ["~> 2.6"])
+      s.add_dependency(%q<fakefs>, ["~> 0.4.0"])
+      s.add_dependency(%q<rr>, ["~> 1.0.4"])
+      s.add_dependency(%q<cucumber>, ["~> 1.0.4"])
+      s.add_dependency(%q<aruba>, ["~> 0.4.6"])
+      s.add_dependency(%q<genomer-plugin-fake>, ["= 0.0.0"])
     end
   else
-    s.add_dependency(%q<bundler>, ["~> 1.0"])
+    s.add_dependency(%q<configliere>, ["~> 0.4.8"])
+    s.add_dependency(%q<unindent>, ["~> 1.0.0"])
+    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5"])
-    s.add_dependency(%q<rspec>, ["~> 2.1"])
-    s.add_dependency(%q<cucumber>, ["~> 0.9"])
-    s.add_dependency(%q<redgreen>, ["~> 1.2"])
-    s.add_dependency(%q<yard>, ["~> 0.6"])
+    s.add_dependency(%q<rspec>, ["~> 2.6"])
+    s.add_dependency(%q<fakefs>, ["~> 0.4.0"])
+    s.add_dependency(%q<rr>, ["~> 1.0.4"])
+    s.add_dependency(%q<cucumber>, ["~> 1.0.4"])
+    s.add_dependency(%q<aruba>, ["~> 0.4.6"])
+    s.add_dependency(%q<genomer-plugin-fake>, ["= 0.0.0"])
   end
 end
 

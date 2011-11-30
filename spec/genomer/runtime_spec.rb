@@ -23,8 +23,8 @@ describe Genomer::Runtime do
         File.exists?('project_name').should be_true
       end
 
-      it "should create a '.gnmr' directory" do
-        File.exists?(File.join('project_name','.gnmr')).should be_true
+      it "should create an 'assembly' directory" do
+        File.exists?(File.join('project_name','assembly')).should be_true
       end
 
     end

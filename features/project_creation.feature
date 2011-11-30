@@ -7,7 +7,7 @@ Feature: Creating a genomer project
     When I run the genomer command with the arguments "init project"
     Then the exit status should be 0
     And a directory named "project" should exist
-    And a directory named "project/.gnmr" should exist
+    And a directory named "project/assembly" should exist
 
   Scenario: Creating a new project where the directory already exists
     Given a directory named "project"

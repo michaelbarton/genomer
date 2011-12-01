@@ -24,7 +24,7 @@ Feature: Using plugins as part of a genomer project
       And I cd to "project"
       And I append to "Gemfile" with:
       """
-      gem 'genomer-plugin-fake', :path => '../../../features/genomer-plugin-fake'
+      gem 'genomer-plugin-simple', :path => '../../../features/genomer-plugin-simple'
       """
      When I run the genomer command with the arguments "help"
      Then the exit status should be 0
@@ -34,7 +34,7 @@ Feature: Using plugins as part of a genomer project
 
      Available commands:
        init        Create a new genomer project
-       fake        Fake genomer plugin for testing purposes
+       simple      Simple genomer plugin for testing purposes
      """
 
   @disable-bundler
@@ -42,11 +42,11 @@ Feature: Using plugins as part of a genomer project
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
       And I append to "Gemfile" with ""
-     When I run the genomer command with the arguments "fake"
+     When I run the genomer command with the arguments "simple"
      Then the exit status should be 1
       And the output should contain:
      """
-     Error. Unknown command or plugin 'fake.'
+     Error. Unknown command or plugin 'simple.'
      run `genomer help` for a list of available commands
 
      """
@@ -57,13 +57,13 @@ Feature: Using plugins as part of a genomer project
       And I cd to "project"
       And I append to "Gemfile" with:
       """
-      gem 'genomer-plugin-fake', :path => '../../../features/genomer-plugin-fake'
+      gem 'genomer-plugin-simple', :path => '../../../features/genomer-plugin-simple'
       """
-     When I run the genomer command with the arguments "fake"
+     When I run the genomer command with the arguments "simple"
      Then the exit status should be 0
       And the output should contain:
      """
-     Plugin "fake" called
+     Plugin "simple" called
      """
 
   @disable-bundler
@@ -72,12 +72,12 @@ Feature: Using plugins as part of a genomer project
       And I cd to "project"
       And I append to "Gemfile" with:
       """
-      gem 'genomer-plugin-fake', :path => '../../../features/genomer-plugin-fake'
+      gem 'genomer-plugin-simple', :path => '../../../features/genomer-plugin-simple'
       """
-     When I run the genomer command with the arguments "fake arg1"
+     When I run the genomer command with the arguments "simple arg1"
      Then the exit status should be 0
       And the output should contain:
      """
-     Plugin "fake" called with arguments: arg1
+     Plugin "simple" called with arguments: arg1
      """
 

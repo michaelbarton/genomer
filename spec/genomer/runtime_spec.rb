@@ -87,8 +87,8 @@ describe Genomer::Runtime do
       before do
         mock(subject).plugins do
           [Gem::Specification.new do |s|
-            s.name        = 'genomer-plugin-fake'
-            s.summary     = 'A fake scaffolder command'
+            s.name        = 'genomer-plugin-simple'
+            s.summary     = 'A simple scaffolder command'
           end]
         end
       end
@@ -99,7 +99,7 @@ describe Genomer::Runtime do
 
           Available commands:
             init        Create a new genomer project
-            fake        A fake scaffolder command
+            simple      A simple scaffolder command
         EOF
 
         subject.execute!.should == msg.unindent.strip
@@ -148,7 +148,7 @@ describe Genomer::Runtime do
     before do
       mock(subject).plugins do
         [Gem::Specification.new do |s|
-          s.name = 'genomer-plugin-fake'
+          s.name = 'genomer-plugin-simple'
         end]
       end
     end
@@ -156,11 +156,11 @@ describe Genomer::Runtime do
     describe "with no arguments" do
 
       subject do
-        Genomer::Runtime.new(MockSettings.new(%w|fake|))
+        Genomer::Runtime.new(MockSettings.new(%w|simple|))
       end
 
       it "should return the expected result of calling the gem" do
-        subject.execute!.should == 'Plugin "fake" called'
+        subject.execute!.should == 'Plugin "simple" called'
       end
 
     end
@@ -168,11 +168,11 @@ describe Genomer::Runtime do
     describe "with arguments" do
 
       subject do
-        Genomer::Runtime.new(MockSettings.new(%w|fake arg1|))
+        Genomer::Runtime.new(MockSettings.new(%w|simple arg1|))
       end
 
       it "should return the expected result of calling the gem" do
-        subject.execute!.should == 'Plugin "fake" called with arguments: arg1'
+        subject.execute!.should == 'Plugin "simple" called with arguments: arg1'
       end
 
     end
@@ -191,7 +191,7 @@ describe Genomer::Runtime do
 
     let(:plugin) do
       Gem::Specification.new do |s|
-        s.name = 'genomer-plugin-fake'
+        s.name = 'genomer-plugin-simple'
       end
     end
 

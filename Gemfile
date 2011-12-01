@@ -19,5 +19,5 @@ group :development do
   gem "aruba",    "~> 0.4.6"
 
   # Fake gem for testing
-  gem "genomer-plugin-fake", "0.0.0", :path => "#{File.dirname(__FILE__)}/features/genomer-plugin-fake/"
+  gem "genomer-plugin-simple", :path => "#{File.dirname(__FILE__)}/features/genomer-plugin-simple/"
 end

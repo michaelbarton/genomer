@@ -165,14 +165,14 @@ describe Genomer::Runtime do
 
     end
 
-    describe "with arguments" do
+    describe "with a command" do
 
       subject do
-        Genomer::Runtime.new(MockSettings.new(%w|simple arg1|))
+        Genomer::Runtime.new(MockSettings.new(%w|simple echo arg1|))
       end
 
       it "should return the expected result of calling the gem" do
-        subject.execute!.should == 'Plugin "simple" called with arguments: arg1'
+        subject.execute!.should == 'Echo: arg1'
       end
 
     end

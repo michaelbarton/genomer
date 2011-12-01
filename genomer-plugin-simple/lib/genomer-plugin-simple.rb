@@ -5,9 +5,10 @@ class GenomerPluginSimple
   end
 
   def run
-    msg = 'Plugin "simple" called'
-    msg << @arguments.unshift(' with arguments:').join(' ') unless @arguments.empty?
-    msg
+    case @arguments.shift
+    when nil    then 'Plugin "simple" called'
+    when 'echo' then @arguments.unshift('Echo:').join(' ')
+    end
   end
 
 end

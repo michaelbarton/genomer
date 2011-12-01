@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Barton"]
-  s.date = "2011-11-30"
+  s.date = "2011-12-01"
   s.description = "Turns scaffolded contigs and annotations into a genome."
   s.email = "mail@michaelbarton.me.uk"
   s.executables = ["genomer"]
@@ -39,7 +39,6 @@ Gem::Specification.new do |s|
     "lib/genomer/runtime.rb",
     "man/genomer-init.1.ronn",
     "spec/genomer/runtime_spec.rb",
-    "spec/genomer_spec.rb",
     "spec/spec_helper.rb"
   ]
   s.homepage = "http://github.com/michaelbarton/genomer"

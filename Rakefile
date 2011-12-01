@@ -31,12 +31,4 @@ end
 require 'cucumber/rake/task'
 Cucumber::Rake::Task.new(:features)
 
-desc "Installs genomer-fake-plugin for testing"
-task :install_fake do
-  FileUtils.cd('features/genomer-plugin-fake') do
-    `gem build genomer-plugin-fake.gemspec`
-    `gem install genomer-plugin-fake-0.0.0.gem`
-  end
-end
-
 task :default => :spec

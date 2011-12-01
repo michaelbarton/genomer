@@ -22,7 +22,10 @@ Feature: Using plugins as part of a genomer project
   Scenario: Running help with a single genomer plugins specified
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with "gem 'genomer-plugin-fake'"
+      And I append to "Gemfile" with:
+      """
+      gem 'genomer-plugin-fake', :path => '../../../features/genomer-plugin-fake'
+      """
      When I run the genomer command with the arguments "help"
      Then the exit status should be 0
       And the output should contain:
@@ -52,7 +55,10 @@ Feature: Using plugins as part of a genomer project
   Scenario: Calling a genomer plugin
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with "gem 'genomer-plugin-fake'"
+      And I append to "Gemfile" with:
+      """
+      gem 'genomer-plugin-fake', :path => '../../../features/genomer-plugin-fake'
+      """
      When I run the genomer command with the arguments "fake"
      Then the exit status should be 0
       And the output should contain:
@@ -64,7 +70,10 @@ Feature: Using plugins as part of a genomer project
   Scenario: Calling a genomer plugin with arguments
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with "gem 'genomer-plugin-fake'"
+      And I append to "Gemfile" with:
+      """
+      gem 'genomer-plugin-fake', :path => '../../../features/genomer-plugin-fake'
+      """
      When I run the genomer command with the arguments "fake arg1"
      Then the exit status should be 0
       And the output should contain:

@@ -6,7 +6,7 @@ class GenomerPluginFake
 
   def run
     msg = 'Plugin "fake" called'
-    msg << @arguments.unshift(' with arguments:').join(' ') unless arguments.empty?
+    msg << @arguments.unshift(' with arguments:').join(' ') unless @arguments.empty?
     msg
   end
 

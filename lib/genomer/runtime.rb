@@ -12,7 +12,7 @@ class Genomer::Runtime
     when nil    then short_help
     when "help" then help
     when "init" then init(@settings.rest.shift)
-    else             run(command,@settings)
+    else             run(command,@settings.rest,@settings)
     end
   end
 
@@ -51,7 +51,7 @@ class Genomer::Runtime
     end
   end
 
-  def run(command,settings)
+  def run(command,arguments,settings)
     plugin = plugins.detect{|i| i.name == "genomer-plugin-#{command}" }
     unless plugin 
       error =  "Unknown command or plugin '#{command}.'\n"
@@ -59,7 +59,7 @@ class Genomer::Runtime
       raise GenomerError, error
     end
     require plugin.name
-    Kernel.const_get(to_class_name(plugin.name)).new(settings).run
+    Kernel.const_get(to_class_name(plugin.name)).new(arguments,settings).run
   end
 
   def plugins

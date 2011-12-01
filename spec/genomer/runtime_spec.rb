@@ -145,25 +145,36 @@ describe Genomer::Runtime do
 
   describe "using plugins on the command line" do
 
-    subject do
-      Genomer::Runtime.new(MockSettings.new(%w|fake|))
-    end
-
     before do
       mock(subject).plugins do
         [Gem::Specification.new do |s|
-          s.name        = 'genomer-plugin-fake'
+          s.name = 'genomer-plugin-fake'
         end]
       end
     end
 
-    let(:plugin) do
-      require 'genomer-plugin-fake'
-      GenomerPluginFake.new(nil)
+    describe "with no arguments" do
+
+      subject do
+        Genomer::Runtime.new(MockSettings.new(%w|fake|))
+      end
+
+      it "should return the expected result of calling the gem" do
+        subject.execute!.should == 'Plugin "fake" called'
+      end
+
     end
 
-    it "should return the expected result of calling the gem" do
-      subject.execute!.should == plugin.run
+    describe "with arguments" do
+
+      subject do
+        Genomer::Runtime.new(MockSettings.new(%w|fake arg1|))
+      end
+
+      it "should return the expected result of calling the gem" do
+        subject.execute!.should == 'Plugin "fake" called with arguments: arg1'
+      end
+
     end
 
   end

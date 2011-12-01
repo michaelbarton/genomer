@@ -69,6 +69,6 @@ Feature: Using plugins as part of a genomer project
      Then the exit status should be 0
       And the output should contain:
      """
-     Plugin "fake" called with arguments: 'arg1'
+     Plugin "fake" called with arguments: arg1
      """
 

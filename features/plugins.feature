@@ -24,7 +24,7 @@ Feature: Using plugins as part of a genomer project
       And I cd to "project"
       And I append to "Gemfile" with:
       """
-      gem 'genomer-plugin-simple', :path => '../../../features/genomer-plugin-simple'
+      gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
      When I run the genomer command with the arguments "help"
      Then the exit status should be 0
@@ -57,7 +57,7 @@ Feature: Using plugins as part of a genomer project
       And I cd to "project"
       And I append to "Gemfile" with:
       """
-      gem 'genomer-plugin-simple', :path => '../../../features/genomer-plugin-simple'
+      gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
      When I run the genomer command with the arguments "simple"
      Then the exit status should be 0
@@ -72,7 +72,7 @@ Feature: Using plugins as part of a genomer project
       And I cd to "project"
       And I append to "Gemfile" with:
       """
-      gem 'genomer-plugin-simple', :path => '../../../features/genomer-plugin-simple'
+      gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
      When I run the genomer command with the arguments "simple arg1"
      Then the exit status should be 0

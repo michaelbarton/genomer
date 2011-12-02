@@ -81,3 +81,36 @@ Feature: Using plugins as part of a genomer project
      Echo: some words
      """
 
+  @disable-bundler
+  Scenario: Plugin accessing the scaffold
+    Given I run the genomer command with the arguments "init project"
+      And I cd to "project"
+      And I append to "Gemfile" with:
+      """
+      gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
+      """
+      And I append to "assembly/scaffold.yml" with:
+      """
+      ---
+      -
+        sequence:
+          source: contig1
+      -
+        sequence:
+          source: contig2
+
+      """
+      And I append to "assembly/sequence.fna" with:
+      """
+      >contig1
+      ATGC
+      >contig2
+      ATGC
+      """
+     When I run the genomer command with the arguments "simple describe"
+     Then the exit status should be 0
+      And the output should contain:
+     """
+     The scaffold contains 2 entries
+     """
+

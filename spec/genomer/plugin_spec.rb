@@ -2,6 +2,38 @@ require 'spec_helper'
 
 describe Genomer::Plugin do
 
+  describe "#[]" do
+
+    before do
+      mock(described_class).plugins do
+        [Gem::Specification.new do |s|
+          s.name = 'genomer-plugin-simple'
+        end]
+      end
+
+    end
+
+    describe "fetching an available plugin" do
+
+      it "should return the class for this plugin" do
+        expected = GenomerPluginSimple = Class.new
+        described_class['simple'].should == expected
+      end
+
+    end
+
+    describe "fethcing an unavailble plugin" do
+
+      it "should print an error message" do
+        error =  "Unknown command or plugin 'unknown.'\n"
+        error << "run `genomer help` for a list of available commands\n"
+        lambda{ described_class['unknown'] }.should raise_error(GenomerError,error)
+      end
+
+    end
+
+  end
+
   describe "#plugins" do
 
     before do

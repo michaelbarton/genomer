@@ -3,142 +3,146 @@ require 'spec_helper'
 describe Genomer::Runtime do
   include FakeFS::SpecHelpers
 
-  describe "init command" do
+  describe "command" do
 
-    subject do
-      Genomer::Runtime.new MockSettings.new(%w|init project_name|)
-    end
+    describe "none" do
 
-    after do
-      FileUtils.rm_rf('project_name') if File.exists?('project_name')
-    end
-
-    describe "with project name argument" do
-
-      before do
-        subject.execute!
+      subject do
+        Genomer::Runtime.new MockSettings.new
       end
 
-      it "should create a directory from the named argument" do
-        File.exists?('project_name').should be_true
-      end
-
-      it "should create an 'assembly' directory" do
-        File.exists?(File.join('project_name','assembly')).should be_true
-      end
-
-    end
-
-    describe "when project already exists" do
-
-      before do
-        Dir.mkdir('project_name')
-      end
-
-      it "should raise an error" do
-        lambda{ subject.execute! }.should raise_error(GenomerError,
-          "Directory 'project_name' already exists.")
-      end
-
-    end
-
-  end
-
-  describe "no command" do
-
-    subject do
-      Genomer::Runtime.new MockSettings.new
-    end
-
-    it "should print the short help description" do
-      msg = <<-EOF
-        genomer COMMAND [options]
-        run `genomer help` for a list of available commands
-      EOF
-
-      subject.execute!.should == msg.unindent
-    end
-
-  end
-
-  describe "help command" do
-
-    subject do
-      Genomer::Runtime.new MockSettings.new(%w|help|)
-    end
-
-    describe "with no plugins" do
-
-      it "should print the help description" do
+      it "should print the short help description" do
         msg = <<-EOF
           genomer COMMAND [options]
-
-          Available commands:
-            init        Create a new genomer project
+          run `genomer help` for a list of available commands
         EOF
 
-        subject.execute!.should == msg.unindent.strip
+        subject.execute!.should == msg.unindent
       end
 
     end
 
-    describe "with available genomer plugins" do
+    describe "unknown" do
 
-      before do
-        mock(subject).plugins do
-          [Gem::Specification.new do |s|
-            s.name        = 'genomer-plugin-simple'
-            s.summary     = 'A simple scaffolder command'
-          end]
+      subject do
+        Genomer::Runtime.new MockSettings.new(%w|unknown|)
+      end
+
+      it "should print an error message" do
+        error =  "Unknown command or plugin 'unknown.'\n"
+        error << "run `genomer help` for a list of available commands\n"
+        lambda{ subject.execute! }.should raise_error(GenomerError,error)
+      end
+
+    end
+
+    describe "init" do
+
+      subject do
+        Genomer::Runtime.new MockSettings.new(%w|init project_name|)
+      end
+
+      after do
+        FileUtils.rm_rf('project_name') if File.exists?('project_name')
+      end
+
+      describe "with project name argument" do
+
+        before do
+          subject.execute!
         end
-      end
 
-      it "should print the help description" do
-        msg = <<-EOF
-          genomer COMMAND [options]
-
-          Available commands:
-            init        Create a new genomer project
-            simple      A simple scaffolder command
-        EOF
-
-        subject.execute!.should == msg.unindent.strip
-      end
-
-    end
-
-    describe "with non-genomer plugins in the Gemfile" do
-
-      before do
-        mock(subject).plugins do
-          []
+        it "should create a directory from the named argument" do
+          File.exists?('project_name').should be_true
         end
+
+        it "should create an 'assembly' directory" do
+          File.exists?(File.join('project_name','assembly')).should be_true
+        end
+
       end
 
-      it "should print the help description without plugins" do
-        msg = <<-EOF
-          genomer COMMAND [options]
+      describe "when project already exists" do
 
-          Available commands:
-            init        Create a new genomer project
-        EOF
-        subject.execute!.should == msg.unindent.strip
+        before do
+          Dir.mkdir('project_name')
+        end
+
+        it "should raise an error" do
+          lambda{ subject.execute! }.should raise_error(GenomerError,
+            "Directory 'project_name' already exists.")
+        end
+
       end
 
     end
 
-  end
+    describe "help" do
 
-  describe "unknown command" do
+      subject do
+        Genomer::Runtime.new MockSettings.new(%w|help|)
+      end
 
-    subject do
-      Genomer::Runtime.new MockSettings.new(%w|unknown|)
-    end
+      describe "with no plugins" do
 
-    it "should print an error message" do
-      error =  "Unknown command or plugin 'unknown.'\n"
-      error << "run `genomer help` for a list of available commands\n"
-      lambda{ subject.execute! }.should raise_error(GenomerError,error)
+        it "should print the help description" do
+          msg = <<-EOF
+            genomer COMMAND [options]
+
+            Available commands:
+              init        Create a new genomer project
+          EOF
+
+          subject.execute!.should == msg.unindent.strip
+        end
+
+      end
+
+      describe "with available genomer plugins" do
+
+        before do
+          mock(subject).plugins do
+            [Gem::Specification.new do |s|
+              s.name        = 'genomer-plugin-simple'
+              s.summary     = 'A simple scaffolder command'
+            end]
+          end
+        end
+
+        it "should print the help description" do
+          msg = <<-EOF
+            genomer COMMAND [options]
+
+            Available commands:
+              init        Create a new genomer project
+              simple      A simple scaffolder command
+          EOF
+
+          subject.execute!.should == msg.unindent.strip
+        end
+
+      end
+
+      describe "with non-genomer plugins in the Gemfile" do
+
+        before do
+          mock(subject).plugins do
+            []
+          end
+        end
+
+        it "should print the help description without plugins" do
+          msg = <<-EOF
+            genomer COMMAND [options]
+
+            Available commands:
+              init        Create a new genomer project
+          EOF
+          subject.execute!.should == msg.unindent.strip
+        end
+
+      end
+
     end
 
   end

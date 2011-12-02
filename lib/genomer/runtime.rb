@@ -2,17 +2,22 @@ require 'unindent'
 
 class Genomer::Runtime
 
+  attr :command
+  attr :arguments
+  attr :flags
+
   def initialize(settings)
-    @settings = settings
+    @command   = settings.rest.shift
+    @arguments = settings.rest
+    @flags     = settings
   end
 
   def execute!
-    command = @settings.rest.shift
     case command
     when nil    then short_help
     when "help" then help
-    when "init" then init(@settings.rest.shift)
-    else             run(command,@settings.rest,@settings)
+    when "init" then init(arguments.first)
+    else             run(command,arguments,flags)
     end
   end
 

@@ -183,6 +183,28 @@ describe Genomer::Runtime do
 
   end
 
+  describe "#initialize" do
+
+    subject do
+      Genomer::Runtime.new settings
+    end
+
+    describe "with arguments and flags" do
+
+      let(:settings) do
+        MockSettings.new(%w|init project_name|, {:flag => 'something'})
+      end
+
+      it "should set the runtime variables" do
+        subject.command.should == 'init'
+        subject.arguments.should == ['project_name']
+        subject.flags[:flag] == settings.flags[:flag]
+      end
+
+    end
+
+  end
+
   describe "#plugins" do
 
     after do

@@ -27,6 +27,10 @@ RSpec.configure do |config|
       @args[arg]
     end
 
+    def flags
+      @args
+    end
+
   end
 
   config.after(:each) do

@@ -16,7 +16,7 @@ class Genomer::Runtime
     case command
     when nil    then short_help
     when "help" then help
-    when "init" then init(arguments.first)
+    when "init" then init
     else             run_plugin
     end
   end
@@ -47,7 +47,8 @@ class Genomer::Runtime
     msg.strip
   end
 
-  def init(project_name)
+  def init
+    project_name = arguments.first
     if File.exists?(project_name)
       raise GenomerError, "Directory '#{project_name}' already exists."
     else

@@ -10,10 +10,13 @@ describe Genomer::Plugin do
           s.name = 'genomer-plugin-simple'
         end]
       end
-
     end
 
     describe "fetching an available plugin" do
+
+      before do
+        mock(described_class).require('genomer-plugin-simple')
+      end
 
       it "should return the class for this plugin" do
         expected = GenomerPluginSimple = Class.new

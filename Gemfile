@@ -10,9 +10,10 @@ group :development do
   gem "jeweler",  "~> 1.5"
 
   # Specs
-  gem "rspec",    "~> 2.6"
-  gem "fakefs",   "~> 0.4.0"
-  gem "rr",       "~> 1.0.4"
+  gem "rspec",                   "~> 2.6"
+  gem "fakefs",                  "~> 0.4.0"
+  gem "rr",                      "~> 1.0.4"
+  gem "scaffolder-test-helpers", "~> 0.4.0"
 
   # Features
   gem "cucumber", "~> 1.0.4"

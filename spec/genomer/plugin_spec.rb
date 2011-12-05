@@ -94,4 +94,38 @@ describe Genomer::Plugin do
 
   end
 
+  describe "#scaffold" do
+
+    let(:entries) do
+      [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
+    end
+
+    let (:sequence_file) do
+      File.new("assembly/sequence.fna",'w')
+    end
+
+    let (:scaffold_file) do
+      File.new("assembly/scaffold.yml",'w')
+    end
+
+    before do
+      Dir.mkdir('assembly')
+      write_sequence_file(entries,sequence_file)
+      write_scaffold_file(entries,scaffold_file)
+    end
+
+    after do
+      FileUtils.rm_rf 'assembly'
+    end
+
+    subject do
+      described_class.new
+    end
+
+    it "should return the expected scaffold built from the scaffold files" do
+      subject.scaffold.length.should == 1
+    end
+
+  end
+
 end

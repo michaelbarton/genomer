@@ -2,6 +2,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'rspec'
 require 'fakefs/spec_helpers'
+require 'scaffolder/test/helpers'
 
 require 'genomer'
 
@@ -13,6 +14,9 @@ end
 
 RSpec.configure do |config|
   config.mock_with :rr
+
+  include Scaffolder::Test
+  include Scaffolder::Test::Helpers
 
   class MockSettings
 

@@ -20,4 +20,11 @@ class Genomer::Plugin
     string.split('-').map{|i| i.capitalize}.join
   end
 
+  def scaffold
+    assembly = Pathname.new('assembly')
+    sequence_file = assembly + 'sequence.fna'
+    scaffold_file = assembly + 'scaffold.yml'
+    Scaffolder.new(YAML.load(File.open(scaffold_file)),sequence_file)
+  end
+
 end

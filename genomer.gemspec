@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Barton"]
-  s.date = "2011-12-01"
+  s.date = "2011-12-06"
   s.description = "Turns scaffolded contigs and annotations into a genome."
   s.email = "mail@michaelbarton.me.uk"
   s.executables = ["genomer"]
@@ -26,18 +26,20 @@ Gem::Specification.new do |s|
     "VERSION",
     "bin/genomer",
     "cucumber.yml",
-    "features/genomer-plugin-fake/genomer-plugin-fake.gemspec",
-    "features/genomer-plugin-fake/lib/genomer-plugin-fake.rb",
     "features/help.feature",
     "features/plugins.feature",
     "features/project_creation.feature",
     "features/step_definitions/genomer_steps.rb",
     "features/support/env.rb",
+    "genomer-plugin-simple/genomer-plugin-simple.gemspec",
+    "genomer-plugin-simple/lib/genomer-plugin-simple.rb",
     "genomer.gemspec",
     "lib/genomer.rb",
     "lib/genomer/genomer_error.rb",
+    "lib/genomer/plugin.rb",
     "lib/genomer/runtime.rb",
     "man/genomer-init.1.ronn",
+    "spec/genomer/plugin_spec.rb",
     "spec/genomer/runtime_spec.rb",
     "spec/spec_helper.rb"
   ]
@@ -52,38 +54,41 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<configliere>, ["~> 0.4.8"])
+      s.add_runtime_dependency(%q<scaffolder>, ["~> 0.4.0"])
       s.add_runtime_dependency(%q<unindent>, ["~> 1.0.0"])
       s.add_runtime_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5"])
       s.add_development_dependency(%q<rspec>, ["~> 2.6"])
       s.add_development_dependency(%q<fakefs>, ["~> 0.4.0"])
       s.add_development_dependency(%q<rr>, ["~> 1.0.4"])
+      s.add_development_dependency(%q<scaffolder-test-helpers>, ["~> 0.4.0"])
       s.add_development_dependency(%q<cucumber>, ["~> 1.0.4"])
       s.add_development_dependency(%q<aruba>, ["~> 0.4.6"])
-      s.add_development_dependency(%q<genomer-plugin-fake>, ["= 0.0.0"])
     else
       s.add_dependency(%q<configliere>, ["~> 0.4.8"])
+      s.add_dependency(%q<scaffolder>, ["~> 0.4.0"])
       s.add_dependency(%q<unindent>, ["~> 1.0.0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5"])
       s.add_dependency(%q<rspec>, ["~> 2.6"])
       s.add_dependency(%q<fakefs>, ["~> 0.4.0"])
       s.add_dependency(%q<rr>, ["~> 1.0.4"])
+      s.add_dependency(%q<scaffolder-test-helpers>, ["~> 0.4.0"])
       s.add_dependency(%q<cucumber>, ["~> 1.0.4"])
       s.add_dependency(%q<aruba>, ["~> 0.4.6"])
-      s.add_dependency(%q<genomer-plugin-fake>, ["= 0.0.0"])
     end
   else
     s.add_dependency(%q<configliere>, ["~> 0.4.8"])
+    s.add_dependency(%q<scaffolder>, ["~> 0.4.0"])
     s.add_dependency(%q<unindent>, ["~> 1.0.0"])
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5"])
     s.add_dependency(%q<rspec>, ["~> 2.6"])
     s.add_dependency(%q<fakefs>, ["~> 0.4.0"])
     s.add_dependency(%q<rr>, ["~> 1.0.4"])
+    s.add_dependency(%q<scaffolder-test-helpers>, ["~> 0.4.0"])
     s.add_dependency(%q<cucumber>, ["~> 1.0.4"])
     s.add_dependency(%q<aruba>, ["~> 0.4.6"])
-    s.add_dependency(%q<genomer-plugin-fake>, ["= 0.0.0"])
   end
 end
 

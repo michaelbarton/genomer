@@ -3,262 +3,174 @@ require 'spec_helper'
 describe Genomer::Runtime do
   include FakeFS::SpecHelpers
 
-  describe "init command" do
+  describe "command" do
 
-    subject do
-      Genomer::Runtime.new MockSettings.new(%w|init project_name|)
-    end
+    describe "none" do
 
-    after do
-      FileUtils.rm_rf('project_name') if File.exists?('project_name')
-    end
-
-    describe "with project name argument" do
-
-      before do
-        subject.execute!
+      subject do
+        Genomer::Runtime.new MockSettings.new
       end
 
-      it "should create a directory from the named argument" do
-        File.exists?('project_name').should be_true
-      end
-
-      it "should create an 'assembly' directory" do
-        File.exists?(File.join('project_name','assembly')).should be_true
-      end
-
-    end
-
-    describe "when project already exists" do
-
-      before do
-        Dir.mkdir('project_name')
-      end
-
-      it "should raise an error" do
-        lambda{ subject.execute! }.should raise_error(GenomerError,
-          "Directory 'project_name' already exists.")
-      end
-
-    end
-
-  end
-
-  describe "no command" do
-
-    subject do
-      Genomer::Runtime.new MockSettings.new
-    end
-
-    it "should print the short help description" do
-      msg = <<-EOF
-        genomer COMMAND [options]
-        run `genomer help` for a list of available commands
-      EOF
-
-      subject.execute!.should == msg.unindent
-    end
-
-  end
-
-  describe "help command" do
-
-    subject do
-      Genomer::Runtime.new MockSettings.new(%w|help|)
-    end
-
-    describe "with no plugins" do
-
-      it "should print the help description" do
+      it "should print the short help description" do
         msg = <<-EOF
           genomer COMMAND [options]
-
-          Available commands:
-            init        Create a new genomer project
+          run `genomer help` for a list of available commands
         EOF
 
-        subject.execute!.should == msg.unindent.strip
+        subject.execute!.should == msg.unindent
       end
 
     end
 
-    describe "with available genomer plugins" do
+    describe "unknown" do
+
+      subject do
+        Genomer::Runtime.new MockSettings.new(%w|unknown|)
+      end
+
+      it "should print an error message" do
+        error =  "Unknown command or plugin 'unknown.'\n"
+        error << "run `genomer help` for a list of available commands\n"
+        lambda{ subject.execute! }.should raise_error(GenomerError,error)
+      end
+
+    end
+
+    describe "init" do
+
+      subject do
+        Genomer::Runtime.new MockSettings.new(%w|init project_name|)
+      end
+
+      after do
+        FileUtils.rm_rf('project_name') if File.exists?('project_name')
+      end
+
+      describe "with project name argument" do
+
+        before do
+          subject.execute!
+        end
+
+        it "should create a directory from the named argument" do
+          File.exists?('project_name').should be_true
+        end
+
+        it "should create an 'assembly' directory" do
+          File.exists?(File.join('project_name','assembly')).should be_true
+        end
+
+      end
+
+      describe "when project already exists" do
+
+        before do
+          Dir.mkdir('project_name')
+        end
+
+        it "should raise an error" do
+          lambda{ subject.execute! }.should raise_error(GenomerError,
+            "Directory 'project_name' already exists.")
+        end
+
+      end
+
+    end
+
+    describe "help" do
+
+      subject do
+        Genomer::Runtime.new MockSettings.new(%w|help|)
+      end
 
       before do
-        mock(subject).plugins do
+        mock(Genomer::Plugin).plugins{ gems }
+      end
+
+      describe "with no available plugins" do
+
+        let (:gems) do
+          []
+        end
+
+        it "should print the help description" do
+          msg = <<-EOF
+            genomer COMMAND [options]
+
+            Available commands:
+              init        Create a new genomer project
+          EOF
+
+          subject.execute!.should == msg.unindent.strip
+        end
+
+      end
+
+      describe "with available genomer plugins" do
+
+        let (:gems) do
           [Gem::Specification.new do |s|
             s.name        = 'genomer-plugin-simple'
             s.summary     = 'A simple scaffolder command'
           end]
         end
-      end
 
-      it "should print the help description" do
-        msg = <<-EOF
-          genomer COMMAND [options]
+        it "should print the help description" do
+          msg = <<-EOF
+            genomer COMMAND [options]
 
-          Available commands:
-            init        Create a new genomer project
-            simple      A simple scaffolder command
-        EOF
-
-        subject.execute!.should == msg.unindent.strip
-      end
-
-    end
-
-    describe "with non-genomer plugins in the Gemfile" do
-
-      before do
-        mock(subject).plugins do
-          []
+            Available commands:
+              init        Create a new genomer project
+              simple      A simple scaffolder command
+          EOF
+          subject.execute!.should == msg.unindent.strip
         end
-      end
 
-      it "should print the help description without plugins" do
-        msg = <<-EOF
-          genomer COMMAND [options]
-
-          Available commands:
-            init        Create a new genomer project
-        EOF
-        subject.execute!.should == msg.unindent.strip
       end
 
     end
 
   end
 
-  describe "unknown command" do
+  describe "#initialize" do
 
     subject do
-      Genomer::Runtime.new MockSettings.new(%w|unknown|)
+      Genomer::Runtime.new settings
     end
 
-    it "should print an error message" do
-      error =  "Unknown command or plugin 'unknown.'\n"
-      error << "run `genomer help` for a list of available commands\n"
-      lambda{ subject.execute! }.should raise_error(GenomerError,error)
+    describe "with arguments and flags" do
+
+      let(:settings) do
+        MockSettings.new(%w|init project_name|, {:flag => 'something'})
+      end
+
+      it "should set the runtime variables" do
+        subject.command.should == 'init'
+        subject.arguments.should == ['project_name']
+        subject.flags[:flag] == settings.flags[:flag]
+      end
+
     end
 
   end
 
-  describe "using plugins on the command line" do
+  describe "#run_plugin" do
 
     before do
-      mock(subject).plugins do
-        [Gem::Specification.new do |s|
-          s.name = 'genomer-plugin-simple'
-        end]
-      end
-    end
-
-    describe "with no arguments" do
-
-      subject do
-        Genomer::Runtime.new(MockSettings.new(%w|simple|))
-      end
-
-      it "should return the expected result of calling the gem" do
-        subject.execute!.should == 'Plugin "simple" called'
-      end
-
-    end
-
-    describe "with a command" do
-
-      subject do
-        Genomer::Runtime.new(MockSettings.new(%w|simple echo arg1|))
-      end
-
-      it "should return the expected result of calling the gem" do
-        subject.execute!.should == 'Echo: arg1'
-      end
-
-    end
-
-  end
-
-  describe "#plugins" do
-
-    after do
-      FileUtils.rm('Gemfile') if File.exists?('Gemfile')
-    end
-
-    before do
-      FileUtils.touch 'Gemfile'
-    end
-
-    let(:plugin) do
-      Gem::Specification.new do |s|
-        s.name = 'genomer-plugin-simple'
-      end
-    end
-
-    let(:not_a_plugin) do
-      Gem::Specification.new do |s|
-        s.name = 'rr'
+      mock(Genomer::Plugin).[]('plugin') do
+         mock!.new(anything,anything) do
+           mock!.run
+         end
       end
     end
 
     subject do
-      Genomer::Runtime.new(MockSettings.new(%w|help|)).plugins
+      Genomer::Runtime.new MockSettings.new(%w|plugin arg1 arg2|, {:flag => 'arg3'})
     end
 
-    describe "where a single genomer plugins is specified" do
-
-      before do
-        bundle = Object.new
-        mock(bundle).gems{ [plugin] }
-        mock(Bundler).setup{ bundle }
-      end
-
-      it "should return the genomer plugin" do
-        subject.should == [plugin]
-      end
-
-    end
-
-    describe "where no genomer plugins are specified" do
-
-      before do
-        bundle = Object.new
-        mock(bundle).gems{ [not_a_plugin] }
-        mock(Bundler).setup{ bundle }
-      end
-
-      it "should return an empty array" do
-        subject.should be_empty
-      end
-
-    end
-
-    describe "where one plugins and non plugin are specified" do
-
-      before do
-        bundle = Object.new
-        mock(bundle).gems{ [plugin, not_a_plugin] }
-        mock(Bundler).setup{ bundle }
-      end
-
-      it "should return the genomer plugin" do
-        subject.should == [plugin]
-      end
-
+    it "should fetch, initialize and run the required plugin" do
+      subject.run_plugin
     end
 
   end
-
-  describe "#to_class_name" do
-
-    subject do
-      Genomer::Runtime.new MockSettings.new
-    end
-
-    it "should dash separated words to camel case" do
-      subject.to_class_name('words-with-dashes').should == "WordsWithDashes"
-    end
-
-  end
-
 end

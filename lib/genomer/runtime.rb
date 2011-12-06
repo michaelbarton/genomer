@@ -2,17 +2,22 @@ require 'unindent'
 
 class Genomer::Runtime
 
+  attr :command
+  attr :arguments
+  attr :flags
+
   def initialize(settings)
-    @settings = settings
+    @command   = settings.rest.shift
+    @arguments = settings.rest
+    @flags     = settings
   end
 
   def execute!
-    command = @settings.rest.shift
     case command
     when nil    then short_help
     when "help" then help
-    when "init" then init(@settings.rest.shift)
-    else             run(command,@settings.rest,@settings)
+    when "init" then init
+    else             run_plugin
     end
   end
 
@@ -33,7 +38,7 @@ class Genomer::Runtime
     EOF
     msg.unindent!
 
-    msg << plugins.inject(String.new) do |str,p|
+    msg << Genomer::Plugin.plugins.inject(String.new) do |str,p|
       str << '  '
       str << p.name.gsub("genomer-plugin-","").ljust(12)
       str << p.summary
@@ -42,7 +47,8 @@ class Genomer::Runtime
     msg.strip
   end
 
-  def init(project_name)
+  def init
+    project_name = arguments.first
     if File.exists?(project_name)
       raise GenomerError, "Directory '#{project_name}' already exists."
     else
@@ -51,31 +57,8 @@ class Genomer::Runtime
     end
   end
 
-  def run(command,arguments,settings)
-    plugin = plugins.detect{|i| i.name == "genomer-plugin-#{command}" }
-    unless plugin 
-      error =  "Unknown command or plugin '#{command}.'\n"
-      error << "run `genomer help` for a list of available commands\n"
-      raise GenomerError, error
-    end
-    require plugin.name
-    Kernel.const_get(to_class_name(plugin.name)).new(arguments,settings).run
-  end
-
-  def plugins
-    require 'bundler'
-    if File.exists?("Gemfile")
-      bundle = Bundler.setup
-      return bundle.gems.select do |gem|
-        gem.name =~ /genomer-plugin-.+/
-      end
-    else
-      Array.new
-    end
-  end
-
-  def to_class_name(string)
-    string.split('-').map{|i| i.capitalize}.join
+  def run_plugin
+    Genomer::Plugin[command].new(arguments,flags).run
   end
 
 end

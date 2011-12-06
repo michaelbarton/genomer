@@ -1,3 +1,5 @@
+require 'scaffolder'
+
 class Genomer::Plugin
 
   def self.[](short_name)

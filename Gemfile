@@ -2,6 +2,7 @@ source "http://rubygems.org"
 
 group :default do
   gem "configliere", "~> 0.4.8"
+  gem "scaffolder",  "~> 0.4.0"
   gem "unindent",    "~> 1.0.0"
   gem "bundler",     "~> 1.0.0"
 end

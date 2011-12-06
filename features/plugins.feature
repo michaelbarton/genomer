@@ -87,6 +87,7 @@ Feature: Using plugins as part of a genomer project
       And I cd to "project"
       And I append to "Gemfile" with:
       """
+      gem 'genomer',               :path => '../../../'
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
       And I append to "assembly/scaffold.yml" with:

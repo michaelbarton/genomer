@@ -1,0 +1,2 @@
+class GenomerError < StandardError
+end

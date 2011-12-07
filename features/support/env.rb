@@ -8,6 +8,6 @@ rescue Bundler::BundlerError => e
 end
 
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../lib')
-require 'genomer'
+$LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../spec')
 
-require 'rspec/expectations'
+require 'aruba/cucumber'

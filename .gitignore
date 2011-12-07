@@ -1,3 +1,6 @@
+tmp
+*.gem
+
 # rcov generated
 coverage
 

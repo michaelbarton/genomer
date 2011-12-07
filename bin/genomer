@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+
+require 'rubygems'
+require 'configliere'
+require 'genomer'
+
+Settings.use :commandline
+Settings.resolve!
+
+begin
+  STDOUT.puts Genomer::Runtime.new(Settings).execute!
+  exit true
+rescue GenomerError => e
+  STDERR.puts "Error. #{e.message}"
+  exit false
+end

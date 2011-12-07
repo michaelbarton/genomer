@@ -119,11 +119,27 @@ describe Genomer::Plugin do
     end
 
     subject do
-      described_class.new
+      described_class.new(nil,nil)
     end
 
     it "should return the expected scaffold built from the scaffold files" do
       subject.scaffold.length.should == 1
+    end
+
+  end
+
+  describe "#initialize" do
+
+    subject do
+      described_class.new(:arguments,:flags)
+    end
+
+    it "should set the #arguments attribute" do
+      subject.arguments.should == :arguments
+    end
+
+    it "should set the #flags attribute" do
+      subject.flags.should == :flags
     end
 
   end

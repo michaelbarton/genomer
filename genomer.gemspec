@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency "configliere", "~> 0.4.8"
   s.add_dependency "scaffolder",  "~> 0.4.0"
   s.add_dependency "unindent",    "~> 1.0.0"
+  s.add_dependency "psych"
 
   # Specs
   s.add_development_dependency "rspec",                   "~> 2.6"

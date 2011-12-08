@@ -11,7 +11,7 @@ Settings.resolve!
 begin
   STDOUT.puts Genomer::Runtime.new(Settings).execute!
   exit true
-rescue GenomerError => e
+rescue Genomer::Error => e
   STDERR.puts "Error. #{e.message}"
   exit false
 end

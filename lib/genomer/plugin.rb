@@ -18,7 +18,7 @@ class Genomer::Plugin
     unless plugin 
       error =  "Unknown command or plugin '#{name}.'\n"
       error << "run `genomer help` for a list of available commands\n"
-      raise GenomerError, error
+      raise Genomer::Error, error
     end
     require plugin.name
     Kernel.const_get(to_class_name(plugin.name))

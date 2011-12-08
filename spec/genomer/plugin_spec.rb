@@ -30,7 +30,7 @@ describe Genomer::Plugin do
       it "should print an error message" do
         error =  "Unknown command or plugin 'unknown.'\n"
         error << "run `genomer help` for a list of available commands\n"
-        lambda{ described_class['unknown'] }.should raise_error(GenomerError,error)
+        lambda{ described_class['unknown'] }.should raise_error(Genomer::Error,error)
       end
 
     end
@@ -139,7 +139,7 @@ describe Genomer::Plugin do
     end
 
     it "should set the #flags attribute" do
-      subject.flags.should == :flags
+      subject.arguments.should == :arguments
     end
 
   end

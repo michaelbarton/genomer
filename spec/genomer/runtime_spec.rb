@@ -34,7 +34,7 @@ describe Genomer::Runtime do
           Unknown command or plugin 'unknown.'
           run `genomer help` for a list of available commands
         EOF
-        lambda{ subject.execute! }.should raise_error(GenomerError,error.unindent)
+        lambda{ subject.execute! }.should raise_error(Genomer::Error,error.unindent)
       end
 
     end
@@ -70,7 +70,7 @@ describe Genomer::Runtime do
         end
 
         it "should raise an error" do
-          lambda{ subject.execute! }.should raise_error(GenomerError,
+          lambda{ subject.execute! }.should raise_error(Genomer::Error,
             "Directory 'project_name' already exists.")
         end
 

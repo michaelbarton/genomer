@@ -18,7 +18,6 @@ describe Genomer::Runtime do
           genomer COMMAND [options]
           run `genomer help` for a list of available commands
         EOF
-
         subject.execute!.should == msg.unindent
       end
 
@@ -29,9 +28,11 @@ describe Genomer::Runtime do
       let (:arguments){ %w|unknown| }
 
       it "should print an error message" do
-        error =  "Unknown command or plugin 'unknown.'\n"
-        error << "run `genomer help` for a list of available commands\n"
-        lambda{ subject.execute! }.should raise_error(GenomerError,error)
+        error = <<-EOF
+          Unknown command or plugin 'unknown.'
+          run `genomer help` for a list of available commands
+        EOF
+        lambda{ subject.execute! }.should raise_error(GenomerError,error.unindent)
       end
 
     end
@@ -96,7 +97,6 @@ describe Genomer::Runtime do
             Available commands:
               init        Create a new genomer project
           EOF
-
           subject.execute!.should == msg.unindent.strip
         end
 

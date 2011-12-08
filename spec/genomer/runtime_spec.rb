@@ -3,13 +3,15 @@ require 'spec_helper'
 describe Genomer::Runtime do
   include FakeFS::SpecHelpers
 
-  describe "command" do
+  describe "with the command" do
+
+    subject do
+      Genomer::Runtime.new MockSettings.new arguments
+    end
 
     describe "none" do
 
-      subject do
-        Genomer::Runtime.new MockSettings.new
-      end
+      let (:arguments){ [] }
 
       it "should print the short help description" do
         msg = <<-EOF
@@ -24,9 +26,7 @@ describe Genomer::Runtime do
 
     describe "unknown" do
 
-      subject do
-        Genomer::Runtime.new MockSettings.new(%w|unknown|)
-      end
+      let (:arguments){ %w|unknown| }
 
       it "should print an error message" do
         error =  "Unknown command or plugin 'unknown.'\n"
@@ -38,9 +38,7 @@ describe Genomer::Runtime do
 
     describe "init" do
 
-      subject do
-        Genomer::Runtime.new MockSettings.new(%w|init project_name|)
-      end
+      let (:arguments){ %w|init project_name| }
 
       after do
         FileUtils.rm_rf('project_name') if File.exists?('project_name')
@@ -79,9 +77,7 @@ describe Genomer::Runtime do
 
     describe "help" do
 
-      subject do
-        Genomer::Runtime.new MockSettings.new(%w|help|)
-      end
+      let (:arguments){ %w|help| }
 
       before do
         mock(Genomer::Plugin).plugins{ gems }

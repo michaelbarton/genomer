@@ -1,4 +1,4 @@
-class Genomer
+module Genomer
   class Error < StandardError
   end
 end

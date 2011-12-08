@@ -1,4 +1,4 @@
-class Genomer
+module Genomer
   require 'genomer/error'
 
   autoload :Runtime, 'genomer/runtime'

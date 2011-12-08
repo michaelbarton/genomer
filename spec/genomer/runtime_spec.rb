@@ -7,13 +7,13 @@ describe Genomer::Runtime do
     Genomer::Runtime.new MockSettings.new arguments, flags
   end
 
-  let (:flags){ {} }
+  let(:flags){ {} }
 
   describe "with the command" do
 
     describe "none" do
 
-      let (:arguments){ [] }
+      let(:arguments){ [] }
 
       it "should print the short help description" do
         msg = <<-EOF
@@ -27,7 +27,7 @@ describe Genomer::Runtime do
 
     describe "unknown" do
 
-      let (:arguments){ %w|unknown| }
+      let(:arguments){ %w|unknown| }
 
       it "should print an error message" do
         error = <<-EOF
@@ -41,7 +41,7 @@ describe Genomer::Runtime do
 
     describe "init" do
 
-      let (:arguments){ %w|init project_name| }
+      let(:arguments){ %w|init project_name| }
 
       after do
         FileUtils.rm_rf('project_name') if File.exists?('project_name')
@@ -80,7 +80,7 @@ describe Genomer::Runtime do
 
     describe "help" do
 
-      let (:arguments){ %w|help| }
+      let(:arguments){ %w|help| }
 
       before do
         mock(Genomer::Plugin).plugins{ gems }
@@ -88,7 +88,7 @@ describe Genomer::Runtime do
 
       describe "with no available plugins" do
 
-        let (:gems) do
+        let(:gems) do
           []
         end
 
@@ -106,7 +106,7 @@ describe Genomer::Runtime do
 
       describe "with available genomer plugins" do
 
-        let (:gems) do
+        let(:gems) do
           [Gem::Specification.new do |s|
             s.name        = 'genomer-plugin-simple'
             s.summary     = 'A simple scaffolder command'

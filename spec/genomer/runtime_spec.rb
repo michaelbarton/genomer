@@ -3,11 +3,13 @@ require 'spec_helper'
 describe Genomer::Runtime do
   include FakeFS::SpecHelpers
 
-  describe "with the command" do
+  subject do
+    Genomer::Runtime.new MockSettings.new arguments, flags
+  end
 
-    subject do
-      Genomer::Runtime.new MockSettings.new arguments
-    end
+  let (:flags){ {} }
+
+  describe "with the command" do
 
     describe "none" do
 
@@ -130,20 +132,15 @@ describe Genomer::Runtime do
 
   describe "#initialize" do
 
-    subject do
-      Genomer::Runtime.new settings
-    end
-
     describe "with arguments and flags" do
 
-      let(:settings) do
-        MockSettings.new(%w|init project_name|, {:flag => 'something'})
-      end
+      let(:arguments){ %w|init project_name| }
+      let(:flags){ {:flag => 'something'} }
 
       it "should set the runtime variables" do
-        subject.command.should == 'init'
+        subject.command.should   == 'init'
         subject.arguments.should == ['project_name']
-        subject.flags[:flag] == settings.flags[:flag]
+        subject.flags[:flag]     == flags[:flag]
       end
 
     end
@@ -160,13 +157,13 @@ describe Genomer::Runtime do
       end
     end
 
-    subject do
-      Genomer::Runtime.new MockSettings.new(%w|plugin arg1 arg2|, {:flag => 'arg3'})
-    end
+    let(:arguments){ %w|plugin arg1 arg2| }
+    let(:flags){ {:flag => 'arg3'} }
 
     it "should fetch, initialize and run the required plugin" do
       subject.run_plugin
     end
 
   end
+
 end

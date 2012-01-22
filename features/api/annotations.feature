@@ -1,5 +1,5 @@
 Feature: Plugins accessing annotations in a genomer project
-  In order to access gff annotations in a genomer project
+  In order to access gff annotations in a genomer plugin
   A plugin developer can access annotations from the #annotations method
   So that these annotations are available for use
 

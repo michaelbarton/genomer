@@ -1,6 +1,6 @@
-Feature: Creating a genomer project
+Feature: Creating a new genomer project
   In order to build a genome
-  A user can create a genomer project
+  A user can create a new genomer project
   So that they can use the genomer commands and organise their data
 
   Scenario: Creating a new project

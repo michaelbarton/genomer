@@ -24,12 +24,22 @@ Feature: Listing available commands
        init        Create a new genomer project
      """
 
-  Scenario: Running genomer with an unknown command
-     When I run the genomer command with the arguments "unknown"
-     Then the exit status should be 1
+  @disable-bundler
+  Scenario: Running help with a single genomer plugins specified
+    Given I run the genomer command with the arguments "init project"
+      And I cd to "project"
+      And I append to "Gemfile" with:
+      """
+      gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
+      """
+     When I run the genomer command with the arguments "help"
+     Then the exit status should be 0
       And the output should contain:
      """
-     Error. Unknown command or plugin 'unknown.'
-     run `genomer help` for a list of available commands
+     genomer COMMAND [options]
 
+     Available commands:
+       init        Create a new genomer project
+       simple      Simple genomer plugin for testing purposes
      """
+

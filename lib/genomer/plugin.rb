@@ -73,6 +73,12 @@ class Genomer::Plugin
     Scaffolder.new(YAML.load(File.open(scaffold_file)),sequence_file)
   end
 
+  def annotations
+    assembly = Pathname.new('assembly')
+    annotation_file = assembly + 'annotations.gff'
+    Bio::GFF::GFF3.new(File.read(annotation_file)).records
+  end
+
   # This method should be overriden to perform this plugin's operation.
   #
   # The run method is called on the plugin by Genomer::Runtime. This should be

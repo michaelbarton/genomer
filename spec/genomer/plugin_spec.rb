@@ -128,6 +128,49 @@ describe Genomer::Plugin do
 
   end
 
+  describe "#annotations" do
+
+    let(:entries) do
+      [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
+    end
+
+    let(:records) do
+      []
+    end
+
+    let (:sequence_file) do
+      File.new("assembly/sequence.fna",'w')
+    end
+
+    let (:scaffold_file) do
+      File.new("assembly/scaffold.yml",'w')
+    end
+
+    let (:annotations_file) do
+      File.new("assembly/annotations.gff",'w')
+    end
+
+    before do
+      Dir.mkdir('assembly')
+      write_sequence_file(entries,sequence_file)
+      write_scaffold_file(entries,scaffold_file)
+      generate_gff3_file(records,annotations_file)
+    end
+
+    after do
+      FileUtils.rm_rf 'assembly'
+    end
+
+    subject do
+      described_class.new(nil,nil)
+    end
+
+    it "should return the expected scaffold built from the scaffold files" do
+      subject.annotations.length.should == 0
+    end
+
+  end
+
   describe "#initialize" do
 
     subject do

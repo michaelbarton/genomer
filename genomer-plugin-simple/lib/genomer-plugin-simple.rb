@@ -9,8 +9,15 @@ class GenomerPluginSimple < Genomer::Plugin
     when nil           then 'Plugin "simple" called'
     when 'echo'        then @arguments.unshift('Echo:').join(' ')
     when 'describe'    then "The scaffold contains #{scaffold.length} entries"
-    when 'annotations' then "The scaffold contains #{annotations.length} annotations"
+    when 'annotations' then format_annotations
     end
   end
+
+  def format_annotations
+    string = "##gff-version 3\n"
+    annotations.each{|a| a.seqname = 'scaffold' }.each{|a| string << a.to_s}
+    string
+  end
+
 
 end

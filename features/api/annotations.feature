@@ -15,7 +15,7 @@ Feature: Plugins accessing annotations in a genomer project
       And I append to "assembly/scaffold.yml" with:
         """
         ---
- l       -
+        -
           sequence:
             source: contig1
 
@@ -35,6 +35,7 @@ Feature: Plugins accessing annotations in a genomer project
      Then the exit status should be 0
       And the output should contain:
         """
-        The scaffold contains 2 annotations
+        ##gff-version 3
+        scaffold	.	gene	1	3	.	+	1	.
+        scaffold	.	gene	5	7	.	+	1	.
         """
-

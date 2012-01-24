@@ -1,4 +1,5 @@
 require 'scaffolder'
+require 'scaffolder/annotation_locator'
 
 # Superclass for genomer plugins which us the genomer plugin. This class
 # implements the common API which plugins should use to interact with the
@@ -50,6 +51,10 @@ class Genomer::Plugin
   # @return [Hash] Command line flags as where --flag=value is :flag => value
   attr :flags
 
+  attr :sequence_file
+  attr :scaffold_file
+  attr :annotation_file
+
   # Initialize plugin with passed command line parameters.
   #
   # This create a plugin instance with the command line arguments and instance set as
@@ -61,22 +66,22 @@ class Genomer::Plugin
   def initialize(arguments,flags)
     @arguments = arguments
     @flags     = flags
+
+    assembly = Pathname.new('assembly')
+    @sequence_file   = assembly + 'sequence.fna'
+    @scaffold_file   = assembly + 'scaffold.yml'
+    @annotation_file = assembly + 'annotations.gff'
   end
 
   # The genome scaffold constructed from the files in the "ROOT/assembly/" directory.
   #
   # @return [Array] An array of Scaffolder::Region instances
   def scaffold
-    assembly = Pathname.new('assembly')
-    sequence_file = assembly + 'sequence.fna'
-    scaffold_file = assembly + 'scaffold.yml'
     Scaffolder.new(YAML.load(File.open(scaffold_file)),sequence_file)
   end
 
   def annotations
-    assembly = Pathname.new('assembly')
-    annotation_file = assembly + 'annotations.gff'
-    Bio::GFF::GFF3.new(File.read(annotation_file)).records
+    Scaffolder::AnnotationLocator.new(scaffold_file,sequence_file,annotation_file)
   end
 
   # This method should be overriden to perform this plugin's operation.

@@ -145,6 +145,15 @@ describe Genomer::Plugin do
       [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
     end
 
+    let(:annotation) do
+      Annotation.new(
+        :seqname    => 'seq1',
+        :start      => 1,
+        :end        => 3,
+        :feature    => 'gene',
+        :attributes => {})
+    end
+
     subject do
       described_class.new(nil,nil).annotations
     end
@@ -164,15 +173,22 @@ describe Genomer::Plugin do
     describe "with one annotation" do
 
       let(:records) do
-        [Annotation.new(
-          :seqname    => 'seq1',
-          :start      => 1,
-          :end        => 3,
-          :feature    => 'gene',
-          :attributes => {})]
+        [annotation]
       end
 
       it "should return no annotations" do
+        subject.length.should == 1
+      end
+
+    end
+
+    describe "with one contig annotation and one non-contig annotation" do
+
+      let(:records) do
+        [annotation,annotation.clone.seqname('seq2')]
+      end
+
+      it "should return only the contig annotation" do
         subject.length.should == 1
       end
 

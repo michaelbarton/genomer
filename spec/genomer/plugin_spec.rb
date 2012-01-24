@@ -130,43 +130,52 @@ describe Genomer::Plugin do
 
   describe "#annotations" do
 
-    let(:entries) do
-      [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
-    end
-
-    let(:records) do
-      []
-    end
-
-    let (:sequence_file) do
-      File.new("assembly/sequence.fna",'w')
-    end
-
-    let (:scaffold_file) do
-      File.new("assembly/scaffold.yml",'w')
-    end
-
-    let (:annotations_file) do
-      File.new("assembly/annotations.gff",'w')
-    end
-
     before do
       Dir.mkdir('assembly')
-      write_sequence_file(entries,sequence_file)
-      write_scaffold_file(entries,scaffold_file)
-      generate_gff3_file(records,annotations_file)
+      write_sequence_file(entries, File.new("assembly/sequence.fna",'w'))
+      write_scaffold_file(entries, File.new("assembly/scaffold.yml",'w'))
+      generate_gff3_file(records,  File.new("assembly/annotations.gff",'w'))
     end
 
     after do
       FileUtils.rm_rf 'assembly'
     end
 
-    subject do
-      described_class.new(nil,nil)
+    let(:entries) do
+      [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
     end
 
-    it "should return the expected scaffold built from the scaffold files" do
-      subject.annotations.length.should == 0
+    subject do
+      described_class.new(nil,nil).annotations
+    end
+
+    describe "with no annotations" do
+
+      let(:records) do
+        []
+      end
+
+      it "should return one annotation entry" do
+        subject.length.should == 0
+      end
+
+    end
+
+    describe "with one annotation" do
+
+      let(:records) do
+        [Annotation.new(
+          :seqname    => 'seq1',
+          :start      => 1,
+          :end        => 3,
+          :feature    => 'gene',
+          :attributes => {})]
+      end
+
+      it "should return no annotations" do
+        subject.length.should == 1
+      end
+
     end
 
   end

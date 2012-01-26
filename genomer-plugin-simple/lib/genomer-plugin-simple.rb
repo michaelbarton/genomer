@@ -1,11 +1,7 @@
 class GenomerPluginSimple < Genomer::Plugin
 
-  def initialize(arguments,settings = {})
-    @arguments = arguments
-  end
-
   def run
-    case @arguments.shift
+    case arguments.shift
     when nil           then 'Plugin "simple" called'
     when 'echo'        then @arguments.unshift('Echo:').join(' ')
     when 'describe'    then "The scaffold contains #{scaffold.length} entries"
@@ -18,6 +14,5 @@ class GenomerPluginSimple < Genomer::Plugin
     annotations.each{|a| a.seqname = 'scaffold' }.each{|a| string << a.to_s}
     string
   end
-
 
 end

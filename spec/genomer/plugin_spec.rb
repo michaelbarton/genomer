@@ -128,6 +128,74 @@ describe Genomer::Plugin do
 
   end
 
+  describe "#annotations" do
+
+    before do
+      Dir.mkdir('assembly')
+      write_sequence_file(entries, File.new("assembly/sequence.fna",'w'))
+      write_scaffold_file(entries, File.new("assembly/scaffold.yml",'w'))
+      generate_gff3_file(records,  File.new("assembly/annotations.gff",'w'))
+    end
+
+    after do
+      FileUtils.rm_rf 'assembly'
+    end
+
+    let(:entries) do
+      [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
+    end
+
+    let(:annotation) do
+      Annotation.new(
+        :seqname    => 'seq1',
+        :start      => 1,
+        :end        => 3,
+        :feature    => 'gene',
+        :attributes => {})
+    end
+
+    subject do
+      described_class.new(nil,nil).annotations
+    end
+
+    describe "with no annotations" do
+
+      let(:records) do
+        []
+      end
+
+      it "should return one annotation entry" do
+        subject.length.should == 0
+      end
+
+    end
+
+    describe "with one annotation" do
+
+      let(:records) do
+        [annotation]
+      end
+
+      it "should return no annotations" do
+        subject.length.should == 1
+      end
+
+    end
+
+    describe "with one contig annotation and one non-contig annotation" do
+
+      let(:records) do
+        [annotation,annotation.clone.seqname('seq2')]
+      end
+
+      it "should return only the contig annotation" do
+        subject.length.should == 1
+      end
+
+    end
+
+  end
+
   describe "#initialize" do
 
     subject do

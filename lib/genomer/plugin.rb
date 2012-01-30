@@ -81,7 +81,12 @@ class Genomer::Plugin
   end
 
   def annotations
-    Scaffolder::AnnotationLocator.new(scaffold_file,sequence_file,annotation_file)
+    unsorted = Scaffolder::AnnotationLocator.new(
+      scaffold_file,sequence_file,annotation_file)
+
+    unsorted.sort_by do |attn|
+      [attn.start,attn.end]
+    end
   end
 
   # This method should be overriden to perform this plugin's operation.

@@ -80,9 +80,14 @@ class Genomer::Plugin
     Scaffolder.new(YAML.load(File.open(scaffold_file)),sequence_file)
   end
 
-  def annotations
+  def annotations(options = {})
     unsorted = Scaffolder::AnnotationLocator.new(
       scaffold_file,sequence_file,annotation_file)
+
+    if prefix = options[:prefix]
+      genes = unsorted.select{|i| i.feature == 'gene'}
+      genes.each{|attn| attn.id.insert(0,prefix) }
+    end
 
     unsorted.sort_by do |attn|
       [attn.start,attn.end]

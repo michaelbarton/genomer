@@ -121,6 +121,92 @@ Feature: Plugins accessing annotations in a genomer project
         """
 
   @disable-bundler
+  Scenario: Three unordered annotations on a single contig
+    Given I run the genomer command with the arguments "init project"
+      And I cd to "project"
+      And I append to "Gemfile" with:
+        """
+        gem 'genomer',               :path => '../../../'
+        gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
+        """
+      And I append to "assembly/scaffold.yml" with:
+        """
+        ---
+        -
+          sequence:
+            source: contig1
+
+        """
+      And I append to "assembly/sequence.fna" with:
+        """
+        >contig1
+        ATGCATGCATGC
+        """
+      And I append to "assembly/annotations.gff" with:
+        """
+        ##gff-version 3
+        contig1	.	gene	9	11	.	+	1	.
+        contig1	.	gene	1	3	.	+	1	.
+        contig1	.	gene	5	7	.	+	1	.
+        """
+     When I run the genomer command with the arguments "simple annotations"
+     Then the exit status should be 0
+      And the output should contain:
+        """
+        ##gff-version 3
+        scaffold	.	gene	1	3	.	+	1	.
+        scaffold	.	gene	5	7	.	+	1	.
+        scaffold	.	gene	9	11	.	+	1	.
+        """
+
+  @disable-bundler
+  Scenario: Four unordered annotations on a two contigs
+    Given I run the genomer command with the arguments "init project"
+      And I cd to "project"
+      And I append to "Gemfile" with:
+        """
+        gem 'genomer',               :path => '../../../'
+        gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
+        """
+      And I append to "assembly/scaffold.yml" with:
+        """
+        ---
+        -
+          sequence:
+            source: contig1
+        -
+          sequence:
+            source: contig2
+
+        """
+      And I append to "assembly/sequence.fna" with:
+        """
+        >contig1
+        ATGCATGC
+        >contig2
+        ATGCATGC
+        """
+      And I append to "assembly/annotations.gff" with:
+        """
+        ##gff-version 3
+        contig2	.	gene	5	7	.	+	1	.
+        contig2	.	gene	1	3	.	+	1	.
+        contig1	.	gene	1	3	.	+	1	.
+        contig1	.	gene	5	7	.	+	1	.
+        """
+     When I run the genomer command with the arguments "simple annotations"
+     Then the exit status should be 0
+      And the output should contain:
+        """
+        ##gff-version 3
+        scaffold	.	gene	1	3	.	+	1	.
+        scaffold	.	gene	5	7	.	+	1	.
+        scaffold	.	gene	9	11	.	+	1	.
+        scaffold	.	gene	13	15	.	+	1	.
+
+        """
+
+  @disable-bundler
   Scenario: Annotations on reversed and trimmed contigs with inserts
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
@@ -176,8 +262,8 @@ Feature: Plugins accessing annotations in a genomer project
         """
         ##gff-version 3
         scaffold	.	CDS	1	4	.	+	1	ID=gene1
-        scaffold	.	CDS	15	18	.	-	1	ID=gene3
         scaffold	.	CDS	7	10	.	-	1	ID=gene4
+        scaffold	.	CDS	15	18	.	-	1	ID=gene3
         scaffold	.	CDS	20	24	.	+	1	ID=gene6
 
         """

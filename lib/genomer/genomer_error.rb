@@ -1,2 +1,0 @@
-class GenomerError < StandardError
-end

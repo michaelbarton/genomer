@@ -1,3 +1,3 @@
-class Genomer
-  VERSION = "0.0.1"
+module Genomer
+  VERSION = "0.0.3"
 end

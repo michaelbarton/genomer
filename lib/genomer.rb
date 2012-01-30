@@ -1,5 +1,5 @@
-class Genomer
-  require 'genomer/genomer_error'
+module Genomer
+  require 'genomer/error'
 
   autoload :Runtime, 'genomer/runtime'
   autoload :Plugin,  'genomer/plugin'

@@ -3,20 +3,23 @@ require 'spec_helper'
 describe Genomer::Runtime do
   include FakeFS::SpecHelpers
 
-  describe "command" do
+  subject do
+    Genomer::Runtime.new MockSettings.new arguments, flags
+  end
+
+  let(:flags){ {} }
+
+  describe "with the command" do
 
     describe "none" do
 
-      subject do
-        Genomer::Runtime.new MockSettings.new
-      end
+      let(:arguments){ [] }
 
       it "should print the short help description" do
         msg = <<-EOF
           genomer COMMAND [options]
           run `genomer help` for a list of available commands
         EOF
-
         subject.execute!.should == msg.unindent
       end
 
@@ -24,23 +27,21 @@ describe Genomer::Runtime do
 
     describe "unknown" do
 
-      subject do
-        Genomer::Runtime.new MockSettings.new(%w|unknown|)
-      end
+      let(:arguments){ %w|unknown| }
 
       it "should print an error message" do
-        error =  "Unknown command or plugin 'unknown.'\n"
-        error << "run `genomer help` for a list of available commands\n"
-        lambda{ subject.execute! }.should raise_error(GenomerError,error)
+        error = <<-EOF
+          Unknown command or plugin 'unknown.'
+          run `genomer help` for a list of available commands
+        EOF
+        lambda{ subject.execute! }.should raise_error(Genomer::Error,error.unindent)
       end
 
     end
 
     describe "init" do
 
-      subject do
-        Genomer::Runtime.new MockSettings.new(%w|init project_name|)
-      end
+      let(:arguments){ %w|init project_name| }
 
       after do
         FileUtils.rm_rf('project_name') if File.exists?('project_name')
@@ -69,7 +70,7 @@ describe Genomer::Runtime do
         end
 
         it "should raise an error" do
-          lambda{ subject.execute! }.should raise_error(GenomerError,
+          lambda{ subject.execute! }.should raise_error(Genomer::Error,
             "Directory 'project_name' already exists.")
         end
 
@@ -79,9 +80,7 @@ describe Genomer::Runtime do
 
     describe "help" do
 
-      subject do
-        Genomer::Runtime.new MockSettings.new(%w|help|)
-      end
+      let(:arguments){ %w|help| }
 
       before do
         mock(Genomer::Plugin).plugins{ gems }
@@ -89,7 +88,7 @@ describe Genomer::Runtime do
 
       describe "with no available plugins" do
 
-        let (:gems) do
+        let(:gems) do
           []
         end
 
@@ -100,7 +99,6 @@ describe Genomer::Runtime do
             Available commands:
               init        Create a new genomer project
           EOF
-
           subject.execute!.should == msg.unindent.strip
         end
 
@@ -108,7 +106,7 @@ describe Genomer::Runtime do
 
       describe "with available genomer plugins" do
 
-        let (:gems) do
+        let(:gems) do
           [Gem::Specification.new do |s|
             s.name        = 'genomer-plugin-simple'
             s.summary     = 'A simple scaffolder command'
@@ -134,20 +132,15 @@ describe Genomer::Runtime do
 
   describe "#initialize" do
 
-    subject do
-      Genomer::Runtime.new settings
-    end
-
     describe "with arguments and flags" do
 
-      let(:settings) do
-        MockSettings.new(%w|init project_name|, {:flag => 'something'})
-      end
+      let(:arguments){ %w|init project_name| }
+      let(:flags){ {:flag => 'something'} }
 
       it "should set the runtime variables" do
-        subject.command.should == 'init'
+        subject.command.should   == 'init'
         subject.arguments.should == ['project_name']
-        subject.flags[:flag] == settings.flags[:flag]
+        subject.flags[:flag]     == flags[:flag]
       end
 
     end
@@ -164,13 +157,13 @@ describe Genomer::Runtime do
       end
     end
 
-    subject do
-      Genomer::Runtime.new MockSettings.new(%w|plugin arg1 arg2|, {:flag => 'arg3'})
-    end
+    let(:arguments){ %w|plugin arg1 arg2| }
+    let(:flags){ {:flag => 'arg3'} }
 
     it "should fetch, initialize and run the required plugin" do
       subject.run_plugin
     end
 
   end
+
 end

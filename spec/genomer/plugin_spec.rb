@@ -30,7 +30,7 @@ describe Genomer::Plugin do
       it "should print an error message" do
         error =  "Unknown command or plugin 'unknown.'\n"
         error << "run `genomer help` for a list of available commands\n"
-        lambda{ described_class['unknown'] }.should raise_error(GenomerError,error)
+        lambda{ described_class['unknown'] }.should raise_error(Genomer::Error,error)
       end
 
     end
@@ -128,6 +128,112 @@ describe Genomer::Plugin do
 
   end
 
+  describe "#annotations" do
+
+    before do
+      Dir.mkdir('assembly')
+      write_sequence_file(entries, File.new("assembly/sequence.fna",'w'))
+      write_scaffold_file(entries, File.new("assembly/scaffold.yml",'w'))
+      generate_gff3_file(records,  File.new("assembly/annotations.gff",'w'))
+    end
+
+    after do
+      FileUtils.rm_rf 'assembly'
+    end
+
+    let(:entries) do
+      [Sequence.new(:name => 'seq1', :sequence => 'ATGCATGCATGC')]
+    end
+
+    let(:annotation) do
+      Annotation.new(
+        :seqname    => 'seq1',
+        :start      => 1,
+        :end        => 3,
+        :feature    => 'gene',
+        :attributes => {'ID' => 'gene1'})
+    end
+
+    let(:options) do
+      {}
+    end
+
+    subject do
+      described_class.new(nil,nil).annotations(options)
+    end
+
+    describe "with no annotations" do
+
+      let(:records) do
+        []
+      end
+
+      it "should return one annotation entry" do
+        subject.length.should == 0
+      end
+
+    end
+
+    describe "with one annotation" do
+
+      let(:records) do
+        [annotation]
+      end
+
+      it "should return no annotations" do
+        subject.length.should == 1
+      end
+
+    end
+
+    describe "with one contig annotation and one non-contig annotation" do
+
+      let(:records) do
+        [annotation,annotation.clone.seqname('seq2')]
+      end
+
+      it "should return only the contig annotation" do
+        subject.length.should == 1
+      end
+
+    end
+
+    describe "with multiple unordered annotations" do
+
+      let(:records) do
+        [
+          annotation.clone.start(4).end(6),
+          annotation.clone.start(7).end(9),
+          annotation
+        ]
+      end
+
+      it "should return the annotations in order" do
+        subject[0].start.should == 1
+        subject[1].start.should == 4
+        subject[2].start.should == 7
+      end
+
+    end
+
+    describe "with the prefix option" do
+
+      let(:records) do
+        [annotation]
+      end
+
+      let(:options) do
+        {:prefix => 'pre_'}
+      end
+
+      it "should prefix the annotation id" do
+        subject.first.id.should == 'pre_gene1'
+      end
+
+    end
+
+  end
+
   describe "#initialize" do
 
     subject do
@@ -139,7 +245,7 @@ describe Genomer::Plugin do
     end
 
     it "should set the #flags attribute" do
-      subject.flags.should == :flags
+      subject.arguments.should == :arguments
     end
 
   end

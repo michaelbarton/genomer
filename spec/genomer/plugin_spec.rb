@@ -151,11 +151,15 @@ describe Genomer::Plugin do
         :start      => 1,
         :end        => 3,
         :feature    => 'gene',
-        :attributes => {})
+        :attributes => {'ID' => 'gene1'})
+    end
+
+    let(:options) do
+      {}
     end
 
     subject do
-      described_class.new(nil,nil).annotations
+      described_class.new(nil,nil).annotations(options)
     end
 
     describe "with no annotations" do
@@ -208,6 +212,22 @@ describe Genomer::Plugin do
         subject[0].start.should == 1
         subject[1].start.should == 4
         subject[2].start.should == 7
+      end
+
+    end
+
+    describe "with the prefix option" do
+
+      let(:records) do
+        [annotation]
+      end
+
+      let(:options) do
+        {:prefix => 'pre_'}
+      end
+
+      it "should prefix the annotation id" do
+        subject.first.id.should == 'pre_gene1'
       end
 
     end

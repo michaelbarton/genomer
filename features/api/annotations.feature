@@ -268,3 +268,39 @@ Feature: Plugins accessing annotations in a genomer project
 
         """
 
+  @disable-bundler
+  Scenario: Adding a prefix to annotation IDs
+    Given I run the genomer command with the arguments "init project"
+      And I cd to "project"
+      And I append to "Gemfile" with:
+        """
+        gem 'genomer',               :path => '../../../'
+        gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
+        """
+      And I append to "assembly/scaffold.yml" with:
+        """
+        ---
+        -
+          sequence:
+            source: contig1
+
+        """
+      And I append to "assembly/sequence.fna" with:
+        """
+        >contig1
+        ATGCATGC
+        """
+      And I append to "assembly/annotations.gff" with:
+        """
+        ##gff-version 3
+        contig1	.	CDS	1	4	.	+	1	ID=gene1
+        contig1	.	CDS	5	8	.	+	1	ID=gene2
+        """
+     When I run the genomer command with the arguments "simple annotations --prefix=pre_"
+     Then the exit status should be 0
+      And the output should contain:
+        """
+        ##gff-version 3
+        scaffold	.	CDS	1	4	.	+	1	ID=pre_gene1
+        scaffold	.	CDS	5	8	.	+	1	ID=pre_gene2
+        """

@@ -142,7 +142,7 @@ describe Genomer::Plugin do
     end
 
     let(:entries) do
-      [Sequence.new(:name => 'seq1', :sequence => 'ATGC')]
+      [Sequence.new(:name => 'seq1', :sequence => 'ATGCATGCATGC')]
     end
 
     let(:annotation) do
@@ -190,6 +190,24 @@ describe Genomer::Plugin do
 
       it "should return only the contig annotation" do
         subject.length.should == 1
+      end
+
+    end
+
+    describe "with multiple unordered annotations" do
+
+      let(:records) do
+        [
+          annotation.clone.start(4).end(6),
+          annotation.clone.start(7).end(9),
+          annotation
+        ]
+      end
+
+      it "should return the annotations in order" do
+        subject[0].start.should == 1
+        subject[1].start.should == 4
+        subject[2].start.should == 7
       end
 
     end

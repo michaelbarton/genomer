@@ -248,12 +248,12 @@ Feature: Plugins accessing annotations in a genomer project
       And I append to "assembly/annotations.gff" with:
         """
         ##gff-version 3
-        contig1	.	CDS	1	4	.	+	1	ID=gene1
-        contig1	.	CDS	5	8	.	+	1	ID=gene2
-        contig2	.	CDS	1	4	.	+	1	ID=gene3
-        contig2	.	CDS	8	11	.	+	1	ID=gene4
-        contig3	.	CDS	1	3	.	+	1	ID=gene5
-        contig3	.	CDS	4	8	.	+	1	ID=gene6
+        contig1	.	gene	1	4	.	+	1	ID=gene1
+        contig1	.	gene	5	8	.	+	1	ID=gene2
+        contig2	.	gene	1	4	.	+	1	ID=gene3
+        contig2	.	gene	8	11	.	+	1	ID=gene4
+        contig3	.	gene	1	3	.	+	1	ID=gene5
+        contig3	.	gene	4	8	.	+	1	ID=gene6
 
         """
      When I run the genomer command with the arguments "simple annotations"
@@ -261,10 +261,10 @@ Feature: Plugins accessing annotations in a genomer project
       And the output should contain:
         """
         ##gff-version 3
-        scaffold	.	CDS	1	4	.	+	1	ID=gene1
-        scaffold	.	CDS	7	10	.	-	1	ID=gene4
-        scaffold	.	CDS	15	18	.	-	1	ID=gene3
-        scaffold	.	CDS	20	24	.	+	1	ID=gene6
+        scaffold	.	gene	1	4	.	+	1	ID=gene1
+        scaffold	.	gene	7	10	.	-	1	ID=gene4
+        scaffold	.	gene	15	18	.	-	1	ID=gene3
+        scaffold	.	gene	20	24	.	+	1	ID=gene6
 
         """
 
@@ -293,14 +293,14 @@ Feature: Plugins accessing annotations in a genomer project
       And I append to "assembly/annotations.gff" with:
         """
         ##gff-version 3
-        contig1	.	CDS	1	4	.	+	1	ID=gene1
-        contig1	.	CDS	5	8	.	+	1	ID=gene2
+        contig1	.	gene	1	4	.	+	1	ID=gene1
+        contig1	.	gene	5	8	.	+	1	ID=gene2
         """
      When I run the genomer command with the arguments "simple annotations --prefix=pre_"
      Then the exit status should be 0
       And the output should contain:
         """
         ##gff-version 3
-        scaffold	.	CDS	1	4	.	+	1	ID=pre_gene1
-        scaffold	.	CDS	5	8	.	+	1	ID=pre_gene2
+        scaffold	.	gene	1	4	.	+	1	ID=pre_gene1
+        scaffold	.	gene	5	8	.	+	1	ID=pre_gene2
         """

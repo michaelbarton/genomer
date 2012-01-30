@@ -24,14 +24,14 @@ Gem::Specification.new do |s|
   s.add_dependency "psych"
 
   # Specs
-  s.add_development_dependency "rspec",                   "~> 2.6"
+  s.add_development_dependency "rspec",                   "~> 2.7.0"
   s.add_development_dependency "fakefs",                  "~> 0.4.0"
   s.add_development_dependency "rr",                      "~> 1.0.4"
   s.add_development_dependency "scaffolder-test-helpers", "~> 0.4.0"
 
   # Features
-  s.add_development_dependency "cucumber", "~> 1.0.4"
-  s.add_development_dependency "aruba",    "~> 0.4.6"
+  s.add_development_dependency "cucumber", "~> 1.1.4"
+  s.add_development_dependency "aruba",    "~> 0.4.11"
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact

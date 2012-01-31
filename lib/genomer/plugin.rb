@@ -81,17 +81,26 @@ class Genomer::Plugin
   end
 
   def annotations(options = {})
-    unsorted = Scaffolder::AnnotationLocator.new(
+    attns = Scaffolder::AnnotationLocator.new(
       scaffold_file,sequence_file,annotation_file)
 
+    attns.sort_by! do |attn|
+      [attn.start,attn.end]
+    end
+
+    if options[:reset]
+      genes = attns.select{|i| i.feature == 'gene'}
+      genes.each_with_index do |annotation,count|
+        annotation.id.replace sprintf("%06d",count+1)
+      end
+    end
+
     if prefix = options[:prefix]
-      genes = unsorted.select{|i| i.feature == 'gene'}
+      genes = attns.select{|i| i.feature == 'gene'}
       genes.each{|attn| attn.id.insert(0,prefix) }
     end
 
-    unsorted.sort_by do |attn|
-      [attn.start,attn.end]
-    end
+    attns
   end
 
   # This method should be overriden to perform this plugin's operation.

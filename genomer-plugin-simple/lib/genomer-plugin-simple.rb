@@ -12,6 +12,7 @@ class GenomerPluginSimple < Genomer::Plugin
   def annotations
     args = Hash.new
     args[:prefix] = flags[:prefix] if flags[:prefix]
+    args[:reset]  = flags[:reset_locus_numbering] if flags[:reset_locus_numbering]
     super(args).inject("##gff-version 3\n"){|s, a| s << a.to_s}
   end
 

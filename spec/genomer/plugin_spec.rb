@@ -232,6 +232,49 @@ describe Genomer::Plugin do
 
     end
 
+    describe "with the reset numbering option" do
+
+      let(:records) do
+        [
+          annotation.clone.start(4).end(6),
+          annotation.clone.start(7).end(9),
+          annotation
+        ]
+      end
+
+      let(:options) do
+        {:reset => true}
+      end
+
+      it "should reset the locus tag numbering at 000001" do
+        subject[0].id.should == '000001'
+        subject[1].id.should == '000002'
+        subject[2].id.should == '000003'
+      end
+
+    end
+
+    describe "with the reset numbering and prefix option" do
+
+      let(:records) do
+        [
+          annotation.clone.start(4).end(6),
+          annotation.clone.start(7).end(9),
+          annotation
+        ]
+      end
+
+      let(:options) do
+        {:reset => true, :prefix => 'pre_'}
+      end
+
+      it "should reset the locus tag numbering at 000001" do
+        subject[0].id.should == 'pre_000001'
+        subject[1].id.should == 'pre_000002'
+        subject[2].id.should == 'pre_000003'
+      end
+
+    end
   end
 
   describe "#initialize" do

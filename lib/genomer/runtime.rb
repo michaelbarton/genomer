@@ -1,4 +1,5 @@
 require 'unindent'
+require 'tempfile'
 
 class Genomer::Runtime
 
@@ -50,12 +51,26 @@ class Genomer::Runtime
   end
 
   def man
-    msg =<<-EOF
-     genomer man COMMAND
-     run `genomer help` for a list of available commands
-    EOF
-    msg.unindent!
-    msg.strip
+    if plugin = arguments.shift
+      require 'ronn/index'
+      require 'ronn/document'
+      man_file = Tempfile.new('man')
+      File.open(man_file.path,'w') do |out|
+        out.puts Ronn::Document.new(man_page plugin).convert('roff')
+      end
+      `man #{man_file.path} | less`
+    else
+      msg =<<-EOF
+        genomer man COMMAND
+        run `genomer help` for a list of available commands
+      EOF
+      msg.unindent!
+      msg.strip
+    end
+  end
+
+  def man_page(command)
+    File.join(Genomer::Plugin.fetch(command).full_gem_path, 'man', "genomer-#{command}.ronn")
   end
 
   def init

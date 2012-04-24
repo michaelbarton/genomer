@@ -23,8 +23,5 @@ Feature: Showing man pages for available commands
       """
      When I run the genomer command with the arguments "man simple"
      Then the exit status should be 0
-      And the output should contain:
-      """
-      genomer-simple - A test plugin for genomer
-      """
+      And the output should contain "GENOMER-SIMPLE"
 

@@ -4,6 +4,7 @@ $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'rubygems'
 require 'configliere'
 require 'genomer'
+require 'ronn'
 
 Settings.use :commandline
 Settings.resolve!

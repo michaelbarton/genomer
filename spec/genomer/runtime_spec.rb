@@ -8,12 +8,11 @@ describe Genomer::Runtime do
   end
 
   let(:flags){ {} }
+  let(:arguments){ [] }
 
   describe "with the command" do
 
     describe "none" do
-
-      let(:arguments){ [] }
 
       it "should print the short help description" do
         msg = <<-EOF
@@ -133,13 +132,9 @@ describe Genomer::Runtime do
         stub(Genomer::Plugin).plugins{ gems }
       end
 
-      describe "with plugin specified" do
+      describe "with no command specified" do
 
         let(:arguments){ %w|man| }
-
-        let(:gems) do
-          []
-        end
 
         it "should print the man help description" do
           msg = <<-EOF
@@ -147,6 +142,22 @@ describe Genomer::Runtime do
             run `genomer help` for a list of available commands
           EOF
           subject.execute!.should include msg.unindent.strip
+        end
+
+      end
+
+      describe "with a command specified" do
+
+        let(:arguments){ %w|man simple| }
+        let(:man_page){ '/tmp' }
+
+        before do
+          mock(subject).man_page('simple'){ man_page }
+        end
+
+        it "should call ronn for the path" do
+          mock(Kernel).system("ronn -m #{man_page}")
+          subject.execute!
         end
 
       end
@@ -168,6 +179,20 @@ describe Genomer::Runtime do
         subject.flags[:flag]     == flags[:flag]
       end
 
+    end
+
+  end
+
+  describe "#man_page" do
+
+    before do
+      mock(Genomer::Plugin).fetch('simple') do
+        mock!.full_gem_path{ '/tmp' }
+      end
+    end
+
+    it "should return the path to the man page for the specified plugin" do
+      subject.man_page('simple').should == '/tmp/man/genomer-simple.ronn'
     end
 
   end

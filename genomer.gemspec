@@ -16,11 +16,12 @@ Gem::Specification.new do |s|
   s.rubyforge_project         = "genomer"
 
   s.add_dependency "rake",                          "~> 0.9.0"
-  s.add_dependency "bundler",                       "~> 1.0.0"
+  s.add_dependency "bundler",                       "~> 1.1.0"
   s.add_dependency "configliere",                   "~> 0.4.8"
   s.add_dependency "scaffolder",                    "~> 0.4.0"
   s.add_dependency "scaffolder-annotation-locator", "~> 0.1.1"
   s.add_dependency "unindent",                      "~> 1.0.0"
+  s.add_dependency "ronn",                          "~> 0.7.3"
   s.add_dependency "psych"
 
   # Specs

@@ -17,6 +17,7 @@ class Genomer::Runtime
     when nil    then short_help
     when "help" then help
     when "init" then init
+    when "man"  then man
     else             run_plugin
     end
   end
@@ -45,6 +46,15 @@ class Genomer::Runtime
       str << p.summary
       str << "\n"
     end
+    msg.strip
+  end
+
+  def man
+    msg =<<-EOF
+     genomer man COMMAND
+     run `genomer help` for a list of available commands
+    EOF
+    msg.unindent!
     msg.strip
   end
 

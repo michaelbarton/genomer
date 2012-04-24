@@ -127,6 +127,32 @@ describe Genomer::Runtime do
 
     end
 
+    describe "man" do
+
+      before do
+        stub(Genomer::Plugin).plugins{ gems }
+      end
+
+      describe "with plugin specified" do
+
+        let(:arguments){ %w|man| }
+
+        let(:gems) do
+          []
+        end
+
+        it "should print the man help description" do
+          msg = <<-EOF
+            genomer man COMMAND
+            run `genomer help` for a list of available commands
+          EOF
+          subject.execute!.should include msg.unindent.strip
+        end
+
+      end
+
+    end
+
   end
 
   describe "#initialize" do

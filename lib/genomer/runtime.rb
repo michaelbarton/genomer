@@ -35,6 +35,7 @@ class Genomer::Runtime
 
       Available commands:
         init        Create a new genomer project
+        man         View man page for the specified plugin
     EOF
     msg.unindent!
 

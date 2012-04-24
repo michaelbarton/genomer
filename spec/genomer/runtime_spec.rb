@@ -92,16 +92,22 @@ describe Genomer::Runtime do
           []
         end
 
-        it "should print the help description" do
+        it "should print the header description" do
           msg = <<-EOF
             genomer COMMAND [options]
 
             Available commands:
-              init        Create a new genomer project
           EOF
-          subject.execute!.should == msg.unindent.strip
+          subject.execute!.should include msg.unindent.strip
         end
 
+        it "should show the init command" do
+          subject.execute!.should include "init        Create a new genomer project"
+        end
+
+        it "should show the man command" do
+          subject.execute!.should include "man         View man page for the specified plugin"
+        end
       end
 
       describe "with available genomer plugins" do
@@ -113,15 +119,8 @@ describe Genomer::Runtime do
           end]
         end
 
-        it "should print the help description" do
-          msg = <<-EOF
-            genomer COMMAND [options]
-
-            Available commands:
-              init        Create a new genomer project
-              simple      A simple scaffolder command
-          EOF
-          subject.execute!.should == msg.unindent.strip
+        it "should print the plugin command description" do
+          subject.execute!.should include "simple      A simple scaffolder command"
         end
 
       end

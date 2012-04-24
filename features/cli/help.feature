@@ -26,6 +26,10 @@ Feature: Listing available commands
      """
        init        Create a new genomer project
      """
+      And the output should contain:
+     """
+       man         View man page for the specified plugin
+     """
 
   @disable-bundler
   Scenario: Running help with a single genomer plugins specified

@@ -82,6 +82,7 @@ class Genomer::Plugin
   #
   # @return [Array] An array of Scaffolder::Region instances
   def scaffold
+    YAML::ENGINE.yamler = 'syck'
     Scaffolder.new(YAML.load(File.read(scaffold_file)),sequence_file)
   end
 

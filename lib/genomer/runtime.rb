@@ -58,7 +58,7 @@ class Genomer::Runtime
       File.open(man_file.path,'w') do |out|
         out.puts Ronn::Document.new(man_page plugin).convert('roff')
       end
-      `man #{man_file.path} | less`
+      exec "man #{man_file.path}"
     else
       msg =<<-EOF
         genomer man COMMAND

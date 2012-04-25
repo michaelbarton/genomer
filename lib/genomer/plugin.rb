@@ -82,7 +82,7 @@ class Genomer::Plugin
   #
   # @return [Array] An array of Scaffolder::Region instances
   def scaffold
-    Scaffolder.new(YAML.load(File.open(scaffold_file)),sequence_file)
+    Scaffolder.new(YAML.load(File.read(scaffold_file)),sequence_file)
   end
 
   def annotations(options = {})

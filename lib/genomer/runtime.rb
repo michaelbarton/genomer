@@ -1,5 +1,7 @@
 require 'unindent'
 require 'tempfile'
+require 'ronn/index'
+require 'ronn/document'
 
 class Genomer::Runtime
 
@@ -52,13 +54,8 @@ class Genomer::Runtime
 
   def man
     if plugin = arguments.shift
-      require 'ronn/index'
-      require 'ronn/document'
-      man_file = Tempfile.new('man')
-      File.open(man_file.path,'w') do |out|
-        out.puts Ronn::Document.new(man_page plugin).convert('roff')
-      end
-      exec "man #{man_file.path}"
+      man_file_location = man_file(plugin)
+      Kernel.exec "man #{groffed_man_file(man_file_location).path}"
     else
       msg =<<-EOF
         genomer man COMMAND
@@ -69,8 +66,16 @@ class Genomer::Runtime
     end
   end
 
-  def man_page(command)
-    File.join(Genomer::Plugin.fetch(command).full_gem_path, 'man', "genomer-#{command}.ronn")
+  def man_file(plugin)
+    File.join(Genomer::Plugin.fetch(plugin).full_gem_path, 'man', "genomer-#{plugin}.ronn")
+  end
+
+  def groffed_man_file(original_man_file)
+    converted_man = Tempfile.new("genome-manpage-")
+    File.open(converted_man.path,'w') do |out|
+      out.puts Ronn::Document.new(original_man_file).convert('roff')
+    end
+    converted_man
   end
 
   def init

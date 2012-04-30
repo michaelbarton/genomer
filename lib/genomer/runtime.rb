@@ -53,8 +53,8 @@ class Genomer::Runtime
   end
 
   def man
-    if plugin = arguments.shift
-      man_file_location = man_file(plugin)
+    if not arguments.empty?
+      man_file_location = man_file(arguments)
       Kernel.exec "man #{groffed_man_file(man_file_location).path}"
     else
       msg =<<-EOF
@@ -66,8 +66,10 @@ class Genomer::Runtime
     end
   end
 
-  def man_file(plugin)
-    File.join(Genomer::Plugin.fetch(plugin).full_gem_path, 'man', "genomer-#{plugin}.ronn")
+  def man_file(arguments)
+    plugin = arguments.first
+    page = arguments.unshift("genomer").join('-') << ".ronn"
+    File.join(Genomer::Plugin.fetch(plugin).full_gem_path, 'man', page)
   end
 
   def groffed_man_file(original_man_file)

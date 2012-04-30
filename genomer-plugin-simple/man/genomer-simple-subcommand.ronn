@@ -1,0 +1,6 @@
+genomer-simple-subcommand(1) -- A test plugin subcommand
+========================================================
+
+## SYNOPSIS
+
+`genomer simple subcommand`

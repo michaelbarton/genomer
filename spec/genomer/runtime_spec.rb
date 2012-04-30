@@ -153,7 +153,25 @@ describe Genomer::Runtime do
         let(:groffed_man_file){ mock!.path{ 'b' } }
 
         before do
-          mock(subject).man_file('simple'){ man_file }
+          mock(subject).man_file(['simple']){ man_file }
+          mock(subject).groffed_man_file(man_file){ groffed_man_file }
+        end
+
+        it "should call man for the groffed path" do
+          mock(Kernel).exec("man b")
+          subject.execute!
+        end
+
+      end
+
+      describe "with a subcommand specified" do
+
+        let(:arguments){ %w|man simple subcommand| }
+        let(:man_file){ 'a' }
+        let(:groffed_man_file){ mock!.path{ 'b' } }
+
+        before do
+          mock(subject).man_file(['simple','subcommand']){ man_file }
           mock(subject).groffed_man_file(man_file){ groffed_man_file }
         end
 
@@ -193,8 +211,12 @@ describe Genomer::Runtime do
       end
     end
 
-    it "should return the path to the man page for the specified plugin" do
-      subject.man_file('simple').should == '/tmp/man/genomer-simple.ronn'
+    it "should return the path to the man page for a command" do
+      subject.man_file(['simple']).should == '/tmp/man/genomer-simple.ronn'
+    end
+
+    it "should return the path to the man page for a subcommand" do
+      subject.man_file(['simple','subcommand']).should == '/tmp/man/genomer-simple-subcommand.ronn'
     end
 
   end

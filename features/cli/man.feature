@@ -53,3 +53,19 @@ Feature: Showing man pages for available commands
       run `genomer help` for a list of available commands
 
       """
+
+  @disable-bundler
+  Scenario: Trying to get a man page for an unknown subcommand
+    Given I run the genomer command with the arguments "init project"
+      And I cd to "project"
+      And I append to "Gemfile" with:
+      """
+      gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
+      """
+     When I run the genomer command with the arguments "man simple unknown"
+     Then the exit status should be 1
+      And the output should contain:
+      """
+      Error. No manual entry for command 'simple unknown'
+
+      """

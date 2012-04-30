@@ -155,6 +155,7 @@ describe Genomer::Runtime do
         before do
           mock(subject).man_file(['simple']){ man_file }
           mock(subject).groffed_man_file(man_file){ groffed_man_file }
+          mock(File).exists?(man_file){true}
         end
 
         it "should call man for the groffed path" do
@@ -173,11 +174,29 @@ describe Genomer::Runtime do
         before do
           mock(subject).man_file(['simple','subcommand']){ man_file }
           mock(subject).groffed_man_file(man_file){ groffed_man_file }
+          mock(File).exists?(man_file){true}
         end
 
         it "should call man for the groffed path" do
           mock(Kernel).exec("man b")
           subject.execute!
+        end
+
+      end
+
+      describe "with an unknown subcommand specified" do
+
+        let(:arguments){ %w|man simple subcommand| }
+        let(:man_file){ 'a' }
+
+        before do
+          mock(subject).man_file(['simple','subcommand']){ man_file }
+          mock(File).exists?(man_file){false}
+        end
+
+        it "should call man for the groffed path" do
+          lambda{ subject.execute! }.
+            should raise_error(Genomer::Error,"No manual entry for command 'simple subcommand'")
         end
 
       end

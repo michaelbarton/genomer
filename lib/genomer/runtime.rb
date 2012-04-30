@@ -54,7 +54,11 @@ class Genomer::Runtime
 
   def man
     if not arguments.empty?
-      man_file_location = man_file(arguments)
+      man_file_location = man_file(arguments.clone)
+      unless File.exists?(man_file_location)
+        raise Genomer::Error, "No manual entry for command '#{arguments.join(' ')}'"
+      end
+
       Kernel.exec "man #{groffed_man_file(man_file_location).path}"
     else
       msg =<<-EOF

@@ -14,7 +14,7 @@ Feature: Showing man pages for available commands
       """
 
   @disable-bundler
-  Scenario: Running man with a single genomer plugins specified
+  Scenario: Getting the man page for a genomer plugin
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
       And I append to "Gemfile" with:
@@ -25,3 +25,19 @@ Feature: Showing man pages for available commands
      Then the exit status should be 0
       And the output should contain "GENOMER-SIMPLE"
 
+  @disable-bundler
+  Scenario: Trying to get a man page for an unknown plugin
+    Given I run the genomer command with the arguments "init project"
+      And I cd to "project"
+      And I append to "Gemfile" with:
+      """
+      gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
+      """
+     When I run the genomer command with the arguments "man unknown"
+     Then the exit status should be 1
+      And the output should contain:
+      """
+      Error. Unknown command or plugin 'unknown.'
+      run `genomer help` for a list of available commands
+
+      """

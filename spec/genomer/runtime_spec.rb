@@ -8,12 +8,11 @@ describe Genomer::Runtime do
   end
 
   let(:flags){ {} }
+  let(:arguments){ [] }
 
   describe "with the command" do
 
     describe "none" do
-
-      let(:arguments){ [] }
 
       it "should print the short help description" do
         msg = <<-EOF
@@ -92,16 +91,22 @@ describe Genomer::Runtime do
           []
         end
 
-        it "should print the help description" do
+        it "should print the header description" do
           msg = <<-EOF
             genomer COMMAND [options]
 
             Available commands:
-              init        Create a new genomer project
           EOF
-          subject.execute!.should == msg.unindent.strip
+          subject.execute!.should include msg.unindent.strip
         end
 
+        it "should show the init command" do
+          subject.execute!.should include "init        Create a new genomer project"
+        end
+
+        it "should show the man command" do
+          subject.execute!.should include "man         View man page for the specified plugin"
+        end
       end
 
       describe "with available genomer plugins" do
@@ -113,15 +118,85 @@ describe Genomer::Runtime do
           end]
         end
 
-        it "should print the help description" do
-          msg = <<-EOF
-            genomer COMMAND [options]
+        it "should print the plugin command description" do
+          subject.execute!.should include "simple      A simple scaffolder command"
+        end
 
-            Available commands:
-              init        Create a new genomer project
-              simple      A simple scaffolder command
+      end
+
+    end
+
+    describe "man" do
+
+      before do
+        stub(Genomer::Plugin).plugins{ gems }
+      end
+
+      describe "with no command specified" do
+
+        let(:arguments){ %w|man| }
+
+        it "should print the man help description" do
+          msg = <<-EOF
+            genomer man COMMAND
+            run `genomer help` for a list of available commands
           EOF
-          subject.execute!.should == msg.unindent.strip
+          subject.execute!.should include msg.unindent.strip
+        end
+
+      end
+
+      describe "with a command specified" do
+
+        let(:arguments){ %w|man simple| }
+        let(:man_file){ 'a' }
+        let(:groffed_man_file){ mock!.path{ 'b' } }
+
+        before do
+          mock(subject).man_file(['simple']){ man_file }
+          mock(subject).groffed_man_file(man_file){ groffed_man_file }
+          mock(File).exists?(man_file){true}
+        end
+
+        it "should call man for the groffed path" do
+          mock(Kernel).exec("man b")
+          subject.execute!
+        end
+
+      end
+
+      describe "with a subcommand specified" do
+
+        let(:arguments){ %w|man simple subcommand| }
+        let(:man_file){ 'a' }
+        let(:groffed_man_file){ mock!.path{ 'b' } }
+
+        before do
+          mock(subject).man_file(['simple','subcommand']){ man_file }
+          mock(subject).groffed_man_file(man_file){ groffed_man_file }
+          mock(File).exists?(man_file){true}
+        end
+
+        it "should call man for the groffed path" do
+          mock(Kernel).exec("man b")
+          subject.execute!
+        end
+
+      end
+
+      describe "with an unknown subcommand specified" do
+
+        let(:arguments){ %w|man simple subcommand| }
+        let(:man_file){ 'a' }
+
+        before do
+          mock(subject).man_file(['simple','subcommand']){ man_file }
+          mock(File).exists?(man_file){false}
+        end
+
+        it "should call man for the groffed path" do
+          lambda{ subject.execute! }.
+            should raise_error(Genomer::Error,"No manual entry for command 'simple subcommand'")
         end
 
       end
@@ -143,6 +218,24 @@ describe Genomer::Runtime do
         subject.flags[:flag]     == flags[:flag]
       end
 
+    end
+
+  end
+
+  describe "#man_file" do
+
+    before do
+      mock(Genomer::Plugin).fetch('simple') do
+        mock!.full_gem_path{ '/tmp' }
+      end
+    end
+
+    it "should return the path to the man page for a command" do
+      subject.man_file(['simple']).should == '/tmp/man/genomer-simple.ronn'
+    end
+
+    it "should return the path to the man page for a subcommand" do
+      subject.man_file(['simple','subcommand']).should == '/tmp/man/genomer-simple-subcommand.ronn'
     end
 
   end

@@ -21,7 +21,14 @@ Feature: Listing available commands
      genomer COMMAND [options]
 
      Available commands:
+     """
+      And the output should contain:
+     """
        init        Create a new genomer project
+     """
+      And the output should contain:
+     """
+       man         View man page for the specified plugin
      """
 
   @disable-bundler
@@ -36,10 +43,6 @@ Feature: Listing available commands
      Then the exit status should be 0
       And the output should contain:
      """
-     genomer COMMAND [options]
-
-     Available commands:
-       init        Create a new genomer project
        simple      Simple genomer plugin for testing purposes
      """
 

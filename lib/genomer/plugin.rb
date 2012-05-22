@@ -6,23 +6,28 @@ require 'scaffolder/annotation_locator'
 # genomer system
 class Genomer::Plugin
 
-  # Require and fetch corresponding class for this plugin name.
+  # Return the corresponding class for this plugin name.
   #
   # This method calls {Kernel#require} for the requested plugin by searching
   # the available plugins for genomer-plugin-NAME. Where name is the passed
-  # string. The camel cased class name for this plugin is then returned.
+  # string. The class for this plugin is then returned.
   #
   # @param [String] name The name of plugin without the 'genomer-plugin-' prefix.
   # @return [Class] The class for this genomer plugin.
-  def self.[](name)
+  def self.[](plugin)
+    name = fetch(plugin).name
+    require name
+    Kernel.const_get(to_class_name(name))
+  end
+
+  def self.fetch(name)
     plugin = plugins.detect{|i| i.name == "genomer-plugin-#{name}" }
     unless plugin 
       error =  "Unknown command or plugin '#{name}.'\n"
       error << "run `genomer help` for a list of available commands\n"
       raise Genomer::Error, error
     end
-    require plugin.name
-    Kernel.const_get(to_class_name(plugin.name))
+    plugin
   end
 
   private
@@ -77,7 +82,8 @@ class Genomer::Plugin
   #
   # @return [Array] An array of Scaffolder::Region instances
   def scaffold
-    Scaffolder.new(YAML.load(File.open(scaffold_file)),sequence_file)
+    YAML::ENGINE.yamler = 'syck'
+    Scaffolder.new(YAML.load(File.read(scaffold_file)),sequence_file)
   end
 
   def annotations(options = {})
@@ -88,10 +94,12 @@ class Genomer::Plugin
       [attn.start,attn.end]
     end
 
-    if options[:reset]
+    if value = options[:reset]
+      start = value.to_s =~ /^[-+]?[0-9]+$/ ? value.to_i : 1
+
       genes = attns.select{|i| i.feature == 'gene'}
       genes.each_with_index do |annotation,count|
-        annotation.id.replace sprintf("%06d",count+1)
+        annotation.id.replace sprintf("%06d",count + start)
       end
     end
 

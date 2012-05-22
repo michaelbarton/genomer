@@ -1,0 +1,6 @@
+genomer-simple(1) -- A test plugin for genomer
+==============================================
+
+## SYNOPSIS
+
+`genomer simple`

@@ -94,10 +94,12 @@ class Genomer::Plugin
       [attn.start,attn.end]
     end
 
-    if options[:reset]
+    if value = options[:reset]
+      start = value.to_s =~ /^[-+]?[0-9]+$/ ? value.to_i : 1
+
       genes = attns.select{|i| i.feature == 'gene'}
       genes.each_with_index do |annotation,count|
-        annotation.id.replace sprintf("%06d",count+1)
+        annotation.id.replace sprintf("%06d",count + start)
       end
     end
 

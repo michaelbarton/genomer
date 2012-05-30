@@ -1,7 +1,6 @@
 require 'unindent'
 require 'tempfile'
-require 'ronn/index'
-require 'ronn/document'
+require 'md2man'
 
 class Genomer::Runtime
 
@@ -79,7 +78,7 @@ class Genomer::Runtime
   def groffed_man_file(original_man_file)
     converted_man = Tempfile.new("genome-manpage-")
     File.open(converted_man.path,'w') do |out|
-      out.puts Ronn::Document.new(original_man_file).convert('roff')
+      out.puts Md2Man::ENGINE.render(File.read(original_man_file))
     end
     converted_man
   end

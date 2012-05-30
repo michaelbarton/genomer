@@ -1,5 +1,8 @@
+# GENOMER-SIMPLE 1
+
+## NAME
+
 genomer-simple(1) -- A test plugin for genomer
-==============================================
 
 ## SYNOPSIS
 

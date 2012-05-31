@@ -1,9 +1,12 @@
+# GENOMER-INIT 1
+
+## NAME
+
 genomer-init(1) -- create a new genomer project
-===============================================
 
 ## SYNOPSIS
 
-`genomer init` <project-name>
+`genomer init` *project-name*
 
 ## DESCRIPTION
 

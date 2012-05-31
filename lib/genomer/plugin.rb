@@ -82,7 +82,7 @@ class Genomer::Plugin
   #
   # @return [Array] An array of Scaffolder::Region instances
   def scaffold
-    YAML::ENGINE.yamler = 'syck'
+    YAML::ENGINE.yamler = 'syck' if defined?(YAML::ENGINE)
     Scaffolder.new(YAML.load(File.read(scaffold_file)),sequence_file)
   end
 
@@ -90,9 +90,7 @@ class Genomer::Plugin
     attns = Scaffolder::AnnotationLocator.new(
       scaffold_file,sequence_file,annotation_file)
 
-    attns.sort_by! do |attn|
-      [attn.start,attn.end]
-    end
+    attns = attns.sort_by{|attn| [attn.start,attn.end] }
 
     if value = options[:reset]
       start = value.to_s =~ /^[-+]?[0-9]+$/ ? value.to_i : 1

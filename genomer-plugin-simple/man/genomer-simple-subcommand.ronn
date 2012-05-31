@@ -1,5 +1,8 @@
+# GENOMER-SIMPLE-SUBCOMMAND 1
+
+## NAME
+
 genomer-simple-subcommand(1) -- A test plugin subcommand
-========================================================
 
 ## SYNOPSIS
 

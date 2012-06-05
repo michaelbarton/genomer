@@ -87,9 +87,13 @@ class Genomer::Runtime
     project_name = arguments.first
     if File.exists?(project_name)
       raise Genomer::Error, "Directory '#{project_name}' already exists."
-    else
-      Dir.mkdir project_name
-      Dir.mkdir File.join(project_name,'assembly')
+    end
+
+    Dir.mkdir project_name
+    Dir.mkdir File.join(project_name,'assembly')
+
+    ['scaffold.yml','sequence.fna','annotations.gff'].each do |f|
+      File.new File.join(project_name,'assembly',f), File::CREAT
     end
   end
 

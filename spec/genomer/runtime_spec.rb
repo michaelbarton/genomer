@@ -60,6 +60,17 @@ describe Genomer::Runtime do
           File.exists?(File.join('project_name','assembly')).should be_true
         end
 
+        it "should create a 'scaffold.yml' file" do
+          File.exists?(File.join('project_name','assembly','scaffold.yml')).should be_true
+        end
+
+        it "should create a 'sequence.fna' file" do
+          File.exists?(File.join('project_name','assembly','sequence.fna')).should be_true
+        end
+
+        it "should create a 'annotations.gff' file" do
+          File.exists?(File.join('project_name','assembly','annotations.gff')).should be_true
+        end
       end
 
       describe "when project already exists" do

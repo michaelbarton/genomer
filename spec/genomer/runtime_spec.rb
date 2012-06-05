@@ -61,15 +61,44 @@ describe Genomer::Runtime do
         end
 
         it "should create a 'scaffold.yml' file" do
-          File.exists?(File.join('project_name','assembly','scaffold.yml')).should be_true
+          file = File.join('project_name','assembly','scaffold.yml')
+          File.exists?(file).should be_true
+          File.read(file).should == <<-EOF.unindent
+            # Specify your genome scaffold in YAML format here. Reference nucleotide
+            # sequences in the 'sequences.fna' file using the first space delimited
+            # word of each fasta header.
+            #
+            # Go to http://next.gs/getting-started/ to start writing genome scaffold
+            # files.
+            #
+            # A simple one contig example is also provided below. Delete this as you
+            # start writing your own scaffold.
+            ---
+              - sequence:
+                source: contig1
+          EOF
         end
 
         it "should create a 'sequence.fna' file" do
-          File.exists?(File.join('project_name','assembly','sequence.fna')).should be_true
+          file = File.join('project_name','assembly','sequence.fna')
+          File.exists?(file).should be_true
+          File.read(file).should == <<-EOF.unindent
+            ; Add your assembled contigs and scaffolds sequences to this file.
+            ; These sequences can be referenced in the 'scaffold.yml' file
+            ; using the first space delimited word in each fasta header.
+            > contig1
+            ATGC
+          EOF
         end
 
         it "should create a 'annotations.gff' file" do
-          File.exists?(File.join('project_name','assembly','annotations.gff')).should be_true
+          file = File.join('project_name','assembly','annotations.gff')
+
+          File.exists?(file).should be_true
+          File.read(file).should == <<-EOF.unindent
+            ##gff-version   3
+            ## Add your gff3 formatted annotations to this file
+          EOF
         end
       end
 

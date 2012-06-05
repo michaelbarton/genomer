@@ -89,11 +89,15 @@ class Genomer::Runtime
       raise Genomer::Error, "Directory '#{project_name}' already exists."
     end
 
+    require 'genomer/files'
+
     Dir.mkdir project_name
     Dir.mkdir File.join(project_name,'assembly')
 
-    ['scaffold.yml','sequence.fna','annotations.gff'].each do |f|
-      File.new File.join(project_name,'assembly',f), File::CREAT
+    ['scaffold.yml','sequence.fna','annotations.gff'].each do |name|
+      File.open(File.join(project_name,'assembly',name),'w') do |file|
+        file.print Genomer::Files.send(name.gsub('.','_').to_sym)
+      end
     end
   end
 

@@ -101,7 +101,7 @@ describe Genomer::Runtime do
           EOF
         end
 
-        it "should create a 'annotations.gff' file" do
+        it "should create a 'Gemfile' file" do
           file    = File.join('project_name','Gemfile')
           version = Genomer::VERSION.split('.')[0..1] << '0'
 

@@ -42,6 +42,7 @@ Feature: Creating a new genomer project
     ## Add your gff3 formatted annotations to this file
 
     """
+    And a file named "project/Gemfile" should exist
 
   Scenario: Creating a new project where the directory already exists
     Given a directory named "project"

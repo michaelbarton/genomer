@@ -100,6 +100,12 @@ describe Genomer::Runtime do
             ## Add your gff3 formatted annotations to this file
           EOF
         end
+
+        it "should create a 'annotations.gff' file" do
+          file = File.join('project_name','Gemfile')
+
+          File.exists?(file).should be_true
+        end
       end
 
       describe "when project already exists" do

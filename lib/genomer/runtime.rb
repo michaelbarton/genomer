@@ -94,6 +94,10 @@ class Genomer::Runtime
     Dir.mkdir project_name
     Dir.mkdir File.join(project_name,'assembly')
 
+
+    File.open(File.join(project_name,'Gemfile'),'w') do |file|
+    end
+
     ['scaffold.yml','sequence.fna','annotations.gff'].each do |name|
       File.open(File.join(project_name,'assembly',name),'w') do |file|
         file.print Genomer::Files.send(name.gsub('.','_').to_sym)

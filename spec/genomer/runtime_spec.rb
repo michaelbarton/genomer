@@ -102,9 +102,16 @@ describe Genomer::Runtime do
         end
 
         it "should create a 'annotations.gff' file" do
-          file = File.join('project_name','Gemfile')
+          file    = File.join('project_name','Gemfile')
+          version = Genomer::VERSION.split('.')[0..1] << '0'
+
 
           File.exists?(file).should be_true
+          File.read(file).should == <<-EOF.unindent
+            source :rubygems
+
+            gem 'genomer',    '~> #{version.join('.')}'
+          EOF
         end
       end
 

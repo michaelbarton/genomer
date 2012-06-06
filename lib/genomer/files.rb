@@ -1,6 +1,15 @@
 class Genomer::Files
   class << self
 
+    def gemfile
+      version = Genomer::VERSION.split('.')[0..1].<<(0).join('.')
+      <<-EOF.unindent
+        source :rubygems
+
+        gem 'genomer',    '~> #{version}'
+      EOF
+    end
+
     def scaffold_yml
       <<-EOF.unindent
         # Specify your genome scaffold in YAML format here. Reference nucleotide

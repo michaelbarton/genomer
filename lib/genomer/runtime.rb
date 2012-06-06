@@ -96,6 +96,7 @@ class Genomer::Runtime
 
 
     File.open(File.join(project_name,'Gemfile'),'w') do |file|
+      file.print Genomer::Files.gemfile
     end
 
     ['scaffold.yml','sequence.fna','annotations.gff'].each do |name|

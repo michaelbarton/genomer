@@ -43,6 +43,13 @@ Feature: Creating a new genomer project
 
     """
     And a file named "project/Gemfile" should exist
+    And the file "project/Gemfile" should contain exactly:
+    """
+    source :rubygems
+
+    gem 'genomer',    '~> 0.0.0'
+
+    """
 
   Scenario: Creating a new project where the directory already exists
     Given a directory named "project"

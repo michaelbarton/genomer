@@ -7,7 +7,7 @@ Feature: Calling genomer plugins in a genomer project
   Scenario: Calling a genomer plugin with no command
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
       """
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
@@ -22,7 +22,7 @@ Feature: Calling genomer plugins in a genomer project
   Scenario: Calling a genomer plugin with a command
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
       """
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """

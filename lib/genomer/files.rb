@@ -1,3 +1,5 @@
+require 'genomer/version'
+
 class Genomer::Files
   class << self
 

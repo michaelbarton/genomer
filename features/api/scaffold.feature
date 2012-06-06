@@ -7,12 +7,12 @@ Feature: Plugins accessing the scaffold in a genomer project
   Scenario: Plugin accessing the scaffold
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
       """
       gem 'genomer',               :path => '../../../'
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
-      And I append to "assembly/scaffold.yml" with:
+      And I overwrite "assembly/scaffold.yml" with:
       """
       ---
       -
@@ -23,7 +23,7 @@ Feature: Plugins accessing the scaffold in a genomer project
           source: contig2
 
       """
-      And I append to "assembly/sequence.fna" with:
+      And I overwrite "assembly/sequence.fna" with:
       """
       >contig1
       ATGC

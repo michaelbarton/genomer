@@ -7,12 +7,12 @@ Feature: Changing annotation IDs
   Scenario: Adding a prefix to annotation IDs
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
         """
         gem 'genomer',               :path => '../../../'
         gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
         """
-      And I append to "assembly/scaffold.yml" with:
+      And I overwrite "assembly/scaffold.yml" with:
         """
         ---
         -
@@ -20,12 +20,12 @@ Feature: Changing annotation IDs
             source: contig1
 
         """
-      And I append to "assembly/sequence.fna" with:
+      And I overwrite "assembly/sequence.fna" with:
         """
         >contig1
         ATGCATGC
         """
-      And I append to "assembly/annotations.gff" with:
+      And I overwrite "assembly/annotations.gff" with:
         """
         ##gff-version 3
         contig1	.	gene	1	4	.	+	1	ID=gene1
@@ -44,12 +44,12 @@ Feature: Changing annotation IDs
   Scenario: Reset locus tag numbering from the sequence start
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
         """
         gem 'genomer',               :path => '../../../'
         gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
         """
-      And I append to "assembly/scaffold.yml" with:
+      And I overwrite "assembly/scaffold.yml" with:
         """
         ---
         -
@@ -57,12 +57,12 @@ Feature: Changing annotation IDs
             source: contig1
 
         """
-      And I append to "assembly/sequence.fna" with:
+      And I overwrite "assembly/sequence.fna" with:
         """
         >contig1
         ATGCATGC
         """
-      And I append to "assembly/annotations.gff" with:
+      And I overwrite "assembly/annotations.gff" with:
         """
         ##gff-version 3
         contig1	.	gene	1	4	.	+	1	ID=gene1
@@ -81,12 +81,12 @@ Feature: Changing annotation IDs
   Scenario: Reset locus tag numbering with at a specific value
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
         """
         gem 'genomer',               :path => '../../../'
         gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
         """
-      And I append to "assembly/scaffold.yml" with:
+      And I overwrite "assembly/scaffold.yml" with:
         """
         ---
         -
@@ -94,12 +94,12 @@ Feature: Changing annotation IDs
             source: contig1
 
         """
-      And I append to "assembly/sequence.fna" with:
+      And I overwrite "assembly/sequence.fna" with:
         """
         >contig1
         ATGCATGC
         """
-      And I append to "assembly/annotations.gff" with:
+      And I overwrite "assembly/annotations.gff" with:
         """
         ##gff-version 3
         contig1	.	gene	1	4	.	+	1	ID=gene1
@@ -118,12 +118,12 @@ Feature: Changing annotation IDs
   Scenario: Reseting locus tag numbering and adding a prefix
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
         """
         gem 'genomer',               :path => '../../../'
         gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
         """
-      And I append to "assembly/scaffold.yml" with:
+      And I overwrite "assembly/scaffold.yml" with:
         """
         ---
         -
@@ -131,12 +131,12 @@ Feature: Changing annotation IDs
             source: contig1
 
         """
-      And I append to "assembly/sequence.fna" with:
+      And I overwrite "assembly/sequence.fna" with:
         """
         >contig1
         ATGCATGC
         """
-      And I append to "assembly/annotations.gff" with:
+      And I overwrite "assembly/annotations.gff" with:
         """
         ##gff-version 3
         contig1	.	gene	1	4	.	+	1	ID=gene1

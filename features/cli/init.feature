@@ -21,8 +21,9 @@ Feature: Creating a new genomer project
     # A simple one contig example is also provided below. Delete this as you
     # start writing your own scaffold.
     ---
-      - sequence:
-        source: contig1
+      -
+        sequence:
+          source: "contig1"
 
     """
     And a file named "project/assembly/sequence.fna" should exist
@@ -51,11 +52,18 @@ Feature: Creating a new genomer project
 
     """
 
-  Scenario: Creating a new project where the directory already exists
-    Given a directory named "project"
-    When I run the genomer command with the arguments "init project"
-    Then the exit status should be 1
-    And the stderr should contain:
-    """
-    Error. Directory 'project' already exists.
-    """
+  @disable-bundler
+  Scenario: Using the files generated in a new project
+    Given I run the genomer command with the arguments "init project"
+      And I cd to "project"
+      And I overwrite "Gemfile" with:
+      """
+      gem 'genomer',               :path => '../../../'
+      gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
+      """
+     When I run the genomer command with the arguments "simple describe"
+     Then the exit status should be 0
+      And the output should contain:
+     """
+     The scaffold contains 1 entries
+     """

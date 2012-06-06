@@ -24,8 +24,9 @@ class Genomer::Files
         # A simple one contig example is also provided below. Delete this as you
         # start writing your own scaffold.
         ---
-          - sequence:
-            source: contig1
+          -
+            sequence:
+              source: "contig1"
       EOF
     end
 

@@ -35,7 +35,7 @@ Feature: Listing available commands
   Scenario: Running help with a single genomer plugins specified
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
       """
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """

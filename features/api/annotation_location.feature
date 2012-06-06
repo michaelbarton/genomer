@@ -7,12 +7,12 @@ Feature: Accessing scaffold annotations
   Scenario: Two annotations on a single contig
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
         """
         gem 'genomer',               :path => '../../../'
         gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
         """
-      And I append to "assembly/scaffold.yml" with:
+      And I overwrite "assembly/scaffold.yml" with:
         """
         ---
         -
@@ -20,12 +20,12 @@ Feature: Accessing scaffold annotations
             source: contig1
 
         """
-      And I append to "assembly/sequence.fna" with:
+      And I overwrite "assembly/sequence.fna" with:
         """
         >contig1
         ATGCATGC
         """
-      And I append to "assembly/annotations.gff" with:
+      And I overwrite "assembly/annotations.gff" with:
         """
         ##gff-version 3
         contig1	.	gene	1	3	.	+	1	.
@@ -44,12 +44,12 @@ Feature: Accessing scaffold annotations
   Scenario: Two annotations on a two contigs
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
         """
         gem 'genomer',               :path => '../../../'
         gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
         """
-      And I append to "assembly/scaffold.yml" with:
+      And I overwrite "assembly/scaffold.yml" with:
         """
         ---
         -
@@ -60,14 +60,14 @@ Feature: Accessing scaffold annotations
             source: contig2
 
         """
-      And I append to "assembly/sequence.fna" with:
+      And I overwrite "assembly/sequence.fna" with:
         """
         >contig1
         ATGCATGC
         >contig2
         ATGCATGC
         """
-      And I append to "assembly/annotations.gff" with:
+      And I overwrite "assembly/annotations.gff" with:
         """
         ##gff-version 3
         contig1	.	gene	1	3	.	+	1	.
@@ -86,12 +86,12 @@ Feature: Accessing scaffold annotations
   Scenario: Two annotations on a single contig with an unused annotation
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
         """
         gem 'genomer',               :path => '../../../'
         gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
         """
-      And I append to "assembly/scaffold.yml" with:
+      And I overwrite "assembly/scaffold.yml" with:
         """
         ---
         -
@@ -99,12 +99,12 @@ Feature: Accessing scaffold annotations
             source: contig1
 
         """
-      And I append to "assembly/sequence.fna" with:
+      And I overwrite "assembly/sequence.fna" with:
         """
         >contig1
         ATGCATGC
         """
-      And I append to "assembly/annotations.gff" with:
+      And I overwrite "assembly/annotations.gff" with:
         """
         ##gff-version 3
         contig2	.	gene	5	7	.	+	1	.
@@ -124,12 +124,12 @@ Feature: Accessing scaffold annotations
   Scenario: Three unordered annotations on a single contig
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
         """
         gem 'genomer',               :path => '../../../'
         gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
         """
-      And I append to "assembly/scaffold.yml" with:
+      And I overwrite "assembly/scaffold.yml" with:
         """
         ---
         -
@@ -137,12 +137,12 @@ Feature: Accessing scaffold annotations
             source: contig1
 
         """
-      And I append to "assembly/sequence.fna" with:
+      And I overwrite "assembly/sequence.fna" with:
         """
         >contig1
         ATGCATGCATGC
         """
-      And I append to "assembly/annotations.gff" with:
+      And I overwrite "assembly/annotations.gff" with:
         """
         ##gff-version 3
         contig1	.	gene	9	11	.	+	1	.
@@ -163,12 +163,12 @@ Feature: Accessing scaffold annotations
   Scenario: Four unordered annotations on a two contigs
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
         """
         gem 'genomer',               :path => '../../../'
         gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
         """
-      And I append to "assembly/scaffold.yml" with:
+      And I overwrite "assembly/scaffold.yml" with:
         """
         ---
         -
@@ -179,14 +179,14 @@ Feature: Accessing scaffold annotations
             source: contig2
 
         """
-      And I append to "assembly/sequence.fna" with:
+      And I overwrite "assembly/sequence.fna" with:
         """
         >contig1
         ATGCATGC
         >contig2
         ATGCATGC
         """
-      And I append to "assembly/annotations.gff" with:
+      And I overwrite "assembly/annotations.gff" with:
         """
         ##gff-version 3
         contig2	.	gene	5	7	.	+	1	.
@@ -210,12 +210,12 @@ Feature: Accessing scaffold annotations
   Scenario: Annotations on reversed and trimmed contigs with inserts
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
         """
         gem 'genomer',               :path => '../../../'
         gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
         """
-      And I append to "assembly/scaffold.yml" with:
+      And I overwrite "assembly/scaffold.yml" with:
         """
         ---
           - sequence:
@@ -234,7 +234,7 @@ Feature: Accessing scaffold annotations
               start: 3
 
         """
-      And I append to "assembly/sequence.fna" with:
+      And I overwrite "assembly/sequence.fna" with:
         """
         > contig1
         AAAAAGGG
@@ -245,7 +245,7 @@ Feature: Accessing scaffold annotations
         > insert1
         TTT
         """
-      And I append to "assembly/annotations.gff" with:
+      And I overwrite "assembly/annotations.gff" with:
         """
         ##gff-version 3
         contig1	.	gene	1	4	.	+	1	ID=gene1

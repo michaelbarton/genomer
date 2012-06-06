@@ -6,7 +6,6 @@ Feature: Reporting genomer errors
   Scenario: Calling a non-specified genomer plugin
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with ""
      When I run the genomer command with the arguments "simple"
      Then the exit status should be 1
       And the output should contain:

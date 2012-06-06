@@ -17,7 +17,7 @@ Feature: Showing man pages for available commands
   Scenario: Getting the man page for a plugin
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
       """
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
@@ -29,7 +29,7 @@ Feature: Showing man pages for available commands
   Scenario: Getting the man page for a plugin subcommand
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
       """
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
@@ -41,7 +41,7 @@ Feature: Showing man pages for available commands
   Scenario: Trying to get a man page for an unknown plugin
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
       """
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
@@ -58,7 +58,7 @@ Feature: Showing man pages for available commands
   Scenario: Trying to get a man page for an unknown subcommand
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
-      And I append to "Gemfile" with:
+      And I overwrite "Gemfile" with:
       """
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """

@@ -60,6 +60,60 @@ describe Genomer::Runtime do
           File.exists?(File.join('project_name','assembly')).should be_true
         end
 
+        it "should create a 'scaffold.yml' file" do
+          file = File.join('project_name','assembly','scaffold.yml')
+          File.exists?(file).should be_true
+          File.read(file).should == <<-EOF.unindent
+            # Specify your genome scaffold in YAML format here. Reference nucleotide
+            # sequences in the 'sequences.fna' file using the first space delimited
+            # word of each fasta header.
+            #
+            # Go to http://next.gs/getting-started/ to start writing genome scaffold
+            # files.
+            #
+            # A simple one contig example is also provided below. Delete this as you
+            # start writing your own scaffold.
+            ---
+              -
+                sequence:
+                  source: "contig1"
+          EOF
+        end
+
+        it "should create a 'sequence.fna' file" do
+          file = File.join('project_name','assembly','sequence.fna')
+          File.exists?(file).should be_true
+          File.read(file).should == <<-EOF.unindent
+            ; Add your assembled contigs and scaffolds sequences to this file.
+            ; These sequences can be referenced in the 'scaffold.yml' file
+            ; using the first space delimited word in each fasta header.
+            > contig1
+            ATGC
+          EOF
+        end
+
+        it "should create a 'annotations.gff' file" do
+          file = File.join('project_name','assembly','annotations.gff')
+
+          File.exists?(file).should be_true
+          File.read(file).should == <<-EOF.unindent
+            ##gff-version   3
+            ## Add your gff3 formatted annotations to this file
+          EOF
+        end
+
+        it "should create a 'Gemfile' file" do
+          file    = File.join('project_name','Gemfile')
+          version = Genomer::VERSION.split('.')[0..1] << '0'
+
+
+          File.exists?(file).should be_true
+          File.read(file).should == <<-EOF.unindent
+            source :rubygems
+
+            gem 'genomer',    '~> #{version.join('.')}'
+          EOF
+        end
       end
 
       describe "when project already exists" do

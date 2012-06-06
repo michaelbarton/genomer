@@ -94,7 +94,6 @@ class Genomer::Runtime
     Dir.mkdir project_name
     Dir.mkdir File.join(project_name,'assembly')
 
-
     File.open(File.join(project_name,'Gemfile'),'w') do |file|
       file.print Genomer::Files.gemfile
     end
@@ -104,6 +103,9 @@ class Genomer::Runtime
         file.print Genomer::Files.send(name.gsub('.','_').to_sym)
       end
     end
+
+    "Genomer project '#{project_name}' created.\n"
+
   end
 
   def run_plugin

@@ -49,7 +49,11 @@ describe Genomer::Runtime do
       describe "with project name argument" do
 
         before do
-          subject.execute!
+          @msg = subject.execute!
+        end
+
+        it "should print message that project has been created" do
+          @msg.should == "Genomer project 'project_name' created.\n"
         end
 
         it "should create a directory from the named argument" do

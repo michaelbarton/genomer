@@ -1,23 +1,26 @@
-== Synopsis
+![Genomer: A swiss army knife for genome projects](http://genomer.s3.amazonaws.com/icon/genomer.png)
 
-Genomer is a plugin-based framework for genome finishing. Plugins are installed
-using the RubyGems package management system. Genome files are managed as a
-directory and updated at the command line using the `genomer` command.
+## Synopsis
 
-== Installing
+Genomer is a modular utility tool framework for genome finishing. Plugins are
+installed using the RubyGems package management system. Genome files are
+managed as a directory and updated at the command line using the `genomer`
+command.
+
+## Installing
 
 Ruby and RubyGems are required to use genomer and related plugins. Genomer is
 installed on the command line using:
 
   $ gem install genomer
 
-== Contact
+## Contact
 
 Genomer is developed by Michael Barton (www.michaelbarton.me.uk). The source
 code is available on github. Bug reports and feature requests should also be
 made there.
 
-== Copyright
+## Copyright
 
 Genomer copyright (c) 2010 by Michael Barton. Scaffolder is licensed under the
 MIT license. See LICENSE.txt for further details.

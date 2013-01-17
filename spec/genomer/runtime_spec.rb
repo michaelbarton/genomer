@@ -137,11 +137,11 @@ describe Genomer::Runtime do
 
     describe "help" do
 
-      let(:arguments){ %w|help| }
-
       before do
         mock(Genomer::Plugin).plugins{ gems }
       end
+
+      let(:arguments){ %w|help| }
 
       describe "with no available plugins" do
 
@@ -190,7 +190,7 @@ describe Genomer::Runtime do
         stub(Genomer::Plugin).plugins{ gems }
       end
 
-      describe "with no command specified" do
+      describe "and no command specified" do
 
         let(:arguments){ %w|man| }
 
@@ -204,7 +204,7 @@ describe Genomer::Runtime do
 
       end
 
-      describe "with a command specified" do
+      describe "and a command specified" do
 
         let(:arguments){ %w|man simple| }
         let(:man_file){ 'a' }
@@ -212,6 +212,25 @@ describe Genomer::Runtime do
 
         before do
           mock(subject).man_file(['simple']){ man_file }
+          mock(subject).groffed_man_file(man_file){ groffed_man_file }
+          mock(File).exists?(man_file){true}
+        end
+
+        it "should call man for the groffed path" do
+          mock(Kernel).exec("man b")
+          subject.execute!
+        end
+
+      end
+
+      describe "and the init command specified" do
+
+        let(:arguments){ %w|man init| }
+        let(:man_file){ File.expand_path File.dirname(__FILE__) + '/../../man/genomer-init.1.ronn' }
+        let(:groffed_man_file){ mock!.path{ 'b' } }
+
+        before do
+          dont_allow(subject).man_file
           mock(subject).groffed_man_file(man_file){ groffed_man_file }
           mock(File).exists?(man_file){true}
         end

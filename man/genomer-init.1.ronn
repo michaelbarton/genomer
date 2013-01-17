@@ -11,7 +11,35 @@ genomer-init(1) -- create a new genomer project
 ## DESCRIPTION
 
 Creates a new genomer project directory named **project-name**. Returns an
-error if the project directory already exists.
+error if the project directory already exists. This created directory has the
+following structure. Each file is described below.
+
+    **project-name**
+    ├── Gemfile
+    └── assembly
+        ├── annotations.gff
+        ├── scaffold.yml
+        └── sequence.fna
+
+* **Gemfile**: Genomer plugins are specified here. After adding a plugin the
+  command `bundle install` should run to install the required plugins. Gems are
+  specified according to [the bundler documentation][bundler]. Each plugin
+  should begin with the suffix 'genomer-plugin.'
+
+* **sequence.fna**: The file containing your contigs and scaffolds. These
+  should be stored in fasta format.
+
+* **scaffold.yml**: The specifies the final layout of your genome. The scaffold
+  file is written the YAML format. Details and examples of the scaffold format
+  can be found on the [next.gs][] website.
+
+* **annotations.gff**: Specific your genome annotations in [gff3 format][gff]
+  here. The **seqid** column should match the corresponding name of the fasta
+  sequence in the **sequence.fna** file.
+
+[bundler]: http://gembundler.com/
+[gff]: http://www.sequenceontology.org/gff3.shtml
+[next.gs]: http://next.gs
 
 ## BUGS
 

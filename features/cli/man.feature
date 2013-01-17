@@ -69,3 +69,9 @@ Feature: Showing man pages for available commands
       Error. No manual entry for command 'simple unknown'
 
       """
+
+  @disable-bundler
+  Scenario: Getting the man page for init
+     When I run the genomer command with the arguments "man init"
+     Then the exit status should be 0
+      And the output should contain "GENOMER-INIT(1)"

@@ -53,12 +53,17 @@ class Genomer::Runtime
 
   def man
     if not arguments.empty?
-      man_file_location = man_file(arguments.clone)
-      unless File.exists?(man_file_location)
+      location = if arguments.first == 'init'
+                   File.expand_path File.dirname(__FILE__) + '/../../man/genomer-init.1.ronn'
+                 else
+                   man_file(arguments.clone)
+                 end
+
+      unless File.exists?(location)
         raise Genomer::Error, "No manual entry for command '#{arguments.join(' ')}'"
       end
 
-      Kernel.exec "man #{groffed_man_file(man_file_location).path}"
+      Kernel.exec "man #{groffed_man_file(location).path}"
     else
       msg =<<-EOF
         genomer man COMMAND
@@ -94,7 +99,6 @@ class Genomer::Runtime
     Dir.mkdir project_name
     Dir.mkdir File.join(project_name,'assembly')
 
-
     File.open(File.join(project_name,'Gemfile'),'w') do |file|
       file.print Genomer::Files.gemfile
     end
@@ -104,6 +108,9 @@ class Genomer::Runtime
         file.print Genomer::Files.send(name.gsub('.','_').to_sym)
       end
     end
+
+    "Genomer project '#{project_name}' created.\n"
+
   end
 
   def run_plugin

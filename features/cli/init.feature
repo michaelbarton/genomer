@@ -6,6 +6,11 @@ Feature: Creating a new genomer project
   Scenario: Creating a new project
     When I run the genomer command with the arguments "init project"
     Then the exit status should be 0
+     And the stdout should contain:
+     """
+     Genomer project 'project' created.
+
+     """
     And a directory named "project" should exist
     And a directory named "project/assembly" should exist
     And a file named "project/assembly/scaffold.yml" should exist
@@ -66,4 +71,13 @@ Feature: Creating a new genomer project
       And the output should contain:
      """
      The scaffold contains 1 entries
+     """
+
+   Scenario: Creating a new project where the directory already exists
+     Given a directory named "project"
+     When I run the genomer command with the arguments "init project"
+     Then the exit status should be 1
+     And the stderr should contain:
+     """
+     Error. Directory 'project' already exists.
      """

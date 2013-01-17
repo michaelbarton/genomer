@@ -1,30 +1,58 @@
 ![Genomer: A swiss army knife for genome projects](http://genomer.s3.amazonaws.com/icon/genomer.png)
 
-## Synopsis
+## About
 
-Genomer is a modular utility tool framework for genome finishing. Plugins are
-installed using the RubyGems package management system. Genome files are
-managed as a directory and updated at the command line using the `genomer`
-command.
+Genomer is command line glue for genome projects. I wrote this tool to simplify
+the small but tedious tasks required when finishing a genome. Genomer does not
+perform assembly, gap closing or genome annotation. Genomer does however make
+it easy to reorganise contigs in a genome, map annotations on to the genome and
+generate the files required to submit a genome.
+
+A important part of genomer is making all projects reproducible. Genomer is
+designed to work well with build tools such as [GNU Make][make] and revision
+control tools such as [git][git]. This allows for all steps taken in genome
+project to be tracked and reverted if required.
+
+[make]: http://www.gnu.org/software/make/
+[git]: http://git-scm.com/
+
+Genomer is also built as a modular tool where additional functions are added by
+installing plugins. Plugins can be added simply by naming them in the `Gemfile`
+in the genomer project root, followed typing the command `bundle install`.
+Furthermore plugins can be specified to specific versions, this means that new
+versions of genomer plugins will not break any existing genomer projects.
+
+## Examples
+
+I wrote genomer to simplify the manual and error prone tasks in my own genome
+projects. You can see examples of using genomer for [a small plasmid][plasmid]
+and for [a larger microbial genome][genome]. Each of these projects takes
+advantage of revision control and build files to make the projects
+reproducible.
+
+[plasmid]: https://github.com/michaelbarton/chromosome-pfluorescens-r124-plasmid
+[genome]: https://github.com/michaelbarton/chromosome-pfluorescens-r124-genome
 
 ## Installing
 
 Ruby and RubyGems are required to use genomer and related plugins. Genomer is
 installed on the command line using:
 
-  $ gem install genomer
+    $ gem install genomer
 
 ## Contact
 
 Genomer is developed by Michael Barton (www.michaelbarton.me.uk). The source
-code is available on github. Bug reports and feature requests should also be
-made there.
+code is available on [github][]. Bug reports and feature requests should also
+be made there.
+
+[github]: https://github.com/michaelbarton/genomer
 
 ## Copyright
 
 Genomer copyright (c) 2010 by Michael Barton. Genomer is licensed under the MIT
 license. See LICENSE.txt for further details. The swiss army knife image is by
-[Dr. Alan Cann][cann] used under a Creative Commons Attribution Non-Commercial
+[Alan Cann][cann] used under a Creative Commons Attribution Non-Commercial
 ShareAlike 2.0 Licence. The original can be [found on flickr.][flickr]
 
 [cann]: http://microbiologybytes.com/AJC/

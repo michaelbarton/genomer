@@ -22,5 +22,10 @@ made there.
 
 ## Copyright
 
-Genomer copyright (c) 2010 by Michael Barton. Scaffolder is licensed under the
-MIT license. See LICENSE.txt for further details.
+Genomer copyright (c) 2010 by Michael Barton. Genomer is licensed under the MIT
+license. See LICENSE.txt for further details. The swiss army knife image is by
+[Dr. Alan Cann][cann] used under a Creative Commons Attribution Non-Commercial
+ShareAlike 2.0 Licence. The original can be [found on flickr.][flickr]
+
+[cann]: http://microbiologybytes.com/AJC/
+[flickr]: http://www.flickr.com/photos/ajc1/4663140532/

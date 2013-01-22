@@ -1,4 +1,4 @@
-![Genomer: A swiss army knife for genome projects](http://genomer.s3.amazonaws.com/icon/genomer.png)
+![Genomer: A swiss army knife for genome projects](http://genomer.s3.amazonaws.com/icon/genomer/genomer.png)
 
 ## About
 

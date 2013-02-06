@@ -16,7 +16,7 @@ class Genomer::Runtime
 
   def execute!
     case command
-    when nil    then short_help
+    when nil    then no_command
     when "help" then help
     when "init" then init
     when "man"  then man
@@ -24,12 +24,16 @@ class Genomer::Runtime
     end
   end
 
-  def short_help
-    msg =<<-EOF
+  def no_command
+    if flags[:version]
+      "Genomer version #{Genomer::VERSION}"
+    else
+      msg =<<-EOF
       genomer COMMAND [options]
       run `genomer help` for a list of available commands
-    EOF
-    msg.unindent
+      EOF
+      msg.unindent
+    end
   end
 
   def help

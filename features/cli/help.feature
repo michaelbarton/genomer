@@ -31,6 +31,14 @@ Feature: Listing available commands
        man         View man page for the specified plugin
      """
 
+  Scenario: Running genomer with the --version flag
+     When I run the genomer command with the arguments "--version"
+     Then the exit status should be 0
+      And the output should match:
+     """
+     Genomer version \d+.\d+.\d+
+     """
+
   @disable-bundler
   Scenario: Running help with a single genomer plugins specified
     Given I run the genomer command with the arguments "init project"

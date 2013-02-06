@@ -10,9 +10,9 @@ describe Genomer::Runtime do
   let(:flags){ {} }
   let(:arguments){ [] }
 
-  describe "with the command" do
+  describe "run" do
 
-    describe "none" do
+    describe "with no command" do
 
       it "should print the short help description" do
         msg = <<-EOF
@@ -24,7 +24,20 @@ describe Genomer::Runtime do
 
     end
 
-    describe "unknown" do
+    describe "with no command and the --version flag" do
+
+      let(:flags) do
+        {:version => true}
+      end
+
+      it "should print the version information" do
+        msg = "Genomer version #{Genomer::VERSION}"
+        subject.execute!.should == msg.unindent
+      end
+
+    end
+
+    describe "with an unknown command" do
 
       let(:arguments){ %w|unknown| }
 
@@ -38,7 +51,7 @@ describe Genomer::Runtime do
 
     end
 
-    describe "init" do
+    describe "with the init command" do
 
       let(:arguments){ %w|init project_name| }
 
@@ -135,7 +148,7 @@ describe Genomer::Runtime do
 
     end
 
-    describe "help" do
+    describe "with the help command" do
 
       before do
         mock(Genomer::Plugin).plugins{ gems }
@@ -184,7 +197,7 @@ describe Genomer::Runtime do
 
     end
 
-    describe "man" do
+    describe "with the man" do
 
       before do
         stub(Genomer::Plugin).plugins{ gems }

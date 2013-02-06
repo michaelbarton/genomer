@@ -2,6 +2,8 @@ require 'unindent'
 require 'tempfile'
 require 'md2man'
 
+require 'genomer/version'
+
 class Genomer::Runtime
 
   attr :command

@@ -3,6 +3,7 @@ Feature: Listing available commands
   A user can use the help command
   To list the available options to the console
 
+  @disable-bundler
   Scenario: Running genomer with no commands
      When I run the genomer command with no arguments
      Then the exit status should be 0
@@ -13,6 +14,7 @@ Feature: Listing available commands
 
      """
 
+  @disable-bundler
   Scenario: Running genomer with the help command
      When I run the genomer command with the arguments "help"
      Then the exit status should be 0

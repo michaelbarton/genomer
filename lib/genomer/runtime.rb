@@ -46,11 +46,13 @@ class Genomer::Runtime
     EOF
     msg.unindent!
 
-    msg << Genomer::Plugin.plugins.inject(String.new) do |str,p|
-      str << '  '
-      str << p.name.gsub("genomer-plugin-","").ljust(12)
-      str << p.summary
-      str << "\n"
+    if File.exists?('Gemfile')
+      msg << Genomer::Plugin.plugins.inject(String.new) do |str,p|
+        str << '  '
+        str << p.name.gsub("genomer-plugin-","").ljust(12)
+        str << p.summary
+        str << "\n"
+      end
     end
     msg.strip
   end

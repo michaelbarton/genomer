@@ -150,13 +150,39 @@ describe Genomer::Runtime do
 
     describe "with the help command" do
 
-      before do
-        mock(Genomer::Plugin).plugins{ gems }
-      end
-
       let(:arguments){ %w|help| }
 
+      describe "with no Gemfile present" do
+
+        before do
+          mock(File).exists?('Gemfile'){ false }
+          dont_allow(Genomer::Plugin).plugins
+        end
+
+        it "should print the header description" do
+          msg = <<-EOF
+            genomer COMMAND [options]
+
+            Available commands:
+          EOF
+          subject.execute!.should include msg.unindent.strip
+        end
+
+        it "should show the init command" do
+          subject.execute!.should include "init        Create a new genomer project"
+        end
+
+        it "should show the man command" do
+          subject.execute!.should include "man         View man page for the specified plugin"
+        end
+      end
+
       describe "with no available plugins" do
+
+        before do
+          mock(Genomer::Plugin).plugins{ gems }
+          mock(File).exists?('Gemfile'){ true }
+        end
 
         let(:gems) do
           []
@@ -181,6 +207,11 @@ describe Genomer::Runtime do
       end
 
       describe "with available genomer plugins" do
+
+        before do
+          mock(Genomer::Plugin).plugins{ gems }
+          mock(File).exists?('Gemfile'){ true }
+        end
 
         let(:gems) do
           [Gem::Specification.new do |s|

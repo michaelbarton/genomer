@@ -307,6 +307,18 @@ describe Genomer::Runtime do
         end
       end
 
+      describe "passed the --version flag" do
+
+        let(:flags) do
+          {:version => true}
+        end
+
+        it "should print the version information" do
+          msg = "Genomer version #{Genomer::VERSION}"
+          subject.execute!.should == msg.unindent
+        end
+
+      end
     end
 
   end

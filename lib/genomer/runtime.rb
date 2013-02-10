@@ -17,6 +17,8 @@ class Genomer::Runtime
   end
 
   def execute!
+    return "Genomer version #{Genomer::VERSION}" if flags[:version]
+
     if genomer_project?
       case command
       when nil    then no_command
@@ -34,7 +36,8 @@ class Genomer::Runtime
   end
 
   def running_init_again
-    raise Genomer::Error, "This directory contains a 'Gemfile' and already appears to be a genomer project."
+    raise Genomer::Error,
+      "This directory contains a 'Gemfile' and already appears to be a genomer project."
   end
 
   def not_genomer_project
@@ -42,15 +45,11 @@ class Genomer::Runtime
   end
 
   def no_command
-    if flags[:version]
-      "Genomer version #{Genomer::VERSION}"
-    else
-      msg =<<-EOF
+    msg =<<-EOF
       genomer COMMAND [options]
       run `genomer help` for a list of available commands
-      EOF
-      msg.unindent
-    end
+    EOF
+    msg.unindent
   end
 
   def help

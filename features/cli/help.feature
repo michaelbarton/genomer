@@ -8,10 +8,10 @@ Feature: Listing available commands
      When I run the genomer command with no arguments
      Then the exit status should be 0
       And the output should contain:
-     """
-     Use `genomer init NAME` to create a new genomer project called NAME
+      """
+      Use `genomer init NAME` to create a new genomer project called NAME
 
-     """
+      """
 
   @disable-bundler
   Scenario: Running genomer with the --version flag outside a project

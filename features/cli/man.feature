@@ -8,8 +8,7 @@ Feature: Showing man pages for available commands
      Then the exit status should be 0
       And the output should contain:
       """
-      genomer man COMMAND
-      run `genomer help` for a list of available commands
+      Use `genomer init NAME` to create a new genomer project called NAME
 
       """
 
@@ -74,4 +73,8 @@ Feature: Showing man pages for available commands
   Scenario: Getting the man page for init
      When I run the genomer command with the arguments "man init"
      Then the exit status should be 0
-      And the output should contain "GENOMER-INIT(1)"
+      And the output should contain:
+      """
+      Use `genomer init NAME` to create a new genomer project called NAME
+
+      """

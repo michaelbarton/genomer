@@ -33,6 +33,12 @@ reproducible.
 [plasmid]: https://github.com/michaelbarton/chromosome-pfluorescens-r124-plasmid
 [genome]: https://github.com/michaelbarton/chromosome-pfluorescens-r124-genome
 
+## Screencasts
+
+  * [Installing Genomer](http://www.youtube.com/watch?v=bXws8RnBsUU)
+  * [Genomer example usage](http://www.youtube.com/watch?v=HfsdJOELFjs)
+  * [Generating Genbank upload files for a simple plasmid](http://www.youtube.com/watch?v=jVn62pMnIRA)
+
 ## Installing
 
 Ruby and RubyGems are required to use genomer and related plugins. Genomer is

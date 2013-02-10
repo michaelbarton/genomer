@@ -17,13 +17,28 @@ class Genomer::Runtime
   end
 
   def execute!
-    case command
-    when nil    then no_command
-    when "help" then help
-    when "init" then init
-    when "man"  then man
-    else             run_plugin
+    if genomer_project?
+      case command
+      when nil    then no_command
+      when "help" then help
+      when "init" then running_init_again
+      when "man"  then man
+      else             run_plugin
+      end
+    else
+      case command
+      when "init" then init
+      else             not_genomer_project
+      end
     end
+  end
+
+  def running_init_again
+    raise Genomer::Error, "This directory contains a 'Gemfile' and already appears to be a genomer project."
+  end
+
+  def not_genomer_project
+    "Use `genomer init NAME` to create a new genomer project called NAME\n"
   end
 
   def no_command
@@ -118,11 +133,14 @@ class Genomer::Runtime
     end
 
     "Genomer project '#{project_name}' created.\n"
-
   end
 
   def run_plugin
     Genomer::Plugin[command].new(arguments,flags).run
+  end
+
+  def genomer_project?
+    File.exists?('Gemfile')
   end
 
 end

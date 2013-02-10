@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Genomer::Runtime do
-  include FakeFS::SpecHelpers
 
   subject do
     Genomer::Runtime.new MockSettings.new arguments, flags
@@ -12,7 +11,11 @@ describe Genomer::Runtime do
 
   describe "run" do
 
-    context "with a Gemfile preset" do
+    context "inside a genomer project" do
+
+      before do
+        stub.instance_of(described_class).genomer_project?{ true }
+      end
 
       describe "passed no arguments" do
 
@@ -194,7 +197,117 @@ describe Genomer::Runtime do
 
         end
 
+        describe "passed the init command" do
+
+          after do
+            FileUtils.rm_rf('project_name') if File.exists?('project_name')
+          end
+
+          let(:arguments){ %w|init project_name| }
+
+          it "should raise a genomer error" do
+            lambda{ subject.execute! }.
+              should raise_error(Genomer::Error,"This directory contains a 'Gemfile' and already appears to be a genomer project.")
+          end
+
+        end
       end
+
+    context "outside a genomer project" do
+
+      before do
+        stub.instance_of(described_class).genomer_project?{ false }
+      end
+
+      describe "passed no arguments" do
+
+        it "should print the short help description" do
+          msg = <<-EOF
+          Use `genomer init NAME` to create a new genomer project called NAME
+          EOF
+          subject.execute!.should == msg.unindent
+        end
+
+      end
+
+      describe "passed the init command with a project name argument" do
+
+        let(:arguments){ %w|init project_name| }
+
+        after do
+          FileUtils.rm_rf('project_name') if File.exists?('project_name')
+        end
+
+        before do
+          @msg = subject.execute!
+        end
+
+        it "should print message that project has been created" do
+          @msg.should == "Genomer project 'project_name' created.\n"
+        end
+
+        it "should create the expected directories" do
+          File.exists?('project_name').should be_true
+          File.exists?(File.join('project_name','assembly')).should be_true
+        end
+
+        it "should create a 'scaffold.yml' file" do
+          file = File.join('project_name','assembly','scaffold.yml')
+          File.exists?(file).should be_true
+          File.read(file).should == <<-EOF.unindent
+            # Specify your genome scaffold in YAML format here. Reference nucleotide
+            # sequences in the 'sequences.fna' file using the first space delimited
+            # word of each fasta header.
+            #
+            # Go to http://next.gs/getting-started/ to start writing genome scaffold
+            # files.
+            #
+            # A simple one contig example is also provided below. Delete this as you
+            # start writing your own scaffold.
+            ---
+              -
+                sequence:
+                  source: "contig1"
+          EOF
+        end
+
+        it "should create a 'sequence.fna' file" do
+          file = File.join('project_name','assembly','sequence.fna')
+          File.exists?(file).should be_true
+          File.read(file).should == <<-EOF.unindent
+            ; Add your assembled contigs and scaffolds sequences to this file.
+            ; These sequences can be referenced in the 'scaffold.yml' file
+            ; using the first space delimited word in each fasta header.
+            > contig1
+            ATGC
+          EOF
+        end
+
+        it "should create a 'annotations.gff' file" do
+          file = File.join('project_name','assembly','annotations.gff')
+
+          File.exists?(file).should be_true
+          File.read(file).should == <<-EOF.unindent
+            ##gff-version   3
+            ## Add your gff3 formatted annotations to this file
+          EOF
+        end
+
+        it "should create a 'Gemfile' file" do
+          file    = File.join('project_name','Gemfile')
+          version = Genomer::VERSION.split('.')[0..1] << '0'
+
+
+          File.exists?(file).should be_true
+          File.read(file).should == <<-EOF.unindent
+            source :rubygems
+
+            gem 'genomer',    '~> #{version.join('.')}'
+          EOF
+        end
+      end
+
+    end
 
   end
 

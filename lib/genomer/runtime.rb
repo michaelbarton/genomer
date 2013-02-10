@@ -10,6 +10,29 @@ class Genomer::Runtime
   attr :arguments
   attr :flags
 
+  MESSAGES = {
+    :error  => {
+      :init_again =>
+        "This directory contains a 'Gemfile' and already appears to be a genomer project."
+  },
+    :output => {
+      :version => "Genomer version #{Genomer::VERSION}",
+      :not_project =>
+        "Use `genomer init NAME` to create a new genomer project called NAME",
+      :simple_help =>
+        "genomer COMMAND [options]\nrun `genomer help` for a list of available commands",
+      :man =>
+        "genomer man COMMAND\nrun `genomer help` for a list of available commands"
+    }
+  }
+
+
+  def message(type,msg)
+    content = MESSAGES[type][msg]
+    type == :error ? raise(Genomer::Error, content) : content
+  end
+
+
   def initialize(settings)
     @command   = settings.rest.shift
     @arguments = settings.rest
@@ -17,39 +40,22 @@ class Genomer::Runtime
   end
 
   def execute!
-    return "Genomer version #{Genomer::VERSION}" if flags[:version]
+    return message :output, :version if flags[:version]
 
     if genomer_project?
       case command
-      when nil    then no_command
+      when nil    then message :output, :simple_help
       when "help" then help
-      when "init" then running_init_again
+      when "init" then message :error, :init_again
       when "man"  then man
       else             run_plugin
       end
     else
       case command
       when "init" then init
-      else             not_genomer_project
+      else             message :output, :not_project
       end
     end
-  end
-
-  def running_init_again
-    raise Genomer::Error,
-      "This directory contains a 'Gemfile' and already appears to be a genomer project."
-  end
-
-  def not_genomer_project
-    "Use `genomer init NAME` to create a new genomer project called NAME\n"
-  end
-
-  def no_command
-    msg =<<-EOF
-      genomer COMMAND [options]
-      run `genomer help` for a list of available commands
-    EOF
-    msg.unindent
   end
 
   def help
@@ -87,12 +93,7 @@ class Genomer::Runtime
 
       Kernel.exec "man #{groffed_man_file(location).path}"
     else
-      msg =<<-EOF
-        genomer man COMMAND
-        run `genomer help` for a list of available commands
-      EOF
-      msg.unindent!
-      msg.strip
+      message :output, :man
     end
   end
 

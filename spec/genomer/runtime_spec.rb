@@ -24,7 +24,7 @@ describe Genomer::Runtime do
           genomer COMMAND [options]
           run `genomer help` for a list of available commands
           EOF
-          subject.execute!.should == msg.unindent
+          subject.execute!.should == msg.unindent.strip
         end
 
       end
@@ -225,7 +225,7 @@ describe Genomer::Runtime do
           msg = <<-EOF
           Use `genomer init NAME` to create a new genomer project called NAME
           EOF
-          subject.execute!.should == msg.unindent
+          subject.execute!.should == msg.unindent.strip
         end
 
       end

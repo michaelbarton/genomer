@@ -4,7 +4,28 @@ Feature: Listing available commands
   To list the available options to the console
 
   @disable-bundler
-  Scenario: Running genomer with no commands
+  Scenario: Running genomer with no commands outside a project
+     When I run the genomer command with no arguments
+     Then the exit status should be 0
+      And the output should contain:
+      """
+      Use `genomer init NAME` to create a new genomer project called NAME
+
+      """
+
+  @disable-bundler
+  Scenario: Running genomer with the --version flag outside a project
+     When I run the genomer command with the arguments "--version"
+     Then the exit status should be 0
+      And the output should match:
+     """
+     Genomer version \d+.\d+.\d+
+     """
+
+  @disable-bundler
+  Scenario: Running genomer with no commands inside a project
+    Given I run the genomer command with the arguments "init project"
+      And I cd to "project"
      When I run the genomer command with no arguments
      Then the exit status should be 0
       And the output should contain:
@@ -15,7 +36,20 @@ Feature: Listing available commands
      """
 
   @disable-bundler
-  Scenario: Running genomer with the help command
+  Scenario: Running genomer with the --version flag inside a project
+    Given I run the genomer command with the arguments "init project"
+      And I cd to "project"
+     When I run the genomer command with the arguments "--version"
+     Then the exit status should be 0
+      And the output should match:
+     """
+     Genomer version \d+.\d+.\d+
+     """
+
+  @disable-bundler
+  Scenario: Running the genomer help command inside a genomer project
+    Given I run the genomer command with the arguments "init project"
+      And I cd to "project"
      When I run the genomer command with the arguments "help"
      Then the exit status should be 0
       And the output should contain:
@@ -31,14 +65,6 @@ Feature: Listing available commands
       And the output should contain:
      """
        man         View man page for the specified plugin
-     """
-
-  Scenario: Running genomer with the --version flag
-     When I run the genomer command with the arguments "--version"
-     Then the exit status should be 0
-      And the output should match:
-     """
-     Genomer version \d+.\d+.\d+
      """
 
   @disable-bundler

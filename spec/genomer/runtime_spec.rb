@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Genomer::Runtime do
-  include FakeFS::SpecHelpers
 
   subject do
     Genomer::Runtime.new MockSettings.new arguments, flags
@@ -12,54 +11,232 @@ describe Genomer::Runtime do
 
   describe "run" do
 
-    describe "with no command" do
+    context "inside a genomer project" do
 
-      it "should print the short help description" do
-        msg = <<-EOF
+      before do
+        stub.instance_of(described_class).genomer_project?{ true }
+      end
+
+      describe "passed no arguments" do
+
+        it "should print the short help description" do
+          msg = <<-EOF
           genomer COMMAND [options]
           run `genomer help` for a list of available commands
-        EOF
-        subject.execute!.should == msg.unindent
+          EOF
+          subject.execute!.should == msg.unindent
+        end
+
       end
 
-    end
+      describe "passed the --version flag" do
 
-    describe "with no command and the --version flag" do
+        let(:flags) do
+          {:version => true}
+        end
 
-      let(:flags) do
-        {:version => true}
+        it "should print the version information" do
+          msg = "Genomer version #{Genomer::VERSION}"
+          subject.execute!.should == msg.unindent
+        end
+
       end
 
-      it "should print the version information" do
-        msg = "Genomer version #{Genomer::VERSION}"
-        subject.execute!.should == msg.unindent
-      end
+      describe "passed an unknown command" do
 
-    end
+        let(:arguments){ %w|unknown| }
 
-    describe "with an unknown command" do
-
-      let(:arguments){ %w|unknown| }
-
-      it "should print an error message" do
-        error = <<-EOF
+        it "should print an error message" do
+          error = <<-EOF
           Unknown command or plugin 'unknown.'
           run `genomer help` for a list of available commands
-        EOF
-        lambda{ subject.execute! }.should raise_error(Genomer::Error,error.unindent)
+          EOF
+          lambda{ subject.execute! }.should raise_error(Genomer::Error,error.unindent)
+        end
+
       end
 
-    end
+      describe "passed help command with no available plugins" do
 
-    describe "with the init command" do
+        let(:arguments){ %w|help| }
 
-      let(:arguments){ %w|init project_name| }
+        before do
+          mock(Genomer::Plugin).plugins{ gems }
+          mock(File).exists?('Gemfile'){ true }
+        end
 
-      after do
-        FileUtils.rm_rf('project_name') if File.exists?('project_name')
+        let(:gems) do
+          []
+        end
+
+        it "should print the header description" do
+          msg = <<-EOF
+            genomer COMMAND [options]
+
+            Available commands:
+          EOF
+          subject.execute!.should include msg.unindent.strip
+        end
+
+        it "should show the init command" do
+          subject.execute!.should include "init        Create a new genomer project"
+        end
+
+        it "should show the man command" do
+          subject.execute!.should include "man         View man page for the specified plugin"
+        end
+        end
+
+      describe "passed help command with one available plugin" do
+
+        let(:arguments){ %w|help| }
+
+        before do
+          mock(Genomer::Plugin).plugins{ gems }
+          mock(File).exists?('Gemfile'){ true }
+        end
+
+        let(:gems) do
+          [Gem::Specification.new do |s|
+            s.name        = 'genomer-plugin-simple'
+            s.summary     = 'A simple scaffolder command'
+          end]
+        end
+
+        it "should print the plugin command description" do
+          subject.execute!.should include "simple      A simple scaffolder command"
+        end
+
       end
 
-      describe "with project name argument" do
+      describe "passed the man command with no arguments" do
+
+        let(:arguments){ %w|man| }
+
+        it "should print the man help description" do
+          msg = <<-EOF
+            genomer man COMMAND
+            run `genomer help` for a list of available commands
+          EOF
+          subject.execute!.should include msg.unindent.strip
+        end
+
+        end
+
+      describe "passed the man command with an argument" do
+
+        let(:arguments){ %w|man simple| }
+        let(:man_file){ 'a' }
+        let(:groffed_man_file){ mock!.path{ 'b' } }
+
+        before do
+          mock(subject).man_file(['simple']){ man_file }
+          mock(subject).groffed_man_file(man_file){ groffed_man_file }
+          mock(File).exists?(man_file){true}
+        end
+
+        it "should call man for the groffed path" do
+          mock(Kernel).exec("man b")
+          subject.execute!
+        end
+
+      end
+
+      describe "passed the man command with the argument 'init'" do
+
+        let(:arguments){ %w|man init| }
+        let(:man_file){ File.expand_path File.dirname(__FILE__) + '/../../man/genomer-init.1.ronn' }
+        let(:groffed_man_file){ mock!.path{ 'b' } }
+
+        before do
+          dont_allow(subject).man_file
+          mock(subject).groffed_man_file(man_file){ groffed_man_file }
+          mock(File).exists?(man_file){true}
+        end
+
+        it "should call man for the groffed path" do
+          mock(Kernel).exec("man b")
+          subject.execute!
+        end
+
+      end
+
+      describe "passed the man command for a plugin" do
+
+        let(:arguments){ %w|man simple subcommand| }
+        let(:man_file){ 'a' }
+        let(:groffed_man_file){ mock!.path{ 'b' } }
+
+        before do
+          mock(subject).man_file(['simple','subcommand']){ man_file }
+          mock(subject).groffed_man_file(man_file){ groffed_man_file }
+          mock(File).exists?(man_file){true}
+        end
+
+        it "should call man for the groffed path" do
+          mock(Kernel).exec("man b")
+          subject.execute!
+        end
+
+      end
+
+        describe "passed the man command with an unknown plugin argument" do
+
+          let(:arguments){ %w|man simple subcommand| }
+          let(:man_file){ 'a' }
+
+          before do
+            mock(subject).man_file(['simple','subcommand']){ man_file }
+            mock(File).exists?(man_file){false}
+          end
+
+          it "should raise a genomer error" do
+            lambda{ subject.execute! }.
+              should raise_error(Genomer::Error,"No manual entry for command 'simple subcommand'")
+          end
+
+        end
+
+        describe "passed the init command" do
+
+          after do
+            FileUtils.rm_rf('project_name') if File.exists?('project_name')
+          end
+
+          let(:arguments){ %w|init project_name| }
+
+          it "should raise a genomer error" do
+            lambda{ subject.execute! }.
+              should raise_error(Genomer::Error,"This directory contains a 'Gemfile' and already appears to be a genomer project.")
+          end
+
+        end
+      end
+
+    context "outside a genomer project" do
+
+      before do
+        stub.instance_of(described_class).genomer_project?{ false }
+      end
+
+      describe "passed no arguments" do
+
+        it "should print the short help description" do
+          msg = <<-EOF
+          Use `genomer init NAME` to create a new genomer project called NAME
+          EOF
+          subject.execute!.should == msg.unindent
+        end
+
+      end
+
+      describe "passed the init command with a project name argument" do
+
+        let(:arguments){ %w|init project_name| }
+
+        after do
+          FileUtils.rm_rf('project_name') if File.exists?('project_name')
+        end
 
         before do
           @msg = subject.execute!
@@ -69,11 +246,8 @@ describe Genomer::Runtime do
           @msg.should == "Genomer project 'project_name' created.\n"
         end
 
-        it "should create a directory from the named argument" do
+        it "should create the expected directories" do
           File.exists?('project_name').should be_true
-        end
-
-        it "should create an 'assembly' directory" do
           File.exists?(File.join('project_name','assembly')).should be_true
         end
 
@@ -133,195 +307,18 @@ describe Genomer::Runtime do
         end
       end
 
-      describe "when project already exists" do
+      describe "passed the --version flag" do
 
-        before do
-          Dir.mkdir('project_name')
+        let(:flags) do
+          {:version => true}
         end
 
-        it "should raise an error" do
-          lambda{ subject.execute! }.should raise_error(Genomer::Error,
-            "Directory 'project_name' already exists.")
-        end
-
-      end
-
-    end
-
-    describe "with the help command" do
-
-      let(:arguments){ %w|help| }
-
-      describe "with no Gemfile present" do
-
-        before do
-          mock(File).exists?('Gemfile'){ false }
-          dont_allow(Genomer::Plugin).plugins
-        end
-
-        it "should print the header description" do
-          msg = <<-EOF
-            genomer COMMAND [options]
-
-            Available commands:
-          EOF
-          subject.execute!.should include msg.unindent.strip
-        end
-
-        it "should show the init command" do
-          subject.execute!.should include "init        Create a new genomer project"
-        end
-
-        it "should show the man command" do
-          subject.execute!.should include "man         View man page for the specified plugin"
-        end
-      end
-
-      describe "with no available plugins" do
-
-        before do
-          mock(Genomer::Plugin).plugins{ gems }
-          mock(File).exists?('Gemfile'){ true }
-        end
-
-        let(:gems) do
-          []
-        end
-
-        it "should print the header description" do
-          msg = <<-EOF
-            genomer COMMAND [options]
-
-            Available commands:
-          EOF
-          subject.execute!.should include msg.unindent.strip
-        end
-
-        it "should show the init command" do
-          subject.execute!.should include "init        Create a new genomer project"
-        end
-
-        it "should show the man command" do
-          subject.execute!.should include "man         View man page for the specified plugin"
-        end
-      end
-
-      describe "with available genomer plugins" do
-
-        before do
-          mock(Genomer::Plugin).plugins{ gems }
-          mock(File).exists?('Gemfile'){ true }
-        end
-
-        let(:gems) do
-          [Gem::Specification.new do |s|
-            s.name        = 'genomer-plugin-simple'
-            s.summary     = 'A simple scaffolder command'
-          end]
-        end
-
-        it "should print the plugin command description" do
-          subject.execute!.should include "simple      A simple scaffolder command"
+        it "should print the version information" do
+          msg = "Genomer version #{Genomer::VERSION}"
+          subject.execute!.should == msg.unindent
         end
 
       end
-
-    end
-
-    describe "with the man" do
-
-      before do
-        stub(Genomer::Plugin).plugins{ gems }
-      end
-
-      describe "and no command specified" do
-
-        let(:arguments){ %w|man| }
-
-        it "should print the man help description" do
-          msg = <<-EOF
-            genomer man COMMAND
-            run `genomer help` for a list of available commands
-          EOF
-          subject.execute!.should include msg.unindent.strip
-        end
-
-      end
-
-      describe "and a command specified" do
-
-        let(:arguments){ %w|man simple| }
-        let(:man_file){ 'a' }
-        let(:groffed_man_file){ mock!.path{ 'b' } }
-
-        before do
-          mock(subject).man_file(['simple']){ man_file }
-          mock(subject).groffed_man_file(man_file){ groffed_man_file }
-          mock(File).exists?(man_file){true}
-        end
-
-        it "should call man for the groffed path" do
-          mock(Kernel).exec("man b")
-          subject.execute!
-        end
-
-      end
-
-      describe "and the init command specified" do
-
-        let(:arguments){ %w|man init| }
-        let(:man_file){ File.expand_path File.dirname(__FILE__) + '/../../man/genomer-init.1.ronn' }
-        let(:groffed_man_file){ mock!.path{ 'b' } }
-
-        before do
-          dont_allow(subject).man_file
-          mock(subject).groffed_man_file(man_file){ groffed_man_file }
-          mock(File).exists?(man_file){true}
-        end
-
-        it "should call man for the groffed path" do
-          mock(Kernel).exec("man b")
-          subject.execute!
-        end
-
-      end
-
-      describe "with a subcommand specified" do
-
-        let(:arguments){ %w|man simple subcommand| }
-        let(:man_file){ 'a' }
-        let(:groffed_man_file){ mock!.path{ 'b' } }
-
-        before do
-          mock(subject).man_file(['simple','subcommand']){ man_file }
-          mock(subject).groffed_man_file(man_file){ groffed_man_file }
-          mock(File).exists?(man_file){true}
-        end
-
-        it "should call man for the groffed path" do
-          mock(Kernel).exec("man b")
-          subject.execute!
-        end
-
-      end
-
-      describe "with an unknown subcommand specified" do
-
-        let(:arguments){ %w|man simple subcommand| }
-        let(:man_file){ 'a' }
-
-        before do
-          mock(subject).man_file(['simple','subcommand']){ man_file }
-          mock(File).exists?(man_file){false}
-        end
-
-        it "should call man for the groffed path" do
-          lambda{ subject.execute! }.
-            should raise_error(Genomer::Error,"No manual entry for command 'simple subcommand'")
-        end
-
-      end
-
     end
 
   end

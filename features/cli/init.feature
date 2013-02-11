@@ -57,23 +57,7 @@ Feature: Creating a new genomer project
 
     """
 
-  @disable-bundler
-  Scenario: Using the files generated in a new project
-    Given I run the genomer command with the arguments "init project"
-      And I cd to "project"
-      And I overwrite "Gemfile" with:
-      """
-      gem 'genomer',               :path => '../../../'
-      gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
-      """
-     When I run the genomer command with the arguments "simple describe"
-     Then the exit status should be 0
-      And the output should contain:
-     """
-     The scaffold contains 1 entries
-     """
-
-   Scenario: Creating a new project where the directory already exists
+   Scenario: Creating a new project when the directory already exists
      Given a directory named "project"
      When I run the genomer command with the arguments "init project"
      Then the exit status should be 1
@@ -81,3 +65,13 @@ Feature: Creating a new genomer project
      """
      Error. Directory 'project' already exists.
      """
+
+  Scenario: Creating a new project when already inside a genomer project
+    Given I run the genomer command with the arguments "init project"
+      And I cd to "project"
+     When I run the genomer command with the arguments "init another_project"
+     Then the exit status should be 1
+     And the stderr should contain:
+      """
+      Error. This directory contains a 'Gemfile' and already appears to be a genomer project.
+      """

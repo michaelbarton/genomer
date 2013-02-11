@@ -2,11 +2,36 @@ require 'unindent'
 require 'tempfile'
 require 'md2man'
 
+require 'genomer/version'
+
 class Genomer::Runtime
 
   attr :command
   attr :arguments
   attr :flags
+
+  MESSAGES = {
+    :error  => {
+      :init_again =>
+        "This directory contains a 'Gemfile' and already appears to be a genomer project."
+  },
+    :output => {
+      :version => "Genomer version #{Genomer::VERSION}",
+      :not_project =>
+        "Use `genomer init NAME` to create a new genomer project called NAME",
+      :simple_help =>
+        "genomer COMMAND [options]\nrun `genomer help` for a list of available commands",
+      :man =>
+        "genomer man COMMAND\nrun `genomer help` for a list of available commands"
+    }
+  }
+
+
+  def message(type,msg)
+    content = MESSAGES[type][msg]
+    type == :error ? raise(Genomer::Error, content) : content
+  end
+
 
   def initialize(settings)
     @command   = settings.rest.shift
@@ -15,21 +40,22 @@ class Genomer::Runtime
   end
 
   def execute!
-    case command
-    when nil    then short_help
-    when "help" then help
-    when "init" then init
-    when "man"  then man
-    else             run_plugin
-    end
-  end
+    return message :output, :version if flags[:version]
 
-  def short_help
-    msg =<<-EOF
-      genomer COMMAND [options]
-      run `genomer help` for a list of available commands
-    EOF
-    msg.unindent
+    if genomer_project?
+      case command
+      when nil    then message :output, :simple_help
+      when "help" then help
+      when "init" then message :error, :init_again
+      when "man"  then man
+      else             run_plugin
+      end
+    else
+      case command
+      when "init" then init
+      else             message :output, :not_project
+      end
+    end
   end
 
   def help
@@ -42,11 +68,13 @@ class Genomer::Runtime
     EOF
     msg.unindent!
 
-    msg << Genomer::Plugin.plugins.inject(String.new) do |str,p|
-      str << '  '
-      str << p.name.gsub("genomer-plugin-","").ljust(12)
-      str << p.summary
-      str << "\n"
+    if File.exists?('Gemfile')
+      msg << Genomer::Plugin.plugins.inject(String.new) do |str,p|
+        str << '  '
+        str << p.name.gsub("genomer-plugin-","").ljust(12)
+        str << p.summary
+        str << "\n"
+      end
     end
     msg.strip
   end
@@ -65,12 +93,7 @@ class Genomer::Runtime
 
       Kernel.exec "man #{groffed_man_file(location).path}"
     else
-      msg =<<-EOF
-        genomer man COMMAND
-        run `genomer help` for a list of available commands
-      EOF
-      msg.unindent!
-      msg.strip
+      message :output, :man
     end
   end
 
@@ -110,11 +133,14 @@ class Genomer::Runtime
     end
 
     "Genomer project '#{project_name}' created.\n"
-
   end
 
   def run_plugin
     Genomer::Plugin[command].new(arguments,flags).run
+  end
+
+  def genomer_project?
+    File.exists?('Gemfile')
   end
 
 end

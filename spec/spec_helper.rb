@@ -5,6 +5,7 @@ require 'fakefs/spec_helpers'
 require 'scaffolder/test/helpers'
 
 require 'genomer'
+require 'genomer/version'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
@@ -22,17 +23,13 @@ RSpec.configure do |config|
 
     attr :rest
 
-    def initialize(rest = [], command_args = {})
+    def initialize(rest = [], args = {})
       @rest = rest
-      @args = command_args
+      @args = args
     end
 
-    def [](arg)
-      @args[arg]
-    end
-
-    def flags
-      @args
+    def method_missing(method, *args, &block)
+      @args.send(method, *args, &block)
     end
 
   end

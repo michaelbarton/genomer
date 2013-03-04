@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Michael Barton"]
   s.email       = ["mail@michaelbarton.me.uk"]
-  s.homepage    = "http://github.com/michaelbarton/genomer"
+  s.homepage    = "http://next.gs"
   s.summary     = %Q{Build genome output files}
   s.description = %Q{Turns scaffolded contigs and annotations into a genome.}
   s.license     = "MIT"

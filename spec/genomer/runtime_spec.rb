@@ -340,6 +340,14 @@ describe Genomer::Runtime do
 
   end
 
+  describe "#render_man" do
+
+    it "should render markdown to man page" do
+      subject.render_man("##Title").should_not be_nil
+    end
+
+  end
+
   describe "#man_file" do
 
     before do

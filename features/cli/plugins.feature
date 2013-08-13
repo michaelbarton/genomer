@@ -9,6 +9,7 @@ Feature: Calling genomer plugins in a genomer project
       And I cd to "project"
       And I overwrite "Gemfile" with:
       """
+      gem 'genomer',               :path => '../../../'
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
      When I run the genomer command with the arguments "simple"
@@ -24,6 +25,7 @@ Feature: Calling genomer plugins in a genomer project
       And I cd to "project"
       And I overwrite "Gemfile" with:
       """
+      gem 'genomer',               :path => '../../../'
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
      When I run the genomer command with the arguments "simple echo some words"

@@ -1,6 +1,6 @@
 require 'unindent'
 require 'tempfile'
-require 'md2man'
+require 'md2man/engine'
 
 require 'genomer/version'
 
@@ -103,10 +103,14 @@ class Genomer::Runtime
     File.join(Genomer::Plugin.fetch(plugin).full_gem_path, 'man', page)
   end
 
+  def render_man(input)
+    Md2Man::ENGINE.render input
+  end
+
   def groffed_man_file(original_man_file)
     converted_man = Tempfile.new("genome-manpage-")
     File.open(converted_man.path,'w') do |out|
-      out.puts Md2Man::ENGINE.render(File.read(original_man_file))
+      out.puts render_man(File.read(original_man_file))
     end
     converted_man
   end

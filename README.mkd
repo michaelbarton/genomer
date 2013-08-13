@@ -54,6 +54,15 @@ be made there.
 
 [github]: https://github.com/michaelbarton/genomer
 
+## Troubleshooting
+
+Genomer specifically requires the 1.2.x version of md2man. This is because
+later versions are not compatible with ruby 1.8.7 and I aim to keep genomer
+backwards compatible for as long as possible. If you find that there are errors
+running or developing genomer related to md2man please remove all versions from
+the systems and try reinstalling genomer. If you have further problems please
+contact the genomer mailing list found at the http://next.gs site.
+
 ## Copyright
 
 Genomer copyright (c) 2010 by Michael Barton. Genomer is licensed under the MIT

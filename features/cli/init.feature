@@ -53,7 +53,7 @@ Feature: Creating a new genomer project
     """
     source "https://rubygems.org"
 
-    gem 'genomer',    '~> 0.0.0'
+    gem 'genomer',    '~> 0.1.0'
 
     """
 

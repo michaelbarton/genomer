@@ -1,6 +1,6 @@
 require 'unindent'
 require 'tempfile'
-require 'md2man/roff/engine'
+require 'md2man/engine'
 
 require 'genomer/version'
 
@@ -104,7 +104,7 @@ class Genomer::Runtime
   end
 
   def render_man(input)
-    Md2Man::Roff::ENGINE.render input
+    Md2Man::ENGINE.render input
   end
 
   def groffed_man_file(original_man_file)

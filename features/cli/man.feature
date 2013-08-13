@@ -18,6 +18,7 @@ Feature: Showing man pages for available commands
       And I cd to "project"
       And I overwrite "Gemfile" with:
       """
+      gem 'genomer',               :path => '../../../'
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
      When I run the genomer command with the arguments "man simple"
@@ -30,6 +31,7 @@ Feature: Showing man pages for available commands
       And I cd to "project"
       And I overwrite "Gemfile" with:
       """
+      gem 'genomer',               :path => '../../../'
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
      When I run the genomer command with the arguments "man simple subcommand"
@@ -42,6 +44,7 @@ Feature: Showing man pages for available commands
       And I cd to "project"
       And I overwrite "Gemfile" with:
       """
+      gem 'genomer',               :path => '../../../'
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
      When I run the genomer command with the arguments "man unknown"
@@ -59,6 +62,7 @@ Feature: Showing man pages for available commands
       And I cd to "project"
       And I overwrite "Gemfile" with:
       """
+      gem 'genomer',               :path => '../../../'
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
      When I run the genomer command with the arguments "man simple unknown"

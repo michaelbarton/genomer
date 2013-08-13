@@ -26,6 +26,10 @@ Feature: Listing available commands
   Scenario: Running genomer with no commands inside a project
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
+      And I overwrite "Gemfile" with:
+      """
+      gem 'genomer',               :path => '../../../'
+      """
      When I run the genomer command with no arguments
      Then the exit status should be 0
       And the output should contain:
@@ -39,6 +43,10 @@ Feature: Listing available commands
   Scenario: Running genomer with the --version flag inside a project
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
+      And I overwrite "Gemfile" with:
+      """
+      gem 'genomer',               :path => '../../../'
+      """
      When I run the genomer command with the arguments "--version"
      Then the exit status should be 0
       And the output should match:
@@ -50,6 +58,10 @@ Feature: Listing available commands
   Scenario: Running the genomer help command inside a genomer project
     Given I run the genomer command with the arguments "init project"
       And I cd to "project"
+      And I overwrite "Gemfile" with:
+      """
+      gem 'genomer',               :path => '../../../'
+      """
      When I run the genomer command with the arguments "help"
      Then the exit status should be 0
       And the output should contain:
@@ -73,6 +85,7 @@ Feature: Listing available commands
       And I cd to "project"
       And I overwrite "Gemfile" with:
       """
+      gem 'genomer',               :path => '../../../'
       gem 'genomer-plugin-simple', :path => '../../../genomer-plugin-simple'
       """
      When I run the genomer command with the arguments "help"

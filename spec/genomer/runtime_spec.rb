@@ -300,7 +300,7 @@ describe Genomer::Runtime do
 
           File.exists?(file).should be_true
           File.read(file).should == <<-EOF.unindent
-            source :rubygems
+            source "https://rubygems.org"
 
             gem 'genomer',    '~> #{version.join('.')}'
           EOF
@@ -336,6 +336,14 @@ describe Genomer::Runtime do
         subject.flags[:flag]     == flags[:flag]
       end
 
+    end
+
+  end
+
+  describe "#render_man" do
+
+    it "should render markdown to man page" do
+      subject.render_man("##Title").should_not be_nil
     end
 
   end

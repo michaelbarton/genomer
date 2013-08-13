@@ -6,7 +6,7 @@ class Genomer::Files
     def gemfile
       version = Genomer::VERSION.split('.')[0..1].<<(0).join('.')
       <<-EOF.unindent
-        source :rubygems
+        source "https://rubygems.org"
 
         gem 'genomer',    '~> #{version}'
       EOF

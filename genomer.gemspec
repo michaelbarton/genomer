@@ -18,8 +18,8 @@ Gem::Specification.new do |s|
   s.add_dependency "rake",                          "~> 10.1.0"
   s.add_dependency "bundler",                       "~> 1.3.0"
   s.add_dependency "configliere",                   "~> 0.4.0"
-  s.add_dependency "scaffolder",                    "~> 0.4.0"
-  s.add_dependency "scaffolder-annotation-locator", ">= 0.1.4"
+  s.add_dependency "scaffolder",                    "~> 0.5.0"
+  s.add_dependency "scaffolder-annotation-locator", "~> 0.2.0"
   s.add_dependency "unindent",                      "~> 1.0.0"
   s.add_dependency "md2man",                        "~> 2.0.0"
 

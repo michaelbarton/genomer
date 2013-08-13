@@ -300,7 +300,7 @@ describe Genomer::Runtime do
 
           File.exists?(file).should be_true
           File.read(file).should == <<-EOF.unindent
-            source :rubygems
+            source "https://rubygems.org"
 
             gem 'genomer',    '~> #{version.join('.')}'
           EOF

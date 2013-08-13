@@ -51,7 +51,7 @@ Feature: Creating a new genomer project
     And a file named "project/Gemfile" should exist
     And the file "project/Gemfile" should contain exactly:
     """
-    source :rubygems
+    source "https://rubygems.org"
 
     gem 'genomer',    '~> 0.0.0'
 

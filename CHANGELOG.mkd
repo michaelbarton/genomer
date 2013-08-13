@@ -1,9 +1,14 @@
+## 0.1.0
+
+  * Genomer should now be ruby 1.8.7 to 2.0.0 compatible.
+  * Use the more secure https:// in genomer Gemfile
+
 ## 0.0.9
 
   * Genomer now has different behaviour dependent on whether inside or outside
     a genomer project directory. These differences are as follows: 
-    * The 'init' command cannot be called inside an existing genomer project.
-    * All other commands cannot be when not inside a genomer project.
-    * Genomer no long throws an error when not inside a genomer project
-      directory, since a Gemfile is no longer attempted to be loaded.
+  * The 'init' command cannot be called inside an existing genomer project.
+  * All other commands cannot be when not inside a genomer project.
+  * Genomer no long throws an error when not inside a genomer project
+    directory, since a Gemfile is no longer attempted to be loaded.
   * Version number can be shown using --version flag

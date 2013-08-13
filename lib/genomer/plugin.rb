@@ -1,3 +1,4 @@
+require 'bundler'
 require 'scaffolder'
 require 'scaffolder/annotation_locator'
 
